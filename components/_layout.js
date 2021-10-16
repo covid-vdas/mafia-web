@@ -1,4 +1,4 @@
-import Header from './Header'
+import Header from './header'
 import PropTypes from 'prop-types'
 
 const Layout = ({ children }) => {
