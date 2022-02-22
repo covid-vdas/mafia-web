@@ -24,6 +24,7 @@
 
 <svelte:head>
 	<title>COVID-19 VDAS</title>
+	<script src="https://kit.fontawesome.com/3c27956f64.js" crossorigin="anonymous"></script>
 </svelte:head>
 
 <main>
