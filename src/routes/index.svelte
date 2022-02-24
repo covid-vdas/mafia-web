@@ -25,7 +25,7 @@
 				<i class="bi bi-images" /> Detect images
 			</button>
 		</a>
-		<a href="/login" class="me-1">
+		<a href="/auth/login" class="me-1">
 			<button class="btn btn-success btn-lg">
 				<i class="fas fa-arrow-right-to-bracket"/> Detect images
 			</button>
@@ -37,17 +37,3 @@
 		</a>
 	</span>
 </section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 1;
-	}
-
-	h1 {
-		width: 100%;
-	}
-</style>

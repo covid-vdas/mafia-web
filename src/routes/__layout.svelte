@@ -4,7 +4,7 @@
 	import 'bootstrap-icons/font/bootstrap-icons.css'
     import 'nprogress/nprogress.css'
 	import '../app.css';
-
+	import FooterAdmin from'../components/Footers/FooterAdmin.svelte'
 	import NProgress from 'nprogress'
 
 	NProgress.configure({
@@ -28,40 +28,8 @@
 </svelte:head>
 
 <main>
-	<slot />
+	<slot/>
 </main>
 
-<footer>
-	<p>{new Date().getFullYear()} &copy; Mafia Team</p>
-</footer>
+<FooterAdmin/>
 
-<style>
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 1024px;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 40px;
-	}
-
-	:global(i.bi) {
-		font-size: 90%;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 40px 0;
-		}
-	}
-</style>
