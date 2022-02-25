@@ -1,20 +1,34 @@
 <script>
     import {API_URL} from "../../util/constant.svelte";
+    import CryptoJS from "crypto-js";
+
     let username = "";
     let password = "";
-    let error = false;
+    let error_status = false;
+    let processing = false;
 
     const handleLogin = async () => {
         console.log(API_URL+"login");
-
+        processing = true;
+        let password_md5 = CryptoJS.MD5(password);
+        let bearerEncoded = CryptoJS.enc.Utf8.parse(username+":"+password_md5)
+        let bearer = CryptoJS.enc.Base64.stringify(bearerEncoded)
+        console.log(bearer);
         const response = await fetch(API_URL+"login",{
             method : "POST",
             headers : {
-                
+                "Content-type": "application/json",
+                "Authorization": "Bearer " + bearer,
             }
-        });
-
-        error = true;
+        }).then(
+            response => response.json()).then(data => {
+                console.log(data);
+                processing = false;
+            }).catch (error =>{
+                error_status=true;
+                console.log(error);
+                processing = false;
+            });
     }
 </script>
 
@@ -41,7 +55,7 @@
                                         </label>
                                         <input id="login-username" type="text"
                                             class=" px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  focus:ring w-full ease-linear transition-all duration-150 focus:outline-none
-                                            {error?'border-1 border-rose-500 focus:border-rose-600':'border-0 text-zinc-600 '}"
+                                            {error_status?'border-1 border-rose-500 focus:border-rose-600':'border-0 text-zinc-600 '}"
                                             placeholder="Username" bind:value="{username}" />
                                     </div>
                                     <div class="relative w-full mb-3">
@@ -51,18 +65,31 @@
                                         </label>
                                         <input id="login-password" type="password"
                                             class=" px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  focus:ring w-full ease-linear transition-all duration-150 focus:outline-none
-                                            {error?'border-1 border-rose-500 focus:border-rose-600':'border-0 text-zinc-600 '}"
+                                            {error_status?'border-1 border-rose-500 focus:border-rose-600':'border-0 text-zinc-600 '}"
                                             placeholder="Password" bind:value="{password}" />
-                                            {#if error}
+                                            {#if error_status}
                                             <p class="text-rose-600 text-center mt-3 font-semibold">Your Credentials is invalid. Please try again.</p>
                                             {/if}
                                     </div>
                                     <div class="text-center mt-6">
+                                        {#if processing}
+                                        <button
+                                            class="text-white bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                                            type="submit"
+                                            disabled>
+                                            <svg class="animate-spin text-white h-6 w-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Processing..
+                                        </button>
+                                        {:else}
                                         <button
                                             class="text-white bg-blue-700 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                                             type="submit">
                                             Sign In
                                         </button>
+                                        {/if}
                                     </div>
                                 </form>
                             </div>
