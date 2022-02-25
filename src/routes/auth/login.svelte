@@ -14,7 +14,7 @@
         let bearerEncoded = CryptoJS.enc.Utf8.parse(username+":"+password_md5)
         let bearer = CryptoJS.enc.Base64.stringify(bearerEncoded)
         console.log(bearer);
-        const response = await fetch(API_URL+"login",{
+        const response = await fetch(API_URL+"login/",{
             method : "POST",
             headers : {
                 "Content-type": "application/json",
