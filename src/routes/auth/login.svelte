@@ -1,5 +1,6 @@
 <script>
     import {API_URL} from "../../util/constant.svelte";
+    import { goto } from '$app/navigation';
     import CryptoJS from "crypto-js";
 
     let username = "";
@@ -21,9 +22,15 @@
                 "Authorization": "Bearer " + bearer,
             }
         }).then(
-            response => response.json()).then(data => {
-                console.log(data);
+            response => {
                 processing = false;
+                if(response.status == 200){
+                    error_status = false;
+                    return response;
+                }else{
+                    console.log(response)
+                    error_status = true;
+                }
             }).catch (error =>{
                 error_status=true;
                 console.log(error);
