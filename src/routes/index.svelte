@@ -27,7 +27,7 @@
 		</a>
 		<a href="/auth/login" class="me-1">
 			<button class="btn btn-success btn-lg">
-				<i class="fas fa-arrow-right-to-bracket"/> Detect images
+				<i class="fas fa-arrow-right-to-bracket"/> Login
 			</button>
 		</a>
 		<a href="/video-detector" class="ms-1">

@@ -1,36 +1,38 @@
 <script>
-    import {API_URL} from "../../util/constant.svelte";
+    import {API_URL} from "utils/constant.svelte";
     import { goto } from '$app/navigation';
-    import CryptoJS from "crypto-js";
 
     let username = "";
     let password = "";
     let error_status = false;
     let processing = false;
-
+    
     const handleLogin = async () => {
+        let data = {
+        'username' : username,
+        'password' : password,
+        };
         console.log(API_URL+"login");
         processing = true;
-        let password_md5 = CryptoJS.MD5(password);
-        let bearerEncoded = CryptoJS.enc.Utf8.parse(username+":"+password_md5)
-        let bearer = CryptoJS.enc.Base64.stringify(bearerEncoded)
-        console.log(bearer);
+        console.log(data);
         const response = await fetch(API_URL+"login/",{
             method : "POST",
             headers : {
                 "Content-type": "application/json",
-                "Authorization": "Bearer " + bearer,
-            }
+            },
+            body : JSON.stringify(data),
         }).then(
             response => {
                 processing = false;
                 if(response.status == 200){
                     error_status = false;
-                    return response;
                 }else{
                     console.log(response)
                     error_status = true;
                 }
+                return response.json();
+            }).then(responseData =>{
+                console.log(responseData);
             }).catch (error =>{
                 error_status=true;
                 console.log(error);
@@ -45,7 +47,7 @@
             <div class="flex content-center items-center justify-center h-full">
                 <div class="w-full lg:w-6/12 px-4">
                     <div
-                        class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-neutral-50 border-0">
+                        class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white border-0">
                         <div class="flex flex-row">
                             <div class="basis-5/12 bg-[url('static/login-image.png')] bg-no-repeat hover:bg-center hover:bg-contain">
                                 
