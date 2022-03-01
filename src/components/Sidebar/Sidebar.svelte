@@ -1,4 +1,5 @@
 <script>
+  import { page } from "$app/stores"
 
   // core component
   import UserDropdown from "components/Dropdowns/UserDropdown.svelte";
@@ -61,37 +62,37 @@
 
       <ul class="md:flex-col md:min-w-full flex flex-col list-none">
         <li class="items-center">
-          <a href="#" class="text-sm uppercase py-3 font-bold block">
+          <a href="/" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/'? 'text-blue-700':''}">
             <i class="fas fa-tv mr-2 text-sm"></i>
             Dashboard
           </a>
         </li>
 
         <li class="items-center">
-          <a href="#" class="text-sm uppercase py-3 font-bold block">
+          <a href="/management/user" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/management/user'? 'text-blue-700':''}">
             <i class="fas fa-users mr-2 text-sm"></i>
-            Users
+            User Management
           </a>
         </li>
 
         <li class="items-center">
-          <a href="#" class="text-sm uppercase py-3 font-bold block">
+          <a href="/management/role" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/management/role'? 'text-blue-700':''}">
             <i class="fas fa-user-gear mr-2 text-sm"></i>
-            Role
+            Role Management
           </a>
         </li>
 
         <li class="items-center">
-          <a href="#" class="text-sm uppercase py-3 font-bold block">
+          <a href="/management/report" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/management/report'? 'text-blue-700':''}">
             <i class="fa-solid fa-square-poll-horizontal mr-3 text-sm"></i>
             Reports
           </a>
         </li>
 
         <li class="items-center">
-          <a href="#" class="text-sm uppercase py-3 font-bold block">
+          <a href="/management/area" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/management/area'? 'text-blue-700':''}">
             <i class="fas fa-map-marked mr-2 text-sm"></i>
-            Area
+            Area Management
           </a>
         </li>
       </ul>

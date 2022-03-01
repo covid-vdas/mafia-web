@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte'
+    import { API_URL } from 'utils/constant.svelte'
 
     /** @type {HTMLInputElement} */
     let fileInput
@@ -49,13 +50,12 @@
 
     const upload = () => {
         processing = true
-
         let done = 0
         images.forEach((v, i) => {
             const data = new FormData()
             data.append('image', v.file)
-
-            fetch('http://127.0.0.1:8000/api/image/', {
+            console.log(API_URL+'image/');
+            fetch(API_URL+'image/', {
                 method: 'POST',
                 body: data,
             })

@@ -4,7 +4,7 @@
 
   // core components
 
-  const image = "../assets/img/team-1-800x800.jpg";
+  const image = "static/login-image.png";
 
   let dropdownPopoverShow = false;
 
@@ -70,7 +70,7 @@
       href="#pablo" on:click={(e) => e.preventDefault()}
       class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
     >
-      Seprated link
+      Sign Out
     </a>
   </div>
 </div>
