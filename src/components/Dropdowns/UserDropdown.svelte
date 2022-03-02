@@ -4,7 +4,7 @@
 
   // core components
 
-  const image = "static/login-image.png";
+  // const image = "static/login-image.png";
 
   let dropdownPopoverShow = false;
 
@@ -33,13 +33,9 @@
   >
     <div class="items-center flex">
       <span
-        class="w-12 h-12 text-sm text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full"
+        class="w-30 h-12 text-md text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full"
       >
-        <img
-          alt="..."
-          class="w-full rounded-full align-middle border-none shadow-lg"
-          src="{image}"
-        />
+        Welcome, User!
       </span>
     </div>
   </a>
@@ -51,19 +47,7 @@
       href="#pablo" on:click={(e) => e.preventDefault()}
       class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
     >
-      Action
-    </a>
-    <a
-      href="#pablo" on:click={(e) => e.preventDefault()}
-      class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-    >
-      Another action
-    </a>
-    <a
-      href="#pablo" on:click={(e) => e.preventDefault()}
-      class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-    >
-      Something else here
+      User Profile
     </a>
     <div class="h-0 my-2 border border-solid border-blueGray-100" />
     <a

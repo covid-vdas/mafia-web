@@ -4,16 +4,13 @@
 </script>
 
 <!-- Header -->
-<div class="relative bg-blue-600 md:pt-5 pb-5 pt-5">
+<div class="relative bg-blue-600 md:pt-0 pt-5 pb-5 sm:pt-0">
   <nav
     class="absolute top-0 left-0 w-full z-10 bg-transparent md:flex-row md:flex-nowrap md:justify-start flex items-center p-4">
     <div class="w-full mx-autp items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
       <!-- Brand -->
-      <a class="text-white text-md uppercase hidden lg:inline-block font-semibold" href="#pablo" on:click={(e)=>
-        e.preventDefault()}
-        >
-        Dashboard
-      </a>
+      <div class="text-md uppercase hidden lg:inline-block font-semibold">
+      </div>
       <!-- User -->
       <ul class="flex-col md:flex-row list-none items-center hidden md:flex">
         <UserDropdown />

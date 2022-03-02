@@ -1,12 +1,16 @@
 <script>
     import {API_URL} from "utils/constant.svelte";
     import { goto } from '$app/navigation';
+    import { writable } from 'svelte/store';
 
     let username = "";
     let password = "";
     let error_status = false;
     let processing = false;
     
+    const stored = localStorage.content;
+    
+
     const handleLogin = async () => {
         let data = {
         'username' : username,
