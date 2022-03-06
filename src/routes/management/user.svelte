@@ -4,35 +4,22 @@
 
     export async function load({url, params, fetch, session, stuff }){
         let token_value;
+        console.log("Loading");
         token.subscribe((t) => (token_value = t));
-        const response = fetch(API_URL+"user/",{
+        const response = await fetch(API_URL+"user/",{
             method : "GET",
             headers : {
                 "Content-type": "application/json",
                 "Authorization": "Bearer "+ token_value,
             }
-        }).then(
-            response => {
-                processing = false;
-                if(response.status == 200){
-                    error_status = false;
-                    return response.json();
-                }else{
-                    console.log(response)
-                    error_status = true;
-                }
-            }).then(responseData =>{
-                if(responseData){
-                    console.log(responseData);
-                } else {
-                    
-                }         
-            }).catch (error =>{
-                error_status=true;
-                console.log(error);
-                processing = false;
-            });
-        return{};
+        });
+        
+        return{
+            status: response.status,
+            props: {
+                users: response.ok && (await response.json())
+            }
+        };
     }
 </script>
 
@@ -61,7 +48,7 @@
         'Delete',
     ]
     
-    let users = [
+    export let users = [
         {
             "username": "Admin",
             "email": "admin@gmail.com",
@@ -86,6 +73,7 @@
         }
     ]
     const handleClick = () =>{
+        console.log(users);
         alert("Chao Nhung Em be hieu hoc");
     }
 </script>
@@ -96,5 +84,6 @@
             <UserCardTable table_title={table_title} table_properties={table_properties} handleClick={handleClick} action_list={action_list} data={users} color="light"/>
         </div>
     </div>
+    <button class="btn bg-slate-500 text-white" on:click={handleClick}>Click Me</button>
 </section>
 
