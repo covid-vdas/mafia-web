@@ -4,6 +4,7 @@
 	import 'bootstrap-icons/font/bootstrap-icons.css'
     import 'nprogress/nprogress.css'
 	import '../app.css';
+    import { user, token } from '../stores'
     import AdminNavbar from "components/Navbars/AdminNavbar.svelte";
     import Sidebar from "components/Sidebar/Sidebar.svelte";
 	import FooterAdmin from'components/Footers/FooterAdmin.svelte'

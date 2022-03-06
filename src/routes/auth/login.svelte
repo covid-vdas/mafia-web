@@ -1,14 +1,13 @@
 <script>
     import {API_URL} from "utils/constant.svelte";
     import { goto } from '$app/navigation';
-    import { writable } from 'svelte/store';
+    import { user, token } from "../../stores";
 
     let username = "";
     let password = "";
     let error_status = false;
     let processing = false;
-    
-    const stored = localStorage.content;
+
     
 
     const handleLogin = async () => {
@@ -30,13 +29,19 @@
                 processing = false;
                 if(response.status == 200){
                     error_status = false;
+                    return response.json();
                 }else{
                     console.log(response)
                     error_status = true;
                 }
-                return response.json();
             }).then(responseData =>{
-                console.log(responseData);
+                if(responseData){
+                    user.update((u) => u = JSON.stringify(responseData.data));
+                    token.update((t) => t = responseData.token);
+                    goto("/");
+                } else {
+                    
+                }         
             }).catch (error =>{
                 error_status=true;
                 console.log(error);
