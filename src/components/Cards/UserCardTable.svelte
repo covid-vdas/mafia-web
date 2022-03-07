@@ -1,0 +1,101 @@
+<script>
+  // core components
+  import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
+
+  // can be one of light or dark
+  export let color = "light";
+  export let table_title;
+  export let table_properties;
+  export let handleClick;
+  export let data;
+  export let action_list;
+</script>
+
+<div
+  class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded {color === 'light' ? 'bg-white' : 'bg-red-800 text-white'}"
+>
+  <div class="rounded-t mb-0 px-4 py-3 border-0">
+    <div class="flex flex-wrap items-center">
+      <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+        <h3
+          class="font-semibold text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
+        >
+          {table_title}
+        </h3>
+      </div>
+    </div>
+  </div>
+  <div class="block w-full overflow-x-auto">
+    <!-- Projects table -->
+    <table class="items-center w-full bg-transparent border-collapse">
+      <thead>
+        <tr>
+        {#each table_properties as prop}
+        <th
+          class="px-6 align-middle text-center border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold {color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-700 text-red-200 border-red-600'}"
+        >
+          {prop}
+        </th>
+        {/each}
+        </tr>
+      </thead>
+      <tbody>
+        {#each data as d, i}
+        <tr>
+          <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+            <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
+              {i+1}
+            </span>
+          </td>
+          <td
+            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+          >
+            {d.username}
+          </td>
+          <td
+            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+          >
+            {d.email}
+          </td>
+          <td
+            class="border-t-0 text-center px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+          >
+            {d.phone}
+          </td>
+          <td
+            class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+          >
+            {d.birthdate}
+          </td>
+          <td
+            class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+          >
+            {d.role_id}
+          </td>
+          <td
+            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+          >
+            {#if d.is_active}
+              <div> <i class="fas fa-circle text-emerald-500 mr-2"></i>Actived</div>
+            {:else}
+              <div> <i class="fas fa-circle text-rose-500 mr-2"></i>Deactived</div>
+            {/if}
+          </td>
+          <td
+            class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+          >
+            {d.updated_at}
+          </td>
+          <td
+            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+          >
+            {#each action_list as action}
+              {action}
+            {/each}
+          </td>
+        </tr>
+        {/each}   
+      </tbody>
+    </table>
+  </div>
+</div>

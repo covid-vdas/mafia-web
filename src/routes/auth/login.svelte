@@ -1,15 +1,14 @@
 <script>
     import {API_URL} from "utils/constant.svelte";
     import { goto } from '$app/navigation';
-    import { writable } from 'svelte/store';
+    import { user, token } from "../../stores";
 
     let username = "";
     let password = "";
     let error_status = false;
     let processing = false;
-    
-    const stored = localStorage.content;
-    
+
+
 
     const handleLogin = async () => {
         let data = {
@@ -30,14 +29,19 @@
                 processing = false;
                 if(response.status == 200){
                     error_status = false;
-                    goto("/");
+                    return response.json();
                 }else{
                     console.log(response)
                     error_status = true;
                 }
-                return response.json();
             }).then(responseData =>{
-                console.log(responseData);
+                if(responseData){
+                    user.update((u) => u = JSON.stringify(responseData.data));
+                    token.update((t) => t = responseData.token);
+                    goto("/");
+                } else {
+
+                }
             }).catch (error =>{
                 error_status=true;
                 console.log(error);
@@ -55,7 +59,7 @@
                         class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white border-0">
                         <div class="flex flex-row">
                             <div class="basis-5/12 bg-[url('static/login-image.png')] bg-no-repeat hover:bg-center hover:bg-contain">
-                                
+
                             </div>
                             <div class="rounded-t mb-0 px-6 py-6 basis-7/12">
                                 <div class="text-zinc-700 text-3xl text-center mb-3 font-bold">

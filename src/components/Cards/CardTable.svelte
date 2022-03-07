@@ -7,6 +7,8 @@
   export let table_title;
   export let table_properties;
   export let handleClick;
+  export let data;
+  export let action_list;
 </script>
 
 <div
@@ -38,12 +40,13 @@
         </tr>
       </thead>
       <tbody>
+        {#each data as d}
         <tr>
           <th
             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
           >
             <span
-              class="ml-3 font-bold {color === 'light' ? 'btext-blueGray-600' : 'text-whit'}"
+              class="ml-3 font-bold {color === 'light' ? 'btext-blueGray-600' : 'text-white'}"
             >
               Argon Design System
             </span>
@@ -54,6 +57,7 @@
             <button class="btn bg-slate-600 text-white" on:click={handleClick}>Click me</button>
           </td>
         </tr>
+        {/each}   
       </tbody>
     </table>
   </div>
