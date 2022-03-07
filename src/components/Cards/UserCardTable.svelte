@@ -6,7 +6,6 @@
   export let color = "light";
   export let table_title;
   export let table_properties;
-  export let handleClick;
   export let data;
   export let action_list;
 </script>
@@ -90,7 +89,9 @@
             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
           >
             {#each action_list as action}
-              {action}
+              <button name={action.name} class="btn text-2xl m-0.1 text-slate-800 hover:text-blue-600">
+                <icon class={action.icon}></icon>
+              </button>
             {/each}
           </td>
         </tr>

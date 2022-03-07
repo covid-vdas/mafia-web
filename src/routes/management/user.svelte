@@ -1,7 +1,7 @@
 <script context="module">
     import {API_URL} from "utils/constant.svelte";
     import {token} from "../../stores.js"
-
+    /** @type {import('./user').Load} */
     export async function load({url, params, fetch, session, stuff }){
         let token_value;
         console.log("Loading");
@@ -41,37 +41,30 @@
     ];
 
     let action_list = [
-        'Enable',
-        'Disable',
-        'View',
-        'Update',
-        'Delete',
-    ]
-    
-    export let users = [
         {
-            "username": "Admin",
-            "email": "admin@gmail.com",
-            "address": "123 FPT Campus",
-            "phone": "0969169969",
-            "birthdate": "06/09/2000",
-            "role_id": "1",
-            "is_active": true,
-            "created_at": "06/03/2022",
-            "updated_at": "06/03/2022"
+            "name":"Enable",
+            "icon":"fas fa-unlock"
         },
         {
-            "username": "Admin",
-            "email": "admin@gmail.com",
-            "address": "123 FPT Campus",
-            "phone": "0969169969",
-            "birthdate": "06/09/2000",
-            "role_id": "1",
-            "is_active": false,
-            "created_at": "06/03/2022",
-            "updated_at": "06/03/2022"
+            "name":"Disable",
+            "icon":"fas fa-lock"
+        },
+        {
+            "name":"View",
+            "icon":"fas fa-circle-info"
+        },
+        {
+            "name":"Edit",
+            "icon":"fas fa-user-pen"
+        },
+        {
+            "name":"Delete",
+            "icon":"fas fa-trash"
         }
     ]
+    
+    export let users;
+
     const handleClick = () =>{
         console.log(users);
         alert("Chao Nhung Em be hieu hoc");
@@ -81,7 +74,7 @@
 <section class="relative w-full h-full py-40 min-h-screen">
     <div class="flex flex-wrap mt-4">
         <div class="w-full mb-12 px-4">
-            <UserCardTable table_title={table_title} table_properties={table_properties} handleClick={handleClick} action_list={action_list} data={users} color="light"/>
+            <UserCardTable table_title={table_title} table_properties={table_properties} action_list={action_list} data={users} color="light"/>
         </div>
     </div>
     <button class="btn bg-slate-500 text-white" on:click={handleClick}>Click Me</button>
