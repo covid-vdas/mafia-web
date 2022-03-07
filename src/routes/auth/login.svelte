@@ -15,9 +15,7 @@
         'username' : username,
         'password' : password,
         };
-        console.log(API_URL+"login");
         processing = true;
-        console.log(data);
         const response = await fetch(API_URL+"login/",{
             method : "POST",
             headers : {

@@ -1,10 +1,13 @@
 <script>
   // library for creating dropdown menu appear on click
   import { createPopper } from "@popperjs/core";
+  import {user} from "../../stores.js"
 
+  let user_value;
+  user.subscribe((u) => (user_value = u));
+  console.log(user_value);
+  
   // core components
-
-  // const image = "static/login-image.png";
 
   let dropdownPopoverShow = false;
 
@@ -35,7 +38,7 @@
       <span
         class="w-30 h-12 text-md text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full"
       >
-        Welcome, User!
+        Welcome, {user_value.username}!
       </span>
     </div>
   </a>

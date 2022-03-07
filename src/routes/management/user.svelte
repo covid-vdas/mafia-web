@@ -42,23 +42,23 @@
 
     let action_list = [
         {
-            "name":"Enable",
+            "name":"enable",
             "icon":"fas fa-unlock"
         },
         {
-            "name":"Disable",
+            "name":"disable",
             "icon":"fas fa-lock"
         },
         {
-            "name":"View",
+            "name":"view",
             "icon":"fas fa-circle-info"
         },
         {
-            "name":"Edit",
+            "name":"edit",
             "icon":"fas fa-user-pen"
         },
         {
-            "name":"Delete",
+            "name":"delete",
             "icon":"fas fa-trash"
         }
     ]

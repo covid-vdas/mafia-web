@@ -1,6 +1,7 @@
 <script>
   // core components
   import UserDropdown from "components/Dropdowns/UserDropdown.svelte";
+  
 </script>
 
 <!-- Header -->
