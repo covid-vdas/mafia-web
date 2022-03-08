@@ -1,5 +1,5 @@
 <script>
-    import {API_URL} from "utils/constant.svelte";
+    import {API_URL} from "utils/constant.js";
     import { goto } from '$app/navigation';
     import { user, token } from "../../stores";
 

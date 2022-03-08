@@ -1,8 +1,8 @@
 <script context="module">
-    import {API_URL} from "utils/constant.svelte";
-    import {token} from "../../stores.js"
-    /** @type {import('./user').Load} */
-    export async function load({url, params, fetch, session, stuff }){
+    import {API_URL} from "utils/constant.js";
+    import {token} from "../../../stores.js"
+    /** @type {import('@sveltejs/kit').Load} */
+    export async function load({fetch}){
         let token_value;
         console.log("Loading");
         token.subscribe((t) => (token_value = t));
@@ -13,11 +13,11 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
-        
+        const users = response.ok && (await response.json());
+
         return{
-            status: response.status,
             props: {
-                users: response.ok && (await response.json())
+                users: users,
             }
         };
     }

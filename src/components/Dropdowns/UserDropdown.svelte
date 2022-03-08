@@ -4,8 +4,11 @@
   import {user} from "../../stores.js"
 
   let user_value;
+  let user_object;
   user.subscribe((u) => (user_value = u));
-  console.log(user_value);
+  if(user_value){
+    user_object = JSON.parse(user_value);
+  }
   
   // core components
 
@@ -38,7 +41,7 @@
       <span
         class="w-30 h-12 text-md text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full"
       >
-        Welcome, {user_value.username}!
+        Welcome, {#if user_object}{user_object.username}{/if}!
       </span>
     </div>
   </a>

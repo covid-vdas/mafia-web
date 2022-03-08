@@ -1,6 +1,7 @@
 <script>
   // core components
   import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
+  import { goto } from '$app/navigation';
 
   // can be one of light or dark
   export let color = "light";
@@ -8,6 +9,28 @@
   export let table_properties;
   export let data;
   export let action_list;
+
+  function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function userAction(action, user) {
+  switch (action) {
+    case 'enable':
+      break;
+    case 'disable':
+      break;
+    case 'view':
+      goto("/management/user/"+user.id+"_a_v");
+      break;  
+    case 'edit':
+      break;
+    case 'delete':
+      break;
+    default:    
+  }
+}
+
 </script>
 
 <div
@@ -64,12 +87,12 @@
           <td
             class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
           >
-            {d.birthdate}
+            {new Date(d.birthdate).toLocaleDateString()}
           </td>
           <td
             class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
           >
-            {d.role_id}
+            {capitalizeFirstLetter(d.role_id.name)}
           </td>
           <td
             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
@@ -83,26 +106,26 @@
           <td
             class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
           >
-            {d.updated_at}
+            {new Date(d.updated_at).toLocaleString()}
           </td>
           <td
             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
           >
             {#each action_list as action}
               {#if action.name == "delete" && !d.is_active}
-                <button name={action.name} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
+                <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
                   <icon class={action.icon}></icon>
                 </button>
               {:else if action.name == "enable" && !d.is_active}
-                <button name={action.name} class="btn text-2xl m-0.1 text-emerald-600 hover:text-emerald-400">
+                <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-emerald-600 hover:text-emerald-400">
                   <icon class={action.icon}></icon>
                 </button>
               {:else if action.name == "disable" && d.is_active}
-                <button name={action.name} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
+                <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
                   <icon class={action.icon}></icon>
                 </button>
               {:else if action.name != "disable" && action.name != "enable" && action.name != "delete"}
-                <button name={action.name} class="btn text-2xl m-0.1 text-blue-800 hover:text-blue-400">
+                <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-blue-800 hover:text-blue-400">
                   <icon class={action.icon}></icon>
                 </button>
               {/if}
