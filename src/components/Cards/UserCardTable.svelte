@@ -24,6 +24,7 @@ function userAction(action, user) {
       goto("/management/user/"+user.id+"_a_v");
       break;  
     case 'edit':
+      goto("/management/user/"+user.id+"_a_e");
       break;
     case 'delete':
       break;

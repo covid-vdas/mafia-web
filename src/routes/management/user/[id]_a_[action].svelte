@@ -5,8 +5,6 @@
     export async function load({fetch, params}){
         let token_value;
         token.subscribe((t) => (token_value = t));
-        console.log(params.id);
-        console.log(params.action);
         const response = await fetch(API_URL+"user/"+params.id+"/",{
             method : "GET",
             headers : {
@@ -14,57 +12,79 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
+        const edit = params.action == "e"? true : false;
         const user = response.ok && (await response.json());
-        console.log(user);
-        console.log(response);
 
         return{
             props: {
                 user: user,
+                edit: edit,
             }
         };
     }
 </script>
 
 <script>
-    import UserCardTable from "components/Cards/UserCardTable.svelte";
-
-    let table_title = "Users";
-
-    let table_properties = [
-        "No.",
-        "username",
-        "email",
-        "phone",
-        "birthdate",
-        "role",
-        "active",
-        "updated date",
-        "action",
-    ];
-
-    export let id;
+    export let edit;
     
     export let user;
+    
+    user.birthdate = new Date(user.birthdate).toLocaleDateString();
 
-    const handleClick = () =>{
+    const handleSubmit = () =>{
         console.log(user);
-        alert("Chao Nhung Em be hieu hoc");
     }
 </script>
 
 <section class="relative w-full h-full py-40 min-h-screen">
-    <div class="flex flex-wrap mt-4">
-        <div class="w-full mb-12 px-4">
+    <div class="flex flex-wrap mt-4 content-center items-center justify-center">
+        <div class="w-full lg:w-5/12 px-4">
             <div
-                class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded p-4">
-                hello {user.id}
-                <form>
-                    <input type="text" value={user.fullname}/>
+                class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
+                <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
+                    {#if edit}Edit{/if} User Information
+                </div>
+                <form on:submit|preventDefault="{handleSubmit}">
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
+                        Full Name
+                    </label>
+                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                     transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={user.fullname} disabled={!edit}/>
+
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-email">
+                        Email
+                    </label>
+                    <input type="email" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  mb-4 focus:ring w-full ease-linear
+                     transition-all duration-150 focus:outline-none" id="info-email" bind:value={user.email} disabled={!edit}/>
+
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-phone">
+                        Phone
+                    </label>
+                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  mb-4 focus:ring w-full ease-linear
+                     transition-all duration-150 focus:outline-none" id="info-phone" bind:value={user.phone} disabled={!edit}/>
+
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-birthdate">
+                        birthdate
+                    </label>
+                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                     transition-all duration-150 focus:outline-none" id="info-birthdate" bind:value={user.birthdate} disabled={!edit}/>
+
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
+                        Role
+                    </label>
+                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                     transition-all duration-150 focus:outline-none"  id="info-role" bind:value={user.role_id} disabled={!edit}/>
+
+                     {#if edit}
+                     <button
+                         class="text-white bg-blue-700 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                         type="submit">
+                         Submit
+                     </button>
+                     {/if}
                 </form>
             </div>
         </div>
     </div>
-    <button class="btn bg-slate-500 text-white" on:click={handleClick}>Click Me</button>
 </section>
 
