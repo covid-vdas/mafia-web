@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte'
-    import { API_URL } from 'utils/constant.svelte'
+    import { API_URL } from 'utils/constant.js'
 
     /** @type {HTMLInputElement} */
     let fileInput
