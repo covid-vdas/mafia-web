@@ -31,25 +31,54 @@
     export let edit;
     export let token;
     export let user;
+    let processing = false;
     
     user.birthdate = new Date(user.birthdate).toLocaleDateString();
 
     const handleSubmit = async () =>{
-        const response = await fetch(API_URL+"user/"+params.id+"/",{
-            method : "POST",
+        processing = true;
+        const response = await fetch(API_URL+"user/"+user.id+"/",{
+            method : "PATCH",
             headers : {
                 "Content-type": "application/json",
-                "Authorization": "Bearer "+ token_value,
-            }
-        });
-        console.log(user);
-        toast.push("Success", {
-            theme: {
-                '--toastBackground':'green',
-                '--toastBarBackground': 'olive',
-                
-            }
-        });
+                "Authorization": "Bearer "+ token,
+            },
+            body : JSON.stringify({
+                'fullname' : user.fullname,
+                'phone' : user.phone,
+            }),
+        }).then(
+            response => {
+                processing = false;
+                if(response.status == 201){
+                    toast.push("Update User Successful", {
+                        theme: {
+                            '--toastBackground':'white',
+                            '--toastBarBackground': 'green',
+                            '--toastColor': 'black',
+                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                        }
+                    });
+                }else{
+                    toast.push("Update User Unsuccessful", {
+                        theme: {
+                            '--toastBackground':'red',
+                            '--toastBarBackground': 'orange',
+                            
+                        }
+                    });
+                }
+            }).catch (error =>{
+                toast.push("Update User Unsuccessful", {
+                        theme: {
+                            '--toastBackground':'red',
+                            '--toastBarBackground': 'orange',
+                            
+                        }
+                    });
+                console.log(error);
+                processing = false;
+            });
     }
 </script>
 
@@ -66,39 +95,48 @@
                         Full Name
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                     transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={user.fullname} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={user.fullname} disabled={!edit}/>
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-email">
                         Email
                     </label>
                     <input type="email" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  mb-4 focus:ring w-full ease-linear
-                     transition-all duration-150 focus:outline-none" id="info-email" bind:value={user.email} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-email" bind:value={user.email} disabled={!edit}/>
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-phone">
                         Phone
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  mb-4 focus:ring w-full ease-linear
-                     transition-all duration-150 focus:outline-none" id="info-phone" bind:value={user.phone} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-phone" bind:value={user.phone} disabled={!edit}/>
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-birthdate">
                         birthdate
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                     transition-all duration-150 focus:outline-none" id="info-birthdate" bind:value={user.birthdate} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-birthdate" bind:value={user.birthdate} disabled={!edit}/>
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
                         Role
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                     transition-all duration-150 focus:outline-none"  id="info-role" bind:value={user.role_id} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none"  id="info-role" bind:value={user.role_id} disabled={!edit}/>
 
-                     {#if edit}
-                     <button
-                         class="text-white bg-blue-700 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                         type="submit">
-                         Submit
-                     </button>
-                     {/if}
+                    {#if edit}
+                        {#if processing}
+                            <button
+                                class="text-white bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                                type="submit" disabled>
+                                <icon class="fa-solid fa-spinner fa-spin-pulse fa-xl mr-1"></icon>
+                                Processing..
+                            </button>
+                        {:else}
+                            <button
+                                class="text-white bg-blue-700 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                                type="submit">
+                                Submit
+                            </button>
+                        {/if}
+                    {/if}
                 </form>
             </div>
         </div>

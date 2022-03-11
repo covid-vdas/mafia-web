@@ -31,6 +31,7 @@
     let table_properties = [
         "No.",
         "username",
+        "fullname",
         "email",
         "phone",
         "birthdate",
