@@ -4,7 +4,7 @@
 	import 'bootstrap-icons/font/bootstrap-icons.css'
     import 'nprogress/nprogress.css'
 	import '../app.css';
-    import { user, token } from '../stores'
+    import { SvelteToast } from '@zerodevx/svelte-toast'
     import AdminNavbar from "components/Navbars/AdminNavbar.svelte";
     import Sidebar from "components/Sidebar/Sidebar.svelte";
 	import FooterAdmin from'components/Footers/FooterAdmin.svelte'
@@ -30,6 +30,7 @@
 	<script src="https://kit.fontawesome.com/3c27956f64.js" crossorigin="anonymous"></script>
 </svelte:head>
 
+<SvelteToast options={{ reversed: true, intro: { y: 192 } }}/>
 <main>
     <Sidebar />
     <div class="relative md:ml-64 bg-blueGray-100">
@@ -41,4 +42,13 @@
     </div>
 </main>
 
+<style>
+    :root {
+      --toastContainerTop: auto;
+      --toastContainerRight: auto;
+      --toastContainerBottom: 8rem;
+      --toastContainerLeft: calc(90vw - 8rem);
+      --toastBorderRadius: 0.25rem;
+    }
+  </style>
 

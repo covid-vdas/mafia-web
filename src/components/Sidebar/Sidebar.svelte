@@ -69,28 +69,28 @@
         </li>
 
         <li class="items-center">
-          <a href="/management/user/list" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/management/user/*' ? 'text-blue-700':''}">
+          <a href="/management/user/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/user\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
             <i class="fas fa-users mr-2 text-sm"></i>
             User Management
           </a>
         </li>
 
         <li class="items-center">
-          <a href="/management/role/list" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/management/role'? 'text-blue-700':''}">
+          <a href="/management/role/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/role\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
             <i class="fas fa-user-gear mr-2 text-sm"></i>
             Role Management
           </a>
         </li>
 
         <li class="items-center">
-          <a href="/management/report/list" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/management/report'? 'text-blue-700':''}">
+          <a href="/management/report/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/report\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
             <i class="fa-solid fa-square-poll-horizontal mr-3 text-sm"></i>
             Reports
           </a>
         </li>
 
         <li class="items-center">
-          <a href="/management/area/list" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/management/area'? 'text-blue-700':''}">
+          <a href="/management/area/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/area\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
             <i class="fas fa-map-marked mr-2 text-sm"></i>
             Area Management
           </a>

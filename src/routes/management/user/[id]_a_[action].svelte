@@ -17,6 +17,7 @@
 
         return{
             props: {
+                token: token_value,
                 user: user,
                 edit: edit,
             }
@@ -25,14 +26,30 @@
 </script>
 
 <script>
+    import { toast } from '@zerodevx/svelte-toast';
+
     export let edit;
-    
+    export let token;
     export let user;
     
     user.birthdate = new Date(user.birthdate).toLocaleDateString();
 
-    const handleSubmit = () =>{
+    const handleSubmit = async () =>{
+        const response = await fetch(API_URL+"user/"+params.id+"/",{
+            method : "POST",
+            headers : {
+                "Content-type": "application/json",
+                "Authorization": "Bearer "+ token_value,
+            }
+        });
         console.log(user);
+        toast.push("Success", {
+            theme: {
+                '--toastBackground':'green',
+                '--toastBarBackground': 'olive',
+                
+            }
+        });
     }
 </script>
 
