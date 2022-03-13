@@ -9,6 +9,7 @@
     "preview": "svelte-kit preview"
   },
   "dependencies": {
+    "@beyonk/svelte-datepicker": "^12.0.0",
     "@fontsource/fira-mono": "^4.5.0",
     "@lukeed/uuid": "^2.0.0",
     "@tailwindcss/forms": "^0.4.0",
@@ -26,6 +27,7 @@
     "autoprefixer": "^10.4.2",
     "bootstrap": "^5.1.3",
     "bootstrap-icons": "^1.7.2",
+    "date-picker-svelte": "^2.0.0",
     "install": "^0.13.0",
     "normalize.css": "^8.0.1",
     "npm": "^8.5.1",

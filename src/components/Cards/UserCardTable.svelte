@@ -1,5 +1,8 @@
 <script>
   // core components
+  import {API_URL} from "utils/constant.js";
+  import {token} from "../../stores.js";
+  import { toast } from '@zerodevx/svelte-toast';
   import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
   import { goto } from '$app/navigation';
 
@@ -10,15 +13,98 @@
   export let data;
   export let action_list;
 
+  let token_value;
+  token.subscribe((t) => (token_value = t));
+
   function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
 function userAction(action, user) {
   switch (action) {
     case 'enable':
+    fetch(API_URL+"user/"+user.id+"/",{
+            method : "PATCH",
+            headers : {
+                "Content-type": "application/json",
+                "Authorization": "Bearer "+ token_value,
+            },
+            body : JSON.stringify({
+                "is_active": true,
+            }),
+        }).then(
+            response => {
+                if(response.status == 200 || response.status == 201){
+                    toast.push("Enable User Successful", {
+                        theme: {
+                            '--toastBackground':'white',
+                            '--toastBarBackground': 'green',
+                            '--toastColor': 'black',
+                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                        }
+                    });
+                }else{
+                    console.log(response);
+                    toast.push("Enable User Unsuccessful", {
+                        theme: {
+                            '--toastBackground':'red',
+                            '--toastBarBackground': 'orange',
+                            
+                        }
+                    });
+                }
+            }).catch (error =>{
+                toast.push("Enable User Unsuccessful", {
+                        theme: {
+                            '--toastBackground':'red',
+                            '--toastBarBackground': 'orange',
+                            
+                        }
+                    });
+                console.log(error);
+            });
       break;
     case 'disable':
+        fetch(API_URL+"user/"+user.id+"/",{
+            method : "PATCH",
+            headers : {
+                "Content-type": "application/json",
+                "Authorization": "Bearer "+ token_value,
+            },
+            body : JSON.stringify({
+                "is_active": false,
+            }),
+        }).then(
+            response => {
+                if(response.status == 200 || response.status == 201){
+                    toast.push("Disable User Successful", {
+                        theme: {
+                            '--toastBackground':'white',
+                            '--toastBarBackground': 'green',
+                            '--toastColor': 'black',
+                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                        }
+                    });
+                }else{
+                    console.log(response);
+                    toast.push("Disable User Unsuccessful", {
+                        theme: {
+                            '--toastBackground':'red',
+                            '--toastBarBackground': 'orange',
+                            
+                        }
+                    });
+                }
+            }).catch (error =>{
+                toast.push("Disable User Unsuccessful", {
+                        theme: {
+                            '--toastBackground':'red',
+                            '--toastBarBackground': 'orange',
+                            
+                        }
+                    });
+                console.log(error);
+            });
       break;
     case 'view':
       goto("/management/user/"+user.id+"_a_v");

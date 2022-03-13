@@ -12,14 +12,25 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
+        
+        const response_role = await fetch(API_URL+"role/",{
+            method : "GET",
+            headers : {
+                "Content-type": "application/json",
+                "Authorization": "Bearer "+ token_value,
+            }
+        });
+
         const edit = params.action == "e"? true : false;
         const user = response.ok && (await response.json());
+        const role = response_role.ok && (await response_role.json());
 
         return{
             props: {
                 token: token_value,
                 user: user,
                 edit: edit,
+                role: role,
             }
         };
     }
@@ -31,9 +42,13 @@
     export let edit;
     export let token;
     export let user;
+    export let role;
     let processing = false;
-    
-    user.birthdate = new Date(user.birthdate).toLocaleDateString();
+    // user.birthdate = new Date(user.birthdate).toLocaleDateString();
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
     const handleSubmit = async () =>{
         processing = true;
@@ -46,11 +61,12 @@
             body : JSON.stringify({
                 'fullname' : user.fullname,
                 'phone' : user.phone,
+                'role_id' : user.role_id.id,
             }),
         }).then(
             response => {
                 processing = false;
-                if(response.status == 201){
+                if(response.status == 200 || response.status == 201){
                     toast.push("Update User Successful", {
                         theme: {
                             '--toastBackground':'white',
@@ -60,6 +76,7 @@
                         }
                     });
                 }else{
+                    console.log(response);
                     toast.push("Update User Unsuccessful", {
                         theme: {
                             '--toastBackground':'red',
@@ -112,14 +129,22 @@
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-birthdate">
                         birthdate
                     </label>
-                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-birthdate" bind:value={user.birthdate} disabled={!edit}/>
+                    <input type="date" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none" id="info-birthdate" bind:value={user.birthdate} on:keydown={(e) => {
+                        e.preventDefault();
+                    }} disabled={!edit} required/>
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
                         Role
                     </label>
-                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none"  id="info-role" bind:value={user.role_id} disabled={!edit}/>
+                    <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none" bind:value={user.role_id.id} disabled={!edit}>
+                        {#each role as r}
+                            <option value={r.id} selected>
+                                {capitalizeFirstLetter(r.name)}
+                            </option>
+                        {/each}
+                    </select>
 
                     {#if edit}
                         {#if processing}
