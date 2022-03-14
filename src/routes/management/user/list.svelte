@@ -65,11 +65,6 @@
     ]
     
     export let users;
-
-    const handleClick = () =>{
-        console.log(users);
-        alert("Chao Nhung Em be hieu hoc");
-    }
 </script>
 
 <section class="relative w-full h-full py-40 min-h-screen">
@@ -78,6 +73,5 @@
             <UserCardTable table_title={table_title} table_properties={table_properties} action_list={action_list} data={users} color="light"/>
         </div>
     </div>
-    <button class="btn bg-slate-500 text-white" on:click={handleClick}>Click Me</button>
 </section>
 
