@@ -1,7 +1,7 @@
 <script>
   // core components
   import {API_URL} from "utils/constant.js";
-  import {token} from "../../stores.js";
+  import { token } from "../../stores.js";
   import { toast } from '@zerodevx/svelte-toast';
   import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
   import { goto } from '$app/navigation';
@@ -12,6 +12,7 @@
   export let table_properties;
   export let data;
   export let action_list;
+  export let user_object;
 
   let token_value;
   token.subscribe((t) => (token_value = t));
@@ -113,6 +114,9 @@ function userAction(action, user) {
       goto("/management/user/"+user.id+"_a_e");
       break;
     case 'delete':
+      console.log(user);
+      console.log("---------------------");
+      console.log(user_object);
       break;
     default:    
   }
@@ -150,80 +154,82 @@ function userAction(action, user) {
       </thead>
       <tbody>
         {#each data as d, i}
-        <tr>
-          <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-            <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-              {i+1}
-            </span>
-          </td>
-          <td
-            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-          >
-            {d.username}
-          </td>
-          <td
-            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-          >
-            {d.fullname}
-          </td>
-          <td
-            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-          >
-            {d.email}
-          </td>
-          <td
-            class="border-t-0 text-center px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-          >
-            {d.phone}
-          </td>
-          <td
-            class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-          >
-            {new Date(d.birthdate).toLocaleDateString()}
-          </td>
-          <td
-            class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-          >
-            {capitalizeFirstLetter(d.role_id.name)}
-          </td>
-          <td
-            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-          >
-            {#if d.is_active}
-              <div> <i class="fas fa-circle text-emerald-500 mr-2"></i>Actived</div>
-            {:else}
-              <div> <i class="fas fa-circle text-rose-500 mr-2"></i>Deactived</div>
-            {/if}
-          </td>
-          <td
-            class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-          >
-            {new Date(d.updated_at).toLocaleString()}
-          </td>
-          <td
-            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
-          >
-            {#each action_list as action}
-              {#if action.name == "delete" && !d.is_active}
-                <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
-                  <icon class={action.icon}></icon>
-                </button>
-              {:else if action.name == "enable" && !d.is_active}
-                <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-emerald-600 hover:text-emerald-400">
-                  <icon class={action.icon}></icon>
-                </button>
-              {:else if action.name == "disable" && d.is_active}
-                <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
-                  <icon class={action.icon}></icon>
-                </button>
-              {:else if action.name != "disable" && action.name != "enable" && action.name != "delete"}
-                <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-blue-800 hover:text-blue-400">
-                  <icon class={action.icon}></icon>
-                </button>
-              {/if}
-            {/each}
-          </td>
-        </tr>
+          {#if d.username != user_object.username}
+            <tr>
+              <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
+                  {i+1}
+                </span>
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {d.username}
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {d.fullname}
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {d.email}
+              </td>
+              <td
+                class="border-t-0 text-center px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {d.phone}
+              </td>
+              <td
+                class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {new Date(d.birthdate).toLocaleDateString()}
+              </td>
+              <td
+                class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {capitalizeFirstLetter(d.role_id.name)}
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {#if d.is_active}
+                  <div> <i class="fas fa-circle text-emerald-500 mr-2"></i>Actived</div>
+                {:else}
+                  <div> <i class="fas fa-circle text-rose-500 mr-2"></i>Deactived</div>
+                {/if}
+              </td>
+              <td
+                class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {new Date(d.updated_at).toLocaleString()}
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
+              >
+                {#each action_list as action}
+                  {#if action.name == "delete" && !d.is_active}
+                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
+                      <icon class={action.icon}></icon>
+                    </button>
+                  {:else if action.name == "enable" && !d.is_active}
+                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-emerald-600 hover:text-emerald-400">
+                      <icon class={action.icon}></icon>
+                    </button>
+                  {:else if action.name == "disable" && d.is_active}
+                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
+                      <icon class={action.icon}></icon>
+                    </button>
+                  {:else if action.name != "disable" && action.name != "enable" && action.name != "delete"}
+                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-blue-800 hover:text-blue-400">
+                      <icon class={action.icon}></icon>
+                    </button>
+                  {/if}
+                {/each}
+              </td>
+            </tr>
+          {/if}     
         {/each}   
       </tbody>
     </table>

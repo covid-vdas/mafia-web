@@ -1,8 +1,9 @@
 <script context="module">
     import {API_URL} from "utils/constant.js";
-    import {token} from "../../../stores.js"
+    import {token, user} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({fetch}){
+
         let token_value;
         console.log("Loading");
         token.subscribe((t) => (token_value = t));
@@ -15,9 +16,19 @@
         });
         const users = response.ok && (await response.json());
 
+
+        let user_value;
+        let user_object;
+        user.subscribe((u) => (user_value = u));
+
+        if (user_value) {
+            user_object = JSON.parse(user_value);
+        }
+
         return{
             props: {
                 users: users,
+                user_object: user_object,
             }
         };
     }
@@ -68,9 +79,10 @@
     ]
     
     export let users;
+    export let user_object;
 
     const handleClick = () =>{
-        console.log(users);
+        console.log(user_object);
         open(Popup, {message:"Chao Nhung Em Be Hieu Hoc"});
     }
 </script>
@@ -78,7 +90,7 @@
 <section class="relative w-full h-full py-40 min-h-screen">
     <div class="flex flex-wrap mt-4">
         <div class="w-full mb-12 px-4">
-            <UserCardTable table_title={table_title} table_properties={table_properties} action_list={action_list} data={users} color="light"/>
+            <UserCardTable table_title={table_title} table_properties={table_properties} action_list={action_list} data={users} user_object={user_object} color="light"/>
         </div>
     </div>
     <button class="btn bg-slate-500 text-white" on:click={handleClick}>Click Me</button>
