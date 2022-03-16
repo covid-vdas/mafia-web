@@ -1,14 +1,16 @@
 <script>
-	import 'normalize.css/normalize.css'
-	import 'bootstrap/dist/css/bootstrap.css'
-	import 'bootstrap-icons/font/bootstrap-icons.css'
-    import 'nprogress/nprogress.css'
+	import 'normalize.css/normalize.css';
+	import 'bootstrap/dist/css/bootstrap.css';
+	import 'bootstrap-icons/font/bootstrap-icons.css';
+    import 'nprogress/nprogress.css';
 	import '../app.css';
-    import { SvelteToast } from '@zerodevx/svelte-toast'
+    import { browser } from '$app/env';
+    import Modal from 'svelte-simple-modal'; 
+    import { SvelteToast } from '@zerodevx/svelte-toast';
     import AdminNavbar from "components/Navbars/AdminNavbar.svelte";
     import Sidebar from "components/Sidebar/Sidebar.svelte";
-	import FooterAdmin from'components/Footers/FooterAdmin.svelte'
-	import NProgress from 'nprogress'
+	import FooterAdmin from'components/Footers/FooterAdmin.svelte';
+	import NProgress from 'nprogress';
 
 	NProgress.configure({
         minimum: 0.1,
@@ -30,17 +32,22 @@
 	<script src="https://kit.fontawesome.com/3c27956f64.js" crossorigin="anonymous"></script>
 </svelte:head>
 
-<SvelteToast options={{ reversed: true, intro: { y: 192 } }}/>
-<main>
-    <Sidebar />
-    <div class="relative md:ml-64 bg-blueGray-100">
-        <AdminNavbar />
-        <div class="px-4 md:px-10 mx-auto w-full -m-24">
-            <slot />
-        </div>
-        <FooterAdmin />
-    </div>
-</main>
+
+{#if browser}
+    <SvelteToast options={{ reversed: true, intro: { y: 192 } }} />
+    <Modal>
+        <main>
+            <Sidebar />
+            <div class="relative md:ml-64 bg-blueGray-100">
+                <AdminNavbar />
+                <div class="px-4 md:px-10 mx-auto w-full -m-24">
+                    <slot />
+                </div>
+                <FooterAdmin />
+            </div>
+        </main>
+    </Modal>
+{/if}
 
 <style>
     :root {
