@@ -25,6 +25,9 @@
 
 <script>
     import UserCardTable from "components/Cards/UserCardTable.svelte";
+    import { getContext } from 'svelte';
+    import Popup from './Popup.svelte';
+    const { open } = getContext('simple-modal');
 
     let table_title = "Users";
 
@@ -68,7 +71,7 @@
 
     const handleClick = () =>{
         console.log(users);
-        alert("Chao Nhung Em be hieu hoc");
+        open(Popup, {message:"Chao Nhung Em Be Hieu Hoc"});
     }
 </script>
 
