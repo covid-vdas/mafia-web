@@ -35,7 +35,11 @@
 
 {#if browser}
     <SvelteToast options={{ reversed: true, intro: { y: 192 } }} />
-    <Modal>
+    <Modal unstyled={true} closeButton={false}
+    classBg="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex"
+    classWindowWrap=""
+    classWindow=""
+    classContent="">
         <main>
             <Sidebar />
             <div class="relative md:ml-64 bg-blueGray-100">

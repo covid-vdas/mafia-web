@@ -37,8 +37,8 @@
 <script>
     import UserCardTable from "components/Cards/UserCardTable.svelte";
     import { getContext } from 'svelte';
-    import Popup from './Popup.svelte';
-    const { open } = getContext('simple-modal');
+    import Confirmation from 'components/Modals/Confirmation.svelte';
+    const { open, close } = getContext('simple-modal');
 
     let table_title = "Users";
 
@@ -83,7 +83,15 @@
 
     const handleClick = () =>{
         console.log(user_object);
-        open(Popup, {message:"Chao Nhung Em Be Hieu Hoc"});
+        open(Confirmation, {message:"Chao Nhung Em Be Hieu Hoc",
+                            title:"Confirmation",
+                            btn_title:"Yes",
+                            handleClick: () => {
+                                alert("Confirmation");
+                            },
+                            closeModal: () => {
+                                close(Confirmation);
+                            }});
     }
 </script>
 

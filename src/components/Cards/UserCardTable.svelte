@@ -5,6 +5,9 @@
   import { toast } from '@zerodevx/svelte-toast';
   import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
   import { goto } from '$app/navigation';
+  import { getContext } from 'svelte';
+  import Confirmation from 'components/Modals/Confirmation.svelte';
+  
 
   // can be one of light or dark
   export let color = "light";
@@ -13,6 +16,11 @@
   export let data;
   export let action_list;
   export let user_object;
+
+  const { open, close } = getContext('simple-modal');
+
+  let index = 0;
+  const increment = () => index += 1;
 
   let token_value;
   token.subscribe((t) => (token_value = t));
@@ -24,88 +32,111 @@
 function userAction(action, user) {
   switch (action) {
     case 'enable':
-    fetch(API_URL+"user/"+user.id+"/",{
-            method : "PATCH",
-            headers : {
-                "Content-type": "application/json",
-                "Authorization": "Bearer "+ token_value,
+      open(Confirmation, {
+        message: "Do you want to enable this user.",
+        title: "Confirmation",
+        btn_title: "Yes",
+        handleClick: () => {
+          fetch(API_URL + "user/" + user.id + "/", {
+            method: "PATCH",
+            headers: {
+              "Content-type": "application/json",
+              "Authorization": "Bearer " + token_value,
             },
-            body : JSON.stringify({
-                "is_active": true,
+            body: JSON.stringify({
+              "is_active": true,
             }),
-        }).then(
+          }).then(
             response => {
-                if(response.status == 200 || response.status == 201){
-                    toast.push("Enable User Successful", {
-                        theme: {
-                            '--toastBackground':'white',
-                            '--toastBarBackground': 'green',
-                            '--toastColor': 'black',
-                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                        }
-                    });
-                }else{
-                    console.log(response);
-                    toast.push("Enable User Unsuccessful", {
-                        theme: {
-                            '--toastBackground':'red',
-                            '--toastBarBackground': 'orange',
-                            
-                        }
-                    });
-                }
-            }).catch (error =>{
+              if (response.status == 200 || response.status == 201) {
+                close(Confirmation)
+                toast.push("Enable User Successful", {
+                  theme: {
+                    '--toastBackground': 'white',
+                    '--toastBarBackground': 'green',
+                    '--toastColor': 'black',
+                    '--toastBoxShadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                  }
+                });
+              } else {
+                close(Confirmation)
+                console.log(response);
                 toast.push("Enable User Unsuccessful", {
-                        theme: {
-                            '--toastBackground':'red',
-                            '--toastBarBackground': 'orange',
-                            
-                        }
-                    });
-                console.log(error);
+                  theme: {
+                    '--toastBackground': 'red',
+                    '--toastBarBackground': 'orange',
+
+                  }
+                });
+              }
+            }).catch(error => {
+              close(Confirmation);
+            toast.push("Enable User Unsuccessful", {
+              theme: {
+                '--toastBackground': 'red',
+                '--toastBarBackground': 'orange',
+
+              }
             });
+            console.log(error);
+          });
+        },
+        closeModal: () => {
+          close(Confirmation);
+        }
+      });
       break;
     case 'disable':
-        fetch(API_URL+"user/"+user.id+"/",{
-            method : "PATCH",
-            headers : {
-                "Content-type": "application/json",
-                "Authorization": "Bearer "+ token_value,
+      open(Confirmation, {
+        message: "Do you want to disable this user.",
+        title: "Confirmation",
+        btn_title: "Yes",
+        handleClick: () => {
+          fetch(API_URL + "user/" + user.id + "/", {
+            method: "PATCH",
+            headers: {
+              "Content-type": "application/json",
+              "Authorization": "Bearer " + token_value,
             },
-            body : JSON.stringify({
-                "is_active": false,
+            body: JSON.stringify({
+              "is_active": false,
             }),
-        }).then(
+          }).then(
             response => {
-                if(response.status == 200 || response.status == 201){
-                    toast.push("Disable User Successful", {
-                        theme: {
-                            '--toastBackground':'white',
-                            '--toastBarBackground': 'green',
-                            '--toastColor': 'black',
-                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                        }
-                    });
-                }else{
-                    console.log(response);
-                    toast.push("Disable User Unsuccessful", {
-                        theme: {
-                            '--toastBackground':'red',
-                            '--toastBarBackground': 'orange',
-                            
-                        }
-                    });
-                }
-            }).catch (error =>{
+              if (response.status == 200 || response.status == 201) {
+                close(Confirmation);
+                toast.push("Disable User Successful", {
+                  theme: {
+                    '--toastBackground': 'white',
+                    '--toastBarBackground': 'green',
+                    '--toastColor': 'black',
+                    '--toastBoxShadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                  }
+                });
+              } else {
+                close(Confirmation);
+                console.log(response);
                 toast.push("Disable User Unsuccessful", {
-                        theme: {
-                            '--toastBackground':'red',
-                            '--toastBarBackground': 'orange',
-                            
-                        }
-                    });
-                console.log(error);
+                  theme: {
+                    '--toastBackground': 'red',
+                    '--toastBarBackground': 'orange',
+
+                  }
+                });
+              }
+            }).catch(error => {
+              close(Confirmation);
+            toast.push("Disable User Unsuccessful", {
+              theme: {
+                '--toastBackground': 'red',
+                '--toastBarBackground': 'orange',
+
+              }
             });
+            console.log(error);
+          });
+        }
+      });
       break;
     case 'view':
       goto("/management/user/"+user.id+"_a_v");
@@ -153,12 +184,12 @@ function userAction(action, user) {
         </tr>
       </thead>
       <tbody>
-        {#each data as d, i}
+        {#each data as d}
           {#if d.username != user_object.username}
             <tr>
               <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                  {i+1}
+                  {increment()}
                 </span>
               </td>
               <td
