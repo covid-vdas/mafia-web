@@ -50,6 +50,11 @@
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    async function reloadData(){
+        await invalidate(API_URL+"user/");
+    }
+
+
     const handleSubmit = async () =>{
         processing = true;
         const response = await fetch(API_URL+"user/"+user.id+"/",{
@@ -67,6 +72,7 @@
             response => {
                 processing = false;
                 if(response.status == 200 || response.status == 201){
+                    reloadData();
                     toast.push("Update User Successful", {
                         theme: {
                             '--toastBackground':'white',
@@ -79,8 +85,10 @@
                     console.log(response);
                     toast.push("Update User Unsuccessful", {
                         theme: {
-                            '--toastBackground':'red',
-                            '--toastBarBackground': 'orange',
+                            '--toastBackground':'white',
+                            '--toastBarBackground': 'red',
+                            '--toastColor': 'black',
+                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
                             
                         }
                     });
@@ -88,9 +96,10 @@
             }).catch (error =>{
                 toast.push("Update User Unsuccessful", {
                         theme: {
-                            '--toastBackground':'red',
-                            '--toastBarBackground': 'orange',
-                            
+                            '--toastBackground':'white',
+                            '--toastBarBackground': 'red',
+                            '--toastColor': 'black',
+                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
                         }
                     });
                 console.log(error);
