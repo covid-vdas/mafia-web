@@ -181,7 +181,7 @@
         <h3
           class="font-semibold text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
         >
-          {table_title}
+          {table_title}s
         </h3>
       </div>
     </div>
@@ -257,20 +257,16 @@
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
               >
                 {#each action_list as action}
-                  {#if action.name == "delete" && !d.is_active}
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
-                      <icon class={action.icon}></icon>
-                    </button>
-                  {:else if action.name == "enable" && !d.is_active}
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-emerald-600 hover:text-emerald-400">
+                  {#if (action.name == "enable"  || action.name == "delete") && !d.is_active}
+                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}}">
                       <icon class={action.icon}></icon>
                     </button>
                   {:else if action.name == "disable" && d.is_active}
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-rose-600 hover:text-rose-400">
+                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
                       <icon class={action.icon}></icon>
                     </button>
                   {:else if action.name != "disable" && action.name != "enable" && action.name != "delete"}
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 text-blue-800 hover:text-blue-400">
+                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
                       <icon class={action.icon}></icon>
                     </button>
                   {/if}
@@ -281,5 +277,12 @@
         {/each}   
       </tbody>
     </table>
+  </div>
+  <div class="rounded-t mb-0 px-4 py-3 border-0">
+    <div class="flex flex-wrap items-center">
+      <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+        <a href="/management/user/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>
+      </div>
+    </div>
   </div>
 </div>

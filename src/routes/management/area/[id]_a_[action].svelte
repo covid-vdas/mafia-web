@@ -5,7 +5,7 @@
     export async function load({fetch, params}){
         let token_value;
         token.subscribe((t) => (token_value = t));
-        const response = await fetch(API_URL+"user/"+params.id+"/",{
+        const response = await fetch(API_URL+"area/"+params.id+"/",{
             method : "GET",
             headers : {
                 "Content-type": "application/json",
@@ -13,24 +13,14 @@
             }
         });
         
-        const response_role = await fetch(API_URL+"role/",{
-            method : "GET",
-            headers : {
-                "Content-type": "application/json",
-                "Authorization": "Bearer "+ token_value,
-            }
-        });
-
         const edit = params.action == "e"? true : false;
-        const user = response.ok && (await response.json());
-        const role = response_role.ok && (await response_role.json());
+        const data = response.ok && (await response.json());
 
         return{
             props: {
                 token: token_value,
-                user: user,
                 edit: edit,
-                role: role,
+                data: data,
             }
         };
     }
@@ -42,40 +32,27 @@
 
     export let edit;
     export let token;
-    export let user;
-    export let role;
+    export let data;
     let processing = false;
-    // user.birthdate = new Date(user.birthdate).toLocaleDateString();
-
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    async function reloadData(){
-        await invalidate(API_URL+"user/");
-    }
+    let color = "bg-slate-100"
 
 
     const handleSubmit = async () =>{
         processing = true;
-        const response = await fetch(API_URL+"user/"+user.id+"/",{
+        const response = await fetch(API_URL+"area/"+data.id+"/",{
             method : "PATCH",
             headers : {
                 "Content-type": "application/json",
                 "Authorization": "Bearer "+ token,
             },
             body : JSON.stringify({
-                'fullname' : user.fullname,
-                'phone' : user.phone,
-                'role_id' : user.role_id.id,
-                'birthdate' : new Date(user.birthdate).toISOString().slice(0, 10),
+                'name' : data.name,
             }),
         }).then(
             response => {
                 processing = false;
                 if(response.status == 200 || response.status == 201){
-                    reloadData();
-                    toast.push("Update User Successful", {
+                    toast.push("Update Area Successful", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'green',
@@ -83,10 +60,10 @@
                             '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
                         }
                     });
-                    goto("/management/user/list")
+                    goto("/management/area/list")
                 }else{
                     console.log(response);
-                    toast.push("Update User Unsuccessful", {
+                    toast.push("Update Area Unsuccessful", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -97,7 +74,7 @@
                     });
                 }
             }).catch (error =>{
-                toast.push("Update User Unsuccessful", {
+                toast.push("Update Area Unsuccessful", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -117,46 +94,14 @@
             <div
                 class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    {#if edit}Edit{/if} User Information
+                    {#if edit}Edit{/if} Area Information
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
-                        Full Name
+                        Name
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={user.fullname} disabled={!edit}/>
-
-                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-email">
-                        Email
-                    </label>
-                    <input type="email" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-email" bind:value={user.email} disabled={!edit}/>
-
-                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-phone">
-                        Phone
-                    </label>
-                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-phone" bind:value={user.phone} disabled={!edit}/>
-
-                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-birthdate">
-                        birthdate
-                    </label>
-                    <input type="date" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-birthdate" bind:value={user.birthdate} on:keydown={(e) => {
-                        e.preventDefault();
-                    }} disabled={!edit} required pattern=""/>
-
-                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
-                        Role
-                    </label>
-                    <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" bind:value={user.role_id.id} disabled={!edit}>
-                        {#each role as r}
-                            <option value={r.id} selected>
-                                {capitalizeFirstLetter(r.name)}
-                            </option>
-                        {/each}
-                    </select>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={data.name} disabled={!edit}/>
 
                     {#if edit}
                         {#if processing}

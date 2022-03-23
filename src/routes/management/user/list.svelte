@@ -40,7 +40,7 @@
     import Confirmation from 'components/Modals/Confirmation.svelte';
     const { open, close } = getContext('simple-modal');
 
-    let table_title = "Users";
+    let table_title = "User";
 
     let table_properties = [
         "No.",
@@ -58,41 +58,34 @@
     let action_list = [
         {
             "name":"enable",
-            "icon":"fas fa-unlock"
+            "icon":"fas fa-unlock",
+            "color": "text-emerald-600 hover:text-emerald-400"
         },
         {
             "name":"disable",
-            "icon":"fas fa-lock"
+            "icon":"fas fa-lock",
+            "color": "text-rose-600 hover:text-rose-400"
         },
         {
             "name":"view",
-            "icon":"fas fa-circle-info"
+            "icon":"fas fa-circle-info",
+            "color": "text-blue-800 hover:text-blue-400"
         },
         {
             "name":"edit",
-            "icon":"fas fa-user-pen"
+            "icon":"fas fa-user-pen",
+            "color": "text-blue-800 hover:text-blue-400"
         },
         {
             "name":"delete",
-            "icon":"fas fa-trash"
+            "icon":"fas fa-trash",
+            "color": "text-rose-600 hover:text-rose-400"
         }
     ]
     
     export let users;
     export let user_object;
 
-    const handleClick = () =>{
-        console.log(user_object);
-        open(Confirmation, {message:"Chao Nhung Em Be Hieu Hoc",
-                            title:"Confirmation",
-                            btn_title:"Yes",
-                            handleClick: () => {
-                                alert("Confirmation");
-                            },
-                            closeModal: () => {
-                                close(Confirmation);
-                            }});
-    }
 </script>
 
 <section class="relative w-full h-full py-40 min-h-screen">
@@ -101,6 +94,5 @@
             <UserCardTable table_title={table_title} table_properties={table_properties} action_list={action_list} data={users} user_object={user_object} color="light"/>
         </div>
     </div>
-    <button class="btn bg-slate-500 text-white" on:click={handleClick}>Click Me</button>
 </section>
 
