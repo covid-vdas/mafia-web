@@ -90,7 +90,7 @@
         </li>
 
         <li class="items-center">
-          <a href="/management/area/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/area\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
+          <a href="/management/area/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/area\/)/.test($page.url.pathname) || /^(\/management\/camera\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
             <i class="fas fa-map-marked mr-2 text-sm"></i>
             Area Management
           </a>
