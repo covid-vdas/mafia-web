@@ -35,10 +35,10 @@
   function userAction(action, d) {
       switch (action) {
         case 'view':
-          goto("/management/area/" + d.id + "_a_v");
+          goto("/management/camera/" + d.id + "_a_v");
           break;
         case 'edit':
-          goto("/management/area/" + d.id + "_a_e");
+          goto("/management/camera/" + d.id + "_a_e");
           break;
         case 'delete':
         open(Confirmation, {
@@ -46,7 +46,7 @@
             title: "Confirmation",
             btn_title: "Yes",
             handleClick: () => {
-              fetch(API_URL + "area/" + d.id + "/", {
+              fetch(API_URL + "camera/" + d.id + "/", {
                 method: "DELETE",
                 headers: {
                   "Content-type": "application/json",
@@ -94,9 +94,6 @@
               close(Confirmation);
             }
           });
-          break;
-        case "detail":
-          goto("/management/camera/list_" + d.id );
           break;
         default:
       }

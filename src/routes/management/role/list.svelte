@@ -57,11 +57,11 @@
             "icon":"fas fa-pen",
             "color": "text-blue-800 hover:text-blue-400"
         },
-        {
-            "name":"delete",
-            "icon":"fas fa-trash",
-            "color": "text-rose-600 hover:text-rose-400"
-        }
+        // {
+        //     "name":"delete",
+        //     "icon":"fas fa-trash",
+        //     "color": "text-rose-600 hover:text-rose-400"
+        // }
     ]
     
     export let role;

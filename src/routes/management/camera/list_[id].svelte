@@ -7,7 +7,7 @@
         let token_value;
         console.log("Loading");
         token.subscribe((t) => (token_value = t));
-        const response = await fetch(API_URL+"area/",{
+        const response = await fetch(API_URL+"camera/",{
             method : "GET",
             headers : {
                 "Content-type": "application/json",
@@ -35,13 +35,14 @@
 </script>
 
 <script>
-    import AreaCardTable from "components/Cards/AreaCardTable.svelte";
+    import CameraCardTable from "components/Cards/CameraCardTable.svelte";
 
-    let table_title = "Area";
+    let table_title = "Camera";
 
     let table_properties = [
-        "id",
         "name",
+        "url",
+        "area id",
         "updated date",
         "action",
     ];
@@ -77,7 +78,7 @@
 <section class="relative w-full h-full py-40 min-h-screen">
     <div class="flex flex-wrap mt-4">
         <div class="w-full mb-12 px-4">
-            <AreaCardTable table_title={table_title} table_properties={table_properties} action_list={action_list} data={data} user_object={user_object} color="light"/>
+            <CameraCardTable table_title={table_title} table_properties={table_properties} action_list={action_list} data={data} user_object={user_object} color="light"/>
         </div>
     </div>
 </section>

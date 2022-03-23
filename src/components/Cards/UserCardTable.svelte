@@ -160,9 +160,59 @@
           goto("/management/user/" + user.id + "_a_e");
           break;
         case 'delete':
-          console.log(user);
-          console.log("---------------------");
-          console.log(user_object);
+        open(Confirmation, {
+            message: "Do you want to delete this user.",
+            title: "Confirmation",
+            btn_title: "Yes",
+            handleClick: () => {
+              fetch(API_URL + "user/" + user.id + "/", {
+                method: "DELETE",
+                headers: {
+                  "Content-type": "application/json",
+                  "Authorization": "Bearer " + token_value,
+                },
+              }).then(
+                response => {
+                  close(Confirmation);
+                  if (response.status == 200 || response.status == 201) {
+                    reloadData()
+                    toast.push("Delete user Successful", {
+                      theme: {
+                        '--toastBackground': 'white',
+                        '--toastBarBackground': 'green',
+                        '--toastColor': 'black',
+                        '--toastBoxShadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                      }
+                    });
+                  } else {
+                    console.log(response);
+                    toast.push("Delete user Unsuccessful", {
+                      theme: {
+                        '--toastBackground':'white',
+                        '--toastBarBackground': 'red',
+                        '--toastColor': 'black',
+                        '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                      }
+                    });
+                  }
+                }).catch(error => {
+                close(Confirmation);
+                toast.push("Delete user Unsuccessful", {
+                  theme: {
+                    '--toastBackground': 'white',
+                    '--toastBarBackground': 'red',
+                    '--toastColor': 'black',
+                    '--toastBoxShadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+
+                  }
+                });
+                console.log(error);
+              });
+            },
+            closeModal: () => {
+              close(Confirmation);
+            }
+          });
           break;
         default:
       }
