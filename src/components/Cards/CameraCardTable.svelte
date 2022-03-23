@@ -29,7 +29,7 @@
   }
 
   async function reloadData(){
-    await invalidate(API_URL+"area/");
+    await invalidate(API_URL+"camera/");
   }
 
   function userAction(action, d) {
@@ -99,7 +99,9 @@
       }
     }
 
-
+    const handleClick = (d) => {
+      goto("/management/camera/" + d.id + "_a_v");
+    }
 
 </script>
 
@@ -110,7 +112,7 @@
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
         <h3
-          class="font-semibold text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
+          class="font-bold text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
         >
           {table_title}s
         </h3>
@@ -118,55 +120,18 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
+    <div class="grid grid-cols-4 gap-4 p-3 text-center text-slate-700 font-bold">
+      {#each data as d}
+      <div class="bg-blue-200 rounded-lg p-4 cursor-pointer " on:click={handleClick(d)}>{d.name}</div>
+      {/each}
+    </div>
     <!-- Projects table -->
-    <table class="items-center w-full bg-transparent border-collapse">
-      <thead>
-        <tr>
-        {#each table_properties as prop}
-        <th
-          class="px-6 align-middle text-center border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold {color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-700 text-red-200 border-red-600'}"
-        >
-          {prop}
-        </th>
-        {/each}
-        </tr>
-      </thead>
-      <tbody>
-        {#each data as d}
-            <tr>
-              <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                  {d.id}
-                </span>
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {capitalizeFirstLetter(d.name)}
-              </td>
-              <td
-                class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {new Date(d.updated_at).toLocaleString()}
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
-              >
-                {#each action_list as action}
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
-                      <icon class={action.icon}></icon>
-                    </button>        
-                {/each}
-              </td>
-            </tr>   
-        {/each}   
-      </tbody>
-    </table>
+
   </div>
   <div class="rounded-t mb-0 px-4 py-3 border-0">
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-        <a href="/management/area/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>
+        <a href="/management/camera/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>
       </div>
     </div>
   </div>
