@@ -94,7 +94,7 @@
             <div
                 class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    {#if edit}Edit{/if} Area Information
+                    {#if edit}Edit{/if} Camera Information
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">

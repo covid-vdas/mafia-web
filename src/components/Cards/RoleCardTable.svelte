@@ -132,11 +132,11 @@
         </tr>
       </thead>
       <tbody>
-        {#each data as d}
+        {#each data as d,i}
             <tr>
               <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                  {d.id}
+                  {i+1}
                 </span>
               </td>
               <td
