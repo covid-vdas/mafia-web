@@ -26,11 +26,21 @@
 </script>
 
 <script>
+    import { toast } from '@zerodevx/svelte-toast';
+    import { goto } from '$app/navigation';
+
     export let role;
     export let token;
     
     const handleSubmit = () => {
-        console.log(user);
+        toast.push("Create User Successful", {
+                        theme: {
+                            '--toastBackground':'white',
+                            '--toastBarBackground': 'green',
+                            '--toastColor': 'black',
+                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                        }
+                    });
     }
     
     let processing = false;
