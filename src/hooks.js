@@ -1,6 +1,7 @@
 import cookie from 'cookie';
 import { v4 as uuid } from '@lukeed/uuid';
 
+/** @type {import('@sveltejs/kit').Handle}  */
 export const handle = async ({ event, resolve }) => {
 	
 	const cookies = cookie.parse(event.request.headers.cookie || '');
@@ -24,3 +25,8 @@ export const handle = async ({ event, resolve }) => {
 
 	return response;
 };
+
+
+// /** @type {import('@sveltejs/kit').GetSession} */
+// export function getSession(event) {
+//   }

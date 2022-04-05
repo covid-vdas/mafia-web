@@ -40,7 +40,7 @@
     let table_title = "Area";
 
     let table_properties = [
-        "id",
+        "No.",
         "name",
         "updated date",
         "action",

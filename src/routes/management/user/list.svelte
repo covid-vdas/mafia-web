@@ -45,12 +45,12 @@
     let table_properties = [
         "No.",
         "username",
-        "fullname",
+        "full name",
         "email",
         "phone",
         "birthdate",
         "role",
-        "active",
+        "status",
         "updated date",
         "action",
     ];

@@ -1,5 +1,4 @@
 <script>
-    import {API_URL} from "utils/constant.js";
     import { goto } from '$app/navigation';
     import { user, token } from "../../stores";
 
@@ -16,7 +15,7 @@
         'password' : password,
         };
         processing = true;
-        const response = await fetch(API_URL+"login/",{
+        const response = await fetch("api/login",{
             method : "POST",
             headers : {
                 "Content-type": "application/json",
@@ -25,6 +24,7 @@
         }).then(
             response => {
                 processing = false;
+                console.log(response)
                 if(response.status == 200){
                     error_status = false;
                     return response.json();
@@ -34,8 +34,7 @@
                 }
             }).then(responseData =>{
                 if(responseData){
-                    user.update((u) => u = JSON.stringify(responseData.data));
-                    token.update((t) => t = responseData.token);
+                    console.log(responseData);
                     goto("/");
                 } else {
 

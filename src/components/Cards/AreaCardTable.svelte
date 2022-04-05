@@ -20,9 +20,14 @@
 
 
   const { open, close } = getContext('simple-modal');
+  
+  
+  let index = 0;
+  const increment = () => index += 1;
 
   let token_value;
   token.subscribe((t) => (token_value = t));
+
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -138,8 +143,8 @@
         {#each data as d}
             <tr>
               <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                  {d.id}
+                <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
+                  {increment()}
                 </span>
               </td>
               <td
@@ -150,7 +155,7 @@
               <td
                 class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                {new Date(d.updated_at).toLocaleString()}
+                {new Date(d.updated_at).toLocaleString("vi-VN")}
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"

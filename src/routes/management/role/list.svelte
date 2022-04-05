@@ -40,7 +40,7 @@
     let table_title = "Role";
 
     let table_properties = [
-        "id",
+        "No.",
         "name",
         "updated date",
         "action",
@@ -52,16 +52,6 @@
             "icon":"fas fa-circle-info",
             "color": "text-blue-800 hover:text-blue-400"
         },
-        {
-            "name":"edit",
-            "icon":"fas fa-pen",
-            "color": "text-blue-800 hover:text-blue-400"
-        },
-        // {
-        //     "name":"delete",
-        //     "icon":"fas fa-trash",
-        //     "color": "text-rose-600 hover:text-rose-400"
-        // }
     ]
     
     export let role;

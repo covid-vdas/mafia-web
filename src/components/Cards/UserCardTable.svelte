@@ -254,8 +254,8 @@
         {#each data as d}
           {#if d.username != user_object.username}
             <tr>
-              <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
+              <td class="border-t-0 text-center px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <span class="{color === 'light' ? 'text-blueGray-600' : 'text-white'}">
                   {increment()}
                 </span>
               </td>
@@ -282,7 +282,7 @@
               <td
                 class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                {new Date(d.birthdate).toLocaleDateString()}
+                {new Date(d.birthdate).toLocaleDateString("vi-VN")}
               </td>
               <td
                 class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
@@ -293,15 +293,15 @@
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
                 {#if d.is_active}
-                  <div> <i class="fas fa-circle text-emerald-500 mr-2"></i>Actived</div>
+                  <div> <i class="fas fa-circle text-emerald-500 mr-2"></i>Active</div>
                 {:else}
-                  <div> <i class="fas fa-circle text-rose-500 mr-2"></i>Deactived</div>
+                  <div> <i class="fas fa-circle text-rose-500 mr-2"></i>Inactive</div>
                 {/if}
               </td>
               <td
                 class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                {new Date(d.updated_at).toLocaleString()}
+                {new Date(d.updated_at).toLocaleString("vi-VN")}
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"

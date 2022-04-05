@@ -135,19 +135,19 @@
         {#each data as d,i}
             <tr>
               <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span class="ml-3 {color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
+                <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
                   {i+1}
                 </span>
               </td>
               <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
                 {capitalizeFirstLetter(d.name)}
               </td>
               <td
                 class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                {new Date(d.updated_at).toLocaleString()}
+                {new Date(d.updated_at).toLocaleString("vi-VN")}
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
@@ -162,12 +162,5 @@
         {/each}   
       </tbody>
     </table>
-  </div>
-  <div class="rounded-t mb-0 px-4 py-3 border-0">
-    <div class="flex flex-wrap items-center">
-      <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-        <a href="/management/user/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>
-      </div>
-    </div>
   </div>
 </div>

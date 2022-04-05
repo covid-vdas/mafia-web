@@ -122,7 +122,12 @@
   <div class="block w-full overflow-x-auto">
     <div class="grid grid-cols-4 gap-4 p-3 text-center text-slate-700 font-bold">
       {#each data as d}
-      <div class="bg-blue-200 rounded-lg p-4 cursor-pointer " on:click={handleClick(d)}>{d.name}</div>
+      <div class="bg-blue-200 rounded-lg p-3 cursor-pointer " on:click={handleClick(d)}>
+        <div>
+          <img src={d.url} class="mb-3"/>
+        </div>
+        <div>{d.name}</div>
+      </div>
       {/each}
     </div>
     <!-- Projects table -->
