@@ -24,7 +24,6 @@
         }).then(
             response => {
                 processing = false;
-                console.log(response)
                 if(response.status == 200){
                     error_status = false;
                     return response.json();
@@ -33,11 +32,10 @@
                     error_status = true;
                 }
             }).then(responseData =>{
+                console.log(responseData)
                 if(responseData){
-                    console.log(responseData);
                     goto("/");
                 } else {
-
                 }
             }).catch (error =>{
                 error_status=true;

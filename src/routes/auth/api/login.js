@@ -6,6 +6,7 @@ export const post = async ({params, request}) =>{
     const form_data = await request.json();
     
     let res_data;
+    let res;
     const response = await fetch(API_URL+"login/",{
             method : "POST",
             headers : {
@@ -14,11 +15,10 @@ export const post = async ({params, request}) =>{
             body : JSON.stringify(form_data),
         }).then(
             response => {
-                console.log(response);
                 if(response.status == 200){
                     return response.json();
                 }else{
-                    return response;
+                    res = response;
                 }
             }).then(response_data =>{
                 if(response_data){
@@ -43,5 +43,7 @@ export const post = async ({params, request}) =>{
             },
             body: res_data
         }
+    }else{
+        return res;
     }     
 }

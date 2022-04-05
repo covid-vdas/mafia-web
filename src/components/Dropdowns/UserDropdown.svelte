@@ -1,5 +1,6 @@
 <script>
   // library for creating dropdown menu appear on click
+  import { goto } from '$app/navigation';
   import { createPopper } from "@popperjs/core";
   import {user} from "../../stores.js"
 
@@ -28,6 +29,23 @@
       });
     }
   };
+
+  const logout = async (event) => {
+    event.preventDefault();
+    alert("logout");
+    const response = await fetch('auth/api/logout',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    ).then(response =>{
+      console.log(response);
+      goto("/auth/login");
+      return response;
+    })
+  }
 </script>
 
 <div>
@@ -57,7 +75,7 @@
     </a>
     <div class="h-0 my-2 border border-solid border-blueGray-100" />
     <a
-      href="#pablo" on:click={(e) => e.preventDefault()}
+      href="#pablo" on:click={logout}
       class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
     >
       Sign Out
