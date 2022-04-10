@@ -2,7 +2,6 @@ import { parse, serialize } from 'cookie';
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export const post = async ({params, request}) => {
-    console.log("logout");
     return {
         status: 200,
         headers: {

@@ -32,7 +32,6 @@
 
   const logout = async (event) => {
     event.preventDefault();
-    alert("logout");
     const response = await fetch('auth/api/logout',
       {
         method: 'POST',

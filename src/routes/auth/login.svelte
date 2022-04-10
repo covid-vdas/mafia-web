@@ -10,6 +10,7 @@
 
 
     const handleLogin = async () => {
+        let valid = false;
         let data = {
         'username' : username,
         'password' : password,
@@ -32,9 +33,11 @@
                     error_status = true;
                 }
             }).then(responseData =>{
-                console.log(responseData)
                 if(responseData){
-                    goto("/");
+                    valid = true;
+                    user.update((u) => u = JSON.stringify(responseData.data));
+                    token.update((t) => t = responseData.token);
+                    console.log(responseData)
                 } else {
                 }
             }).catch (error =>{
@@ -42,6 +45,10 @@
                 console.log(error);
                 processing = false;
             });
+
+        if(valid){
+            goto("/");
+        }
     }
 </script>
 
