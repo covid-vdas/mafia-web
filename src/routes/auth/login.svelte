@@ -1,6 +1,26 @@
+<script context="module">
+
+    import {protectedRedirect} from "utils/constant.js";
+
+    /** @type {import('@sveltejs/kit').Load} */
+    export async function load({session}){
+        if(session.user){
+        return{
+            redirect:"/",
+            status: 303,
+        }
+    }
+
+        return {
+            status:200,
+        }
+    }
+</script>
+
 <script>
     import { goto } from '$app/navigation';
-    import { user, token } from "../../stores";
+    import { session } from '$app/stores';
+    import { user, token  } from "../../stores";
 
     let username = "";
     let password = "";
@@ -10,7 +30,6 @@
 
 
     const handleLogin = async () => {
-        let valid = false;
         let data = {
         'username' : username,
         'password' : password,
@@ -34,10 +53,10 @@
                 }
             }).then(responseData =>{
                 if(responseData){
-                    valid = true;
                     user.update((u) => u = JSON.stringify(responseData.data));
                     token.update((t) => t = responseData.token);
-                    console.log(responseData)
+                    $session.user = true;
+                    goto("/")
                 } else {
                 }
             }).catch (error =>{
@@ -45,10 +64,6 @@
                 console.log(error);
                 processing = false;
             });
-
-        if(valid){
-            goto("/");
-        }
     }
 </script>
 

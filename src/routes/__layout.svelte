@@ -1,18 +1,4 @@
-<script context="module">
-    /** @type {import('@sveltejs/kit').Load} */
-    export async function load({session}){
-        
-        if(!session.user){
-            return{
-                status: 302,
-                redirect: '/auth/login'
-            }
-        }
 
-        return{
-        };
-    }
-</script>
 
 <script>
 	import 'normalize.css/normalize.css';

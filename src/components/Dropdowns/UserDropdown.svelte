@@ -1,8 +1,9 @@
 <script>
   // library for creating dropdown menu appear on click
   import { goto } from '$app/navigation';
+  import {session} from '$app/stores';
   import { createPopper } from "@popperjs/core";
-  import {user} from "../../stores.js"
+  import {user, token} from "../../stores.js"
 
   let user_value;
   let user_object;
@@ -40,7 +41,9 @@
         },
       }
     ).then(response =>{
-      console.log(response);
+      user.update((u) => u = "");
+      token.update((t) => t = "");
+      $session.user = false;
       goto("/auth/login");
       return response;
     })

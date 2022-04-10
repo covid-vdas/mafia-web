@@ -1,3 +1,13 @@
+<script context="module">
+
+    import {protectedRedirect} from "utils/constant.js";
+
+    /** @type {import('@sveltejs/kit').Load} */
+    export async function load({session}){
+        return protectedRedirect(session,{});
+    }
+</script>
+
 <script>
 </script>
 
@@ -23,11 +33,6 @@
 		<a href="/image-detector" class="me-1">
 			<button class="btn btn-primary btn-lg">
 				<i class="bi bi-images" /> Detect images
-			</button>
-		</a>
-		<a href="/auth/login" class="me-1">
-			<button class="btn btn-success btn-lg">
-				<i class="fas fa-arrow-right-to-bracket"/> Login
 			</button>
 		</a>
 		<a href="/video-detector" class="ms-1">

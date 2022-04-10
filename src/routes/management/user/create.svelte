@@ -33,6 +33,7 @@
     export let token;
     
     const handleSubmit = () => {
+        console.log(user);
         toast.push("Create User Successful", {
                         theme: {
                             '--toastBackground':'white',
@@ -58,6 +59,7 @@
     }
 
     function capitalizeFirstLetter(string) {
+        console.log(string)
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     
@@ -122,9 +124,11 @@
                     <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none" bind:value={user.role_id.id} >
                         {#each role as r}
-                            <option value={r.id} selected>
-                                {capitalizeFirstLetter(r.name)}
-                            </option>
+                            {#if r.name != 'admin'}
+                                <option value={r.id}>
+                                    {capitalizeFirstLetter(r.name)}
+                                </option>
+                            {/if} 
                         {/each}
                     </select>
 
