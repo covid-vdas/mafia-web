@@ -103,7 +103,7 @@
                                             {error_status?'border-1 border-rose-500 focus:border-rose-600':'border-0 text-zinc-600 '}"
                                             placeholder="Password" bind:value="{password}" />
                                             {#if error_status}
-                                            <p class="text-rose-600 text-center mt-3 font-semibold">Your Credentials is invalid. Please try again.</p>
+                                                <p class="text-rose-600 text-center mt-3 font-semibold">Your Credentials is invalid. Please try again.</p>
                                             {/if}
                                     </div>
                                     <div class="text-center mt-6">

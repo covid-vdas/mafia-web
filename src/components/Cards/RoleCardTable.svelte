@@ -40,67 +40,9 @@
         case 'edit':
           goto("/management/role/" + role.id + "_a_e");
           break;
-        // case 'delete':
-        // open(Confirmation, {
-        //     message: "Do you want to delete this Area.",
-        //     title: "Confirmation",
-        //     btn_title: "Yes",
-        //     handleClick: () => {
-        //       fetch(API_URL + "role/" + role.id + "/", {
-        //         method: "DELETE",
-        //         headers: {
-        //           "Content-type": "application/json",
-        //           "Authorization": "Bearer " + token_value,
-        //         },
-        //       }).then(
-        //         response => {
-        //           close(Confirmation);
-        //           if (response.status == 200 || response.status == 201) {
-        //             reloadData()
-        //             toast.push("Delete Role Successful", {
-        //               theme: {
-        //                 '--toastBackground': 'white',
-        //                 '--toastBarBackground': 'green',
-        //                 '--toastColor': 'black',
-        //                 '--toastBoxShadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-        //               }
-        //             });
-        //           } else {
-        //             console.log(response);
-        //             toast.push("Delete Role Unsuccessful", {
-        //               theme: {
-        //                 '--toastBackground':'white',
-        //                 '--toastBarBackground': 'red',
-        //                 '--toastColor': 'black',
-        //                 '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-        //               }
-        //             });
-        //           }
-        //         }).catch(error => {
-        //         close(Confirmation);
-        //         toast.push("Delete Area Unsuccessful", {
-        //           theme: {
-        //             '--toastBackground': 'white',
-        //             '--toastBarBackground': 'red',
-        //             '--toastColor': 'black',
-        //             '--toastBoxShadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-
-        //           }
-        //         });
-        //         console.log(error);
-        //       });
-        //     },
-        //     closeModal: () => {
-        //       close(Confirmation);
-        //     }
-        //   });
-          // break;
         default:
       }
     }
-
-
-
 </script>
 
 <div

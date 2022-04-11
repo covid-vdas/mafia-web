@@ -33,7 +33,7 @@
 
   const logout = async (event) => {
     event.preventDefault();
-    const response = await fetch('auth/api/logout',
+    const response = fetch('/auth/api/logout',
       {
         method: 'POST',
         headers: {
@@ -61,7 +61,7 @@
       <span
         class="w-30 h-12 text-md text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full"
       >
-        Welcome, {#if user_object}{user_object.username}{/if}!
+        Welcome, {#if user_object}{user_object.username}{/if}! <i class="pl-3 fa-solid fa-angle-down"></i>
       </span>
     </div>
   </a>
@@ -73,14 +73,14 @@
       href="#pablo" on:click={(e) => e.preventDefault()}
       class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
     >
-      User Profile
+      <i class="fa-solid fa-user mr-4"></i> User Profile
     </a>
     <div class="h-0 my-2 border border-solid border-blueGray-100" />
     <a
       href="#pablo" on:click={logout}
       class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
     >
-      Sign Out
+    <i class="fa-solid fa-arrow-right-from-bracket mr-4"></i> Sign Out 
     </a>
   </div>
 </div>

@@ -1,4 +1,12 @@
+<script context="module">
 
+    import {protectedRedirect} from "utils/constant.js";
+
+    /** @type {import('@sveltejs/kit').Load} */
+    export async function load({session}){
+        return protectedRedirect(session,{});
+    }
+</script>
 
 <script>
 	import 'normalize.css/normalize.css';

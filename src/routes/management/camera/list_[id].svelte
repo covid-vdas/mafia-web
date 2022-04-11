@@ -2,12 +2,12 @@
     import {API_URL} from "utils/constant.js";
     import {token, user} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
-    export async function load({fetch}){
+    export async function load({fetch, params}){
 
         let token_value;
         console.log("Loading");
         token.subscribe((t) => (token_value = t));
-        const response = await fetch(API_URL+"camera/",{
+        const response = await fetch(API_URL+"camera/getAllCamera/"+params.id+"/",{
             method : "GET",
             headers : {
                 "Content-type": "application/json",

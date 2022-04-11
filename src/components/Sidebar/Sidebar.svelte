@@ -1,8 +1,18 @@
+
 <script>
   import { page } from "$app/stores"
-
-  // core component
+  import {user} from "../../stores.js"
   import UserDropdown from "components/Dropdowns/UserDropdown.svelte";
+  
+  let user_value;
+  let user_object;
+  user.subscribe((u) => (user_value = u));
+
+  if (user_value) {
+    user_object = JSON.parse(user_value);
+  }
+  
+  // console.log(user_object);
 
   let collapseShow = "hidden";
 
@@ -68,19 +78,24 @@
           </a>
         </li>
 
-        <li class="items-center">
-          <a href="/management/user/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/user\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
-            <i class="fas fa-users mr-2 text-sm"></i>
-            User Management
-          </a>
-        </li>
-
-        <li class="items-center">
-          <a href="/management/role/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/role\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
-            <i class="fas fa-user-gear mr-2 text-sm"></i>
-            Role Management
-          </a>
-        </li>
+        {#if user_object.role_id.name != "staff"}
+          <li class="items-center">
+            <a href="/management/user/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/user\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
+              <i class="fas fa-users mr-2 text-sm"></i>
+              User Management
+            </a>
+          </li>
+        {/if}
+       
+        {#if user_object.role_id.name == "admin"}
+          <li class="items-center">
+            <a href="/management/role/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/role\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
+              <i class="fas fa-user-gear mr-2 text-sm"></i>
+              Role Management
+            </a>
+          </li>
+        {/if}
+       
 
         <li class="items-center">
           <a href="/management/report/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/report\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
