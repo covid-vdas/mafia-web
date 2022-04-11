@@ -46,8 +46,9 @@
 
 <script>
     import { toast } from '@zerodevx/svelte-toast';
-    import { goto } from '$app/navigation';
+    import { goto, invalidate } from '$app/navigation';
     import SveltyPicker from 'svelty-picker';
+    import moment from 'moment';
 
     export let role;
     export let token;
@@ -55,6 +56,7 @@
     export let managers;
     export let is_admin;
     let username_valid = true;
+    let fullname_valid = true;
     let phone_valid = true;
     let email_valid = true;
     let confirm_pass_valid = true;
@@ -62,6 +64,7 @@
     let processing = false;
     let confirm_pass = "";
     let role_staff_index;
+    let role_manager_index;
     let user = {
         username: "",
         password: "",
@@ -77,8 +80,10 @@
     $: picker_theme = 'picker_theme';
     $: pass_message = "";
     $: username_message = "";
+    $: fullname_message = "";
 
-    const handleSubmit = () => {
+
+    const handleSubmit = async () => {
         processing = true;
 
         if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(user.email)){
@@ -98,35 +103,35 @@
 
         const isWhitespace = /^(?=.*\s)/;
         if (isWhitespace.test(user.password)) {
-            pass_message = "Password must not contain Whitespaces.";
+            pass_message = "Password must not contain Whitespaces";
             pass_valid = false;
         }
         
     
         const isContainsUppercase = /^(?=.*[A-Z])/;
         if (!isContainsUppercase.test(user.password)) {
-            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long.";
+            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long";
             pass_valid = false;
         }
     
     
         const isContainsLowercase = /^(?=.*[a-z])/;
         if (!isContainsLowercase.test(user.password)) {
-            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long.";
+            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long";
             pass_valid = false;
         }
     
     
         const isContainsNumber = /^(?=.*[0-9])/;
         if (!isContainsNumber.test(user.password)) {
-            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long.";
+            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long";
             pass_valid = false;
         }
     
     
         const isContainsSymbol = /^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹])/;
         if (!isContainsSymbol.test(user.password)) {
-            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long.";
+            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long";
             pass_valid = false;
         }
 
@@ -142,10 +147,16 @@
             username_valid = false;
         }
 
+        fullname_valid = true;
+        const isValidLength250 = /^.{2,50}$/;
+        if (!isValidLength250.test(user.fullname)) {
+            fullname_message = "Fullname must have at least 2 characters";
+            fullname_valid = false;
+        }
 
         const isValidLength = /^.{8,}$/;
         if (!isValidLength.test(user.password)) {
-            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long.";
+            pass_message = "Password must contain at least one Digit, one Uppercase, one Lowercase, one Special Symbol and 8 Characters Long";
             pass_valid = false;
         }
 
@@ -157,7 +168,38 @@
         }
 
         console.log(user);
-        toast.push("Create User Successful", {
+        
+        if( username_valid && fullname_valid && phone_valid && email_valid && confirm_pass_valid && pass_valid){
+            if(login_user.role_id.name == "manager"){
+                user.managed_by = login_user.id;
+                user.role_id = role[role_staff_index].id;
+            }else if(user.role_id.id == role[role_manager_index].id){
+                user.managed_by = login_user.id;
+            }
+
+            const response = await fetch(API_URL+"user/",{
+            method : "POST",
+            headers : {
+                "Content-type": "application/json",
+                "Authorization": "Bearer "+ token,
+            },
+            body : JSON.stringify({
+                'fullname' : user.fullname,
+                'phone' : user.phone,
+                'role_id' : user.role_id.id,
+                'email' : user.email,
+                'birthdate' : moment(user.birthdate, "DD/mm/yyyy").format("yyyy-mm-DD"),
+                'managed_by': user.managed_by,
+                'username': user.username,
+                'password': user.password,
+                'address': "Dcm Huyber :)))",
+            }),
+        }).then(
+            response => {
+                processing = false;
+                if(response.status == 200 || response.status == 201){
+                    reloadData();
+                    toast.push("Create User Successful", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'green',
@@ -165,20 +207,52 @@
                             '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
                         }
                     });
+                    goto("/management/user/list")
+                }else{
+                    console.log(response);
+                    toast.push("Create User Unsuccessful", {
+                        theme: {
+                            '--toastBackground':'white',
+                            '--toastBarBackground': 'red',
+                            '--toastColor': 'black',
+                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                            
+                        }
+                    });
+                }
+            }).catch (error =>{
+                toast.push("Create User Unsuccessful", {
+                        theme: {
+                            '--toastBackground':'white',
+                            '--toastBarBackground': 'red',
+                            '--toastColor': 'black',
+                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                        }
+                    });
+                console.log(error);
+            });
+        }
 
         processing = false;
     }
     
+    async function reloadData(){
+        await invalidate(API_URL+"user/");
+    }
+
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     
     login_user = JSON.parse(login_user);
-    if(is_admin){
-        role_staff_index = role.findIndex(value => {
-                return value.name == 'staff';  
-        });
-    }
+
+    role_staff_index = role.findIndex(value => {
+            return value.name == 'staff';  
+    });
+
+    role_manager_index = role.findIndex(value => {
+            return value.name == 'manager';  
+    });
 
 </script>
 
@@ -221,14 +295,19 @@
                     {!confirm_pass_valid?'border-1 border-rose-500 focus:border-rose-600':''}
                     " id="create-confirm-pass" bind:value={confirm_pass} />
                     {#if !confirm_pass_valid}
-                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Password and Confirm Password not matched.</p>
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Password and Confirm Password not matched</p>
                     {/if}
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-fullname">
                         Full Name
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="create-fullname" bind:value={user.fullname} />
+                    transition-all duration-150 focus:outline-none
+                    {!fullname_valid?'border-1 border-rose-500 focus:border-rose-600':''}
+                    " id="create-fullname" bind:value={user.fullname} />
+                    {#if !fullname_valid}
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{fullname_message}</p>
+                    {/if}
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-email">
                         Email
@@ -238,7 +317,7 @@
                     {!email_valid?'border-1 border-rose-500 focus:border-rose-600':''}
                     " id="create-email" bind:value={user.email}/>
                     {#if !email_valid}
-                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Email is invalid.</p>
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Email is invalid</p>
                     {/if}
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-phone">
@@ -249,7 +328,7 @@
                     {!phone_valid?'border-1 border-rose-500 focus:border-rose-600':''}
                     " id="create-phone" bind:value={user.phone}/>
                     {#if !phone_valid}
-                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Phone is invalid.</p>
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Phone is invalid</p>
                     {/if}
 
 
@@ -268,15 +347,29 @@
                             Role
                         </label>
                         <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                        transition-all duration-150 focus:outline-none" bind:value={user.role_id.id} >
+                        transition-all duration-150 focus:outline-none" bind:value={user.role_id.id} required>
                             {#each role as r}
                                 {#if r.name != 'admin'}
-                                    <option value={r.id}>
+                                    <option value={r.id} selected>
                                         {capitalizeFirstLetter(r.name)}
                                     </option>
                                 {/if} 
                             {/each}
                         </select>
+
+                        {#if user.role_id.id == role[role_staff_index].id}
+                        <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
+                            Managed By
+                        </label>
+                        <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                        transition-all duration-150 focus:outline-none" bind:value={user.managed_by} required>
+                            {#each managers as m}
+                                <option value={m.id} selected>
+                                    {capitalizeFirstLetter(m.fullname)}
+                                </option>
+                            {/each}
+                            </select>
+                        {/if}
                     {/if}
                     
                     {#if processing}

@@ -60,7 +60,7 @@
 
 <script>
     import { toast } from '@zerodevx/svelte-toast';
-    import { goto } from '$app/navigation';
+    import { goto, invalidate } from '$app/navigation';
     import SveltyPicker from 'svelty-picker';
 
 

@@ -1,10 +1,13 @@
 <script context="module">
     import {API_URL} from "utils/constant.js";
-    import {token} from "../../../stores.js"
+    import {token, user} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({fetch, params}){
         let token_value;
+        let login_user;
+        let managers;
         token.subscribe((t) => (token_value = t));
+        user.subscribe((t) => (login_user = t));
         const response = await fetch(API_URL+"area/"+params.id+"/",{
             method : "GET",
             headers : {
@@ -13,6 +16,27 @@
             }
         });
         
+        const response_user = await fetch(API_URL+"user/",{
+            method : "GET",
+            headers : {
+                "Content-type": "application/json",
+                "Authorization": "Bearer "+ token_value,
+            }
+        });
+        const users = response_user.ok && (await response_user.json());
+
+        if(login_user.includes("admin")){
+            const response_manager = await fetch(API_URL+"user/getAllManager/",{
+                method : "GET",
+                headers : {
+                    "Content-type": "application/json",
+                    "Authorization": "Bearer "+ token_value,
+                }
+            });
+
+            managers = response_manager.ok && (await response_manager.json());
+        }
+
         const edit = params.action == "e"? true : false;
         const data = response.ok && (await response.json());
 
@@ -21,6 +45,9 @@
                 token: token_value,
                 edit: edit,
                 data: data,
+                managers: managers,
+                login_user: login_user,
+                users: users,
             }
         };
     }
@@ -33,9 +60,16 @@
     export let edit;
     export let token;
     export let data;
+    export let login_user;
+    export let managers;
+    export let users;
     let processing = false;
     let color = "bg-slate-100"
+    login_user = JSON.parse(login_user);
 
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
     const handleSubmit = async () =>{
         processing = true;
@@ -102,6 +136,32 @@
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={data.name} disabled={!edit}/>
+                    
+                    {#if login_user.role_id.name == "admin"} 
+                        <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
+                            Managed By Manager
+                        </label>
+                        <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                        transition-all duration-150 focus:outline-none" bind:value={data.managed_manager} disabled={!edit} required>
+                            {#each managers as m}
+                                <option value={m.id} selected>
+                                    {capitalizeFirstLetter(m.fullname)}
+                                </option>
+                            {/each}
+                            </select>
+                    {/if}
+
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
+                        Managed By Staff
+                    </label>
+                    <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none" bind:value={data.managed_staff} disabled={!edit} required>
+                        {#each managers as m}
+                            <option value={m.id} selected>
+                                {capitalizeFirstLetter(m.fullname)}
+                            </option>
+                        {/each}
+                        </select>
 
                     {#if edit}
                         {#if processing}
