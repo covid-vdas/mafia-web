@@ -82,7 +82,7 @@
           <li class="items-center">
             <a href="/management/user/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/user\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
               <i class="fas fa-users mr-2 text-sm"></i>
-              User Management
+                {#if user_object.role_id.name == "admin"}User{:else}Staff{/if} Management
             </a>
           </li>
         {/if}

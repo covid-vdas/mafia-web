@@ -5,8 +5,10 @@
     export async function load({fetch}){
 
         let token_value;
+        let login_user;
         console.log("Loading");
         token.subscribe((t) => (token_value = t));
+        user.subscribe((t) => (login_user = t));
         const response = await fetch(API_URL+"user/",{
             method : "GET",
             headers : {
@@ -29,6 +31,7 @@
             props: {
                 users: users,
                 user_object: user_object,
+                login_user: login_user,
             }
         };
     }
@@ -40,7 +43,20 @@
     import Confirmation from 'components/Modals/Confirmation.svelte';
     const { open, close } = getContext('simple-modal');
 
-    let table_title = "User";
+    export let login_user;
+
+    let table_title;
+
+    if(login_user){
+        login_user = JSON.parse(login_user);
+    }
+    
+
+    if(login_user.role_id.name =="admin"){
+        table_title = "User";
+    } else {
+        table_title = "Staff";
+    }
 
     let table_properties = [
         "No.",
