@@ -47,7 +47,7 @@
                 data: data,
                 managers: managers,
                 login_user: login_user,
-                users: users,
+                users: users,   
             }
         };
     }
@@ -63,9 +63,17 @@
     export let login_user;
     export let managers;
     export let users;
+    export let managed_users;
     let processing = false;
-    let color = "bg-slate-100"
+    let color = "bg-slate-100";
+    $: manager_id = data.managed_manager;
     login_user = JSON.parse(login_user);
+
+    managed_users =  users.filter(user =>{
+                                return user.managed_by == data.managed_manager;
+                     });
+
+    console.log(managed_users);
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -81,6 +89,8 @@
             },
             body : JSON.stringify({
                 'name' : data.name,
+                'managed_manager': data.managed_manager,
+                'managed_staff': data.managed_staff,
             }),
         }).then(
             response => {
@@ -142,7 +152,13 @@
                             Managed By Manager
                         </label>
                         <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                        transition-all duration-150 focus:outline-none" bind:value={data.managed_manager} disabled={!edit} required>
+                        transition-all duration-150 focus:outline-none" bind:value={data.managed_manager} disabled={!edit} required on:change={()=>{
+                            manager_id = data.managed_manager;
+                            managed_users = users.filter(user =>{
+                                return user.managed_by == manager_id;
+                            });
+                            data.managed_staff = "";
+                        }}>
                             {#each managers as m}
                                 <option value={m.id} selected>
                                     {capitalizeFirstLetter(m.fullname)}
@@ -151,12 +167,16 @@
                             </select>
                     {/if}
 
+
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
                         Managed By Staff
                     </label>
                     <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" bind:value={data.managed_staff} disabled={!edit} required>
-                        {#each managers as m}
+                    transition-all duration-150 focus:outline-none" bind:value={data.managed_staff} disabled={!edit || managed_users.length === 0} required>
+                        {#if managed_users.length === 0}
+                             <option value="" disabled selected>There is no staff under manager management</option>
+                        {/if}
+                        {#each managed_users as m}
                             <option value={m.id} selected>
                                 {capitalizeFirstLetter(m.fullname)}
                             </option>
