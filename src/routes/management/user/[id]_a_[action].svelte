@@ -208,12 +208,6 @@
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Phone is invalid.</p>
                     {/if}
 
-                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-address">
-                        Address
-                    </label>
-                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={user.address} disabled={!edit}/>
-
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-birthdate">
                         birthdate
                     </label>
