@@ -122,7 +122,7 @@
   <div class="block w-full overflow-x-auto">
     <div class="grid grid-cols-4 gap-4 p-3 text-center text-slate-700 font-bold">
       {#each data as d}
-      <div class="bg-blue-200 rounded-lg p-3 cursor-pointer " on:click={handleClick(d)}>
+      <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2" on:click={handleClick(d)}>
         <div>
           <img src={d.url} class="mb-3"/>
         </div>
@@ -136,7 +136,7 @@
   <div class="rounded-t mb-0 px-4 py-3 border-0">
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-        <a href="/management/camera/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>
+        {#if user_object.role_id.name != "staff"}<a href="/management/camera/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>{/if}
       </div>
     </div>
   </div>

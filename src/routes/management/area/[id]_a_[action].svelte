@@ -70,10 +70,8 @@
     login_user = JSON.parse(login_user);
 
     managed_users =  users.filter(user =>{
-                                return user.managed_by == data.managed_manager;
-                     });
-
-    console.log(managed_users);
+                        return user.managed_by == data.managed_manager;
+                    });
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -174,14 +172,14 @@
                     <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none" bind:value={data.managed_staff} disabled={!edit || managed_users.length === 0} required>
                         {#if managed_users.length === 0}
-                             <option value="" disabled selected>There is no staff under manager management</option>
+                            <option value="" disabled selected>There is no staff under manager management</option>
                         {/if}
                         {#each managed_users as m}
                             <option value={m.id} selected>
                                 {capitalizeFirstLetter(m.fullname)}
                             </option>
                         {/each}
-                        </select>
+                    </select>
 
                     {#if edit}
                         {#if processing}

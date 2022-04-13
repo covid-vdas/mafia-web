@@ -77,7 +77,11 @@
     let role_staff_index;
     let phone_valid = true;
     let email_valid = true;
+    let fullname_valid = true;
+    let address_valid = true;
     $: picker_theme = 'picker_theme';
+    $: fullname_message = "";
+    $: address_message = "";
 
     if(login_user.role_id.name == "admin"){
         role_staff_index = role.findIndex(value => {
@@ -112,9 +116,23 @@
             phone_valid = false;
         }
 
+        fullname_valid = true;
+        const isValidLength250 = /^.{2,50}$/;
+        if (!isValidLength250.test(user.fullname)) {
+            fullname_message = "Fullname must have at least 2 characters";
+            fullname_valid = false;
+        }
+
+        address_valid = true;
+        const addressLength = /^.{2,}$/;
+        if (!addressLength.test(user.address)) {
+            address_message = "Address must have at least 2 characters";
+            address_valid = false;
+        }
+
         console.log(user);
 
-        if(email_valid && phone_valid){
+        if(email_valid && phone_valid && fullname_valid && address_valid) {
             const response = await fetch(API_URL+"user/"+user.id+"/",{
             method : "PATCH",
             headers : {
@@ -128,6 +146,7 @@
                 'email' : user.email,
                 'birthdate' : moment(user.birthdate, "DD/mm/yyyy").format("yyyy-mm-DD"),
                 'managed_by': user.managed_by,
+                'address': user.address,
             }),
         }).then(
             response => {
@@ -184,7 +203,11 @@
                         Full Name
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={user.fullname} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none 
+                    {!fullname_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-fullname" bind:value={user.fullname} disabled={!edit}/>
+                    {#if !fullname_valid}
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{fullname_message}</p>
+                    {/if}
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-email">
                         Email
@@ -206,6 +229,16 @@
                     " id="info-phone" bind:value={user.phone} disabled={!edit}/>
                     {#if !phone_valid}
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Phone is invalid.</p>
+                    {/if}
+
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-address">
+                        Address
+                    </label>
+                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none
+                    {!address_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-fullname" bind:value={user.address} disabled={!edit}/>
+                    {#if !address_valid}
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{address_message}</p>
                     {/if}
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-birthdate">
@@ -263,8 +296,13 @@
                             {/each}
                         </select>
                     {/if} -->
-                
+                        
                     {#if edit}
+
+                        <a class="btn text-white bg-yellow-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow
+                         hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all mb-3
+                         duration-150" href="/management/user/{user.id}_p">Change password</a>
+                        
                         {#if processing}
                             <button
                                 class="text-white bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"

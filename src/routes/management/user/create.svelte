@@ -61,6 +61,7 @@
     let email_valid = true;
     let confirm_pass_valid = true;
     let pass_valid = true;
+    let address_valid = true;
     let processing = false;
     let confirm_pass = "";
     let role_staff_index;
@@ -76,11 +77,13 @@
             id: ""
         },
         managed_by:"",
+        address:""
     }
     $: picker_theme = 'picker_theme';
     $: pass_message = "";
     $: username_message = "";
     $: fullname_message = "";
+    $: address_message = "";
 
 
     const handleSubmit = async () => {
@@ -160,6 +163,12 @@
             pass_valid = false;
         }
 
+        address_valid = true;
+        const addressLength = /^.{2,}$/;
+        if (!addressLength.test(user.address)) {
+            address_message = "Address must have at least 2 characters";
+            address_valid = false;
+        }
 
         if(user.password === confirm_pass){
             confirm_pass_valid = true;
@@ -192,7 +201,7 @@
                 'managed_by': user.managed_by,
                 'username': user.username,
                 'password': user.password,
-                'address': "Dcm Huyber :)))",
+                'address': user.address,
             }),
         }).then(
             response => {
@@ -331,6 +340,15 @@
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Phone is invalid</p>
                     {/if}
 
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-address">
+                        Address
+                    </label>
+                    <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none
+                    {!address_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="create-fullname" bind:value={user.address}/>
+                    {#if !address_valid}
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{address_message}</p>
+                    {/if}
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-birthdate">
                         birthdate

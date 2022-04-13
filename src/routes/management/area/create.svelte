@@ -1,12 +1,40 @@
 <script context="module">
-    import {token} from "../../../stores.js"
+    import {token, user} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({fetch, params}){
         let token_value;
+        let login_user;
+        let managers;
         token.subscribe((t) => (token_value = t));
+        user.subscribe((t) => (login_user = t));
+        
+        const response_user = await fetch(API_URL+"user/",{
+            method : "GET",
+            headers : {
+                "Content-type": "application/json",
+                "Authorization": "Bearer "+ token_value,
+            }
+        });
+        const users = response_user.ok && (await response_user.json());
+
+        if(login_user.includes("admin")){
+            const response_manager = await fetch(API_URL+"user/getAllManager/",{
+                method : "GET",
+                headers : {
+                    "Content-type": "application/json",
+                    "Authorization": "Bearer "+ token_value,
+                }
+            });
+
+            managers = response_manager.ok && (await response_manager.json());
+        }
+
         return{
             props: {
                 token: token_value,
+                managers: managers,
+                login_user: login_user,
+                users: users, 
             }
         };
     }
@@ -16,8 +44,39 @@
     import {API_URL} from "utils/constant.js";
     import { toast } from '@zerodevx/svelte-toast';
     import { goto } from '$app/navigation';
+
     export let token;
+    export let login_user;
+    export let managers;
+    export let users;
+    export let managed_users;
+    let processing = false;
+    let data = {
+        name: "",
+        managed_manager:"",
+        managed_staff: "",
+    }
+    $: manager_id = data.managed_manager;
+    login_user = JSON.parse(login_user);
     
+
+    console.log(users);
+    if(login_user.role_id.name == "admin"){
+        managed_users =  users.filter(user =>{
+                        return user.managed_by == data.managed_manager;
+                    });
+    } else {
+        data.managed_manager = login_user.id;
+        managed_users =  users.filter(user =>{
+                        return user.managed_by == login_user.id;
+                    });
+    }
+    
+    
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     const handleSubmit = async () => {
         processing = true;
         const response = await fetch(API_URL+"area/",{
@@ -28,6 +87,8 @@
             },
             body : JSON.stringify({
                 'name' : data.name,
+                'managed_manager' : data.managed_manager,
+                'managed_staff' : data.managed_staff,
             }),
         }).then(
             response => {
@@ -67,11 +128,6 @@
                 processing = false;
             });
     }
-    
-    let processing = false;
-    let data = {
-        name: "",
-    }
 
 </script>
 
@@ -90,6 +146,41 @@
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none" id="create-username" bind:value={data.name} />
 
+                    {#if login_user.role_id.name == "admin"} 
+                        <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
+                            Managed By Manager
+                        </label>
+                        <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                        transition-all duration-150 focus:outline-none" bind:value={data.managed_manager} required on:change={()=>{
+                            manager_id = data.managed_manager;
+                            managed_users = users.filter(user =>{
+                                return user.managed_by == manager_id;
+                            });
+                            data.managed_staff = "";
+                        }}>
+                            {#each managers as m}
+                                <option value={m.id} selected>
+                                    {capitalizeFirstLetter(m.fullname)}
+                                </option>
+                            {/each}
+                            </select>
+                    {/if}
+
+
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">
+                        Managed By Staff
+                    </label>
+                    <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none" bind:value={data.managed_staff} required>
+                        {#if managed_users.length === 0}
+                            <option value="" disabled selected>There is no staff under manager management</option>
+                        {/if}
+                        {#each managed_users as m}
+                            <option value={m.id} selected>
+                                {capitalizeFirstLetter(m.fullname)}
+                            </option>
+                        {/each}
+                    </select>
                     
                     {#if processing}
                         <button
