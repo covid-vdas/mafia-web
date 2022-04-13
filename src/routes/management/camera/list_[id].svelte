@@ -29,6 +29,7 @@
             props: {
                 data: data,
                 user_object: user_object,
+                area_id: params.id,
             }
         };
     }
@@ -36,6 +37,8 @@
 
 <script>
     import CameraCardTable from "components/Cards/CameraCardTable.svelte";
+    
+    export let area_id;
 
     let table_title = "Camera";
 
@@ -78,7 +81,7 @@
 <section class="relative w-full h-full py-40 min-h-screen">
     <div class="flex flex-wrap mt-4">
         <div class="w-full mb-12 px-4">
-            <CameraCardTable table_title={table_title} table_properties={table_properties} action_list={action_list} data={data} user_object={user_object} color="light"/>
+            <CameraCardTable table_title={table_title} table_properties={table_properties} area_id={area_id} action_list={action_list} data={data} user_object={user_object} color="light"/>
         </div>
     </div>
 </section>

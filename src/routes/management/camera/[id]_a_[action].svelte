@@ -1,5 +1,5 @@
 <script context="module">
-    import {API_URL} from "utils/constant.js";
+    import {API_URL, API_DETECT_URL} from "utils/constant.js";
     import {token} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({fetch, params}){
@@ -33,13 +33,41 @@
     export let edit;
     export let token;
     export let data;
+    let name_valid = true;
+    let url_valid = true;
+    let ratio_valid = true;
+    $: name_message = "";
+    $: ratio_message = "";
+    $: url_message = "";
     let processing = false;
     let color = "bg-slate-100"
-
-
+    let data_url = encodeURIComponent(data.url);
     const handleSubmit = async () =>{
         processing = true;
-        const response = await fetch(API_URL+"camera/"+data.id+"/",{
+
+        ratio_valid = true;
+        if(data.ratio <= 0){
+            ratio_valid = false;
+            ratio_message = "Ratio must be greater than zero";
+        }
+
+        
+        const addressLength = /^.{2,}$/;
+
+        name_valid = true;
+        if (!addressLength.test(data.name)) {
+            name_message = "Name must have at least 2 characters";
+            name_valid = false;
+        }
+
+        url_valid = true;
+        if (!addressLength.test(data.url)) {
+            url_message = "URL must have at least 2 characters";
+            url_valid = false;
+        }
+
+        if(name_valid && url_valid && ratio_valid){
+            const response = await fetch(API_URL+"camera/"+data.id+"/",{
             method : "PATCH",
             headers : {
                 "Content-type": "application/json",
@@ -61,7 +89,7 @@
                             '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
                         }
                     });
-                    goto("/management/area/list")
+                    goto("/management/camera/list_"+data.area_id)
                 }else{
                     console.log(response);
                     toast.push("Update Camera Unsuccessful", {
@@ -84,9 +112,24 @@
                         }
                     });
                 console.log(error);
-                processing = false;
+                
             });
+        } 
+        processing = false;
     }
+
+    // const response_stream = fetch(API_DETECT_URL+`detector/?stream_url=${data_url}&ratio=1&obj_detect_type=mask&camera_id=${data.id}/`, {
+    //     method : "GET",
+    //     // body : JSON.stringify({
+    //     //         stream_url : data.url,
+    //     //         ratio : 1,
+    //     //         object_detect_type : 'mask',
+    //     //         camera_id : data.id,
+    //     //     }
+    //     // )
+    // }).then(response => {
+    //         console.log(response);
+    //     });
 </script>
 
 <section class="relative w-full h-full py-40 min-h-screen">
@@ -97,19 +140,37 @@
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
                     {#if edit}Edit{/if} Camera Information
                 </div>
-                <img src={data.url} class="mb-4"/>
+                <img src={API_DETECT_URL+`detector/?stream_url=${data_url}&ratio=1&obj_detect_type=mask&camera_id=${data.id}`} class="mb-4"/>
                 <form on:submit|preventDefault="{handleSubmit}">
-                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-cam-name">
                         Name
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={data.name} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none
+                    {!name_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-cam-name" bind:value={data.name} disabled={!edit}/>
+                    {#if !name_valid}
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{name_message}</p>
+                    {/if}
 
-                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-cam-url">
                         URL
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={data.url} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none
+                    {!url_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-cam-url" bind:value={data.url} disabled={!edit}/>
+                    {#if !url_valid}
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{url_message}</p>
+                    {/if}
+
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-cam-ratio">
+                        Ratio
+                    </label>
+                    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none
+                    {!ratio_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-cam-ratio" bind:value={data.ratio} disabled={!edit} required/>
+                    {#if !ratio_valid}
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{ratio_message}</p>
+                    {/if}
 
                     <button
                         class="text-white bg-lime-600 active:bg-lime-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"

@@ -17,7 +17,7 @@
   export let data;
   export let action_list;
   export let user_object;
-
+  export let area_id;
 
   const { open, close } = getContext('simple-modal');
 
@@ -120,7 +120,7 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
-    <div class="grid grid-cols-4 gap-4 p-3 text-center text-slate-700 font-bold">
+    <div class="grid grid-cols-4 gap-4 px-5 text-center text-slate-700 font-bold">
       {#each data as d}
       <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2" on:click={handleClick(d)}>
         <div>
@@ -136,7 +136,7 @@
   <div class="rounded-t mb-0 px-4 py-3 border-0">
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-        {#if user_object.role_id.name != "staff"}<a href="/management/camera/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>{/if}
+        {#if user_object.role_id.name != "staff"}<a href={"/management/camera/create_"+area_id} class="btn bg-emerald-600 text-white">Create New {table_title}</a>{/if}
       </div>
     </div>
   </div>
