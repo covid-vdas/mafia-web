@@ -69,7 +69,7 @@
     }
 </script>
 
-<section>
+<section class="relative w-full h-full py-40 min-h-screen">
     <h1 class="fs-1 fw-bold text-bold mb-4">
 		Video dectector
 	</h1>

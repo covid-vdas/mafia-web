@@ -142,7 +142,7 @@
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
                     {#if edit}Edit{/if} Camera Information
                 </div>
-                <img src={API_DETECT_URL+`detector/?stream_url=${data_url}&ratio=1&obj_detect_type=mask&camera_id=${data.id}`} alt="An IP Camera Stream" class="mb-4"/>
+                <img src={API_DETECT_URL+`detector/?stream_url=${data_url}&ratio=${data.ratio}&obj_detect_type=${detect_class}&camera_id=${data.id}`} alt="An IP Camera Stream" class="mb-4"/>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-cam-name">
                         Name

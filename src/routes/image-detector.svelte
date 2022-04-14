@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte'
-    import { API_URL } from 'utils/constant.js'
+    import { API_URL, API_DETECT_URL } from 'utils/constant.js'
 
     /** @type {HTMLInputElement} */
     let fileInput
@@ -8,6 +8,7 @@
     let processing = false
     let images = []
     let uploaded = false
+    let ratio;
 
     let elModal, modal
     let results = []
@@ -53,9 +54,10 @@
         let done = 0
         images.forEach((v, i) => {
             const data = new FormData()
-            data.append('image', v.file)
-            console.log(API_URL+'image/');
-            fetch(API_URL+'image/', {
+            data.append('img', v.file)
+            data.append('ratio', ratio)
+            console.log(data)
+            fetch(API_DETECT_URL+'detector/', {
                 method: 'POST',
                 body: data,
             })
@@ -78,7 +80,7 @@
 
 <!-- svelte-ignore a11y-missing-attribute -->
 
-<section>
+<section class="relative w-full h-full py-40 min-h-screen">
     <h1 class="fs-1 fw-bold text-bold mb-4">
 		Image detector
 	</h1>
@@ -109,6 +111,14 @@
     <button class="btn btn-success" on:click={() => fileInput.click()}>
         Select images
     </button>
+    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-cam-ratio">
+        Ratio
+    </label>
+    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-3/12 ease-linear
+    transition-all duration-150 focus:outline-none" id="create-cam-ratio" bind:value={ratio} required/>
+    <!-- {#if !ratio_valid}
+        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{ratio_message}</p>
+    {/if} -->
 {/if}
 
     <input
@@ -133,7 +143,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" on:click={cancel}>Close</button>
+                <button type="button" class="btn bg-slate-200" on:click={cancel}>Close</button>
             </div>
         </div>
     </div>
