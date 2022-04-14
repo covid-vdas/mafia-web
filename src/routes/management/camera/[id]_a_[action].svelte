@@ -36,6 +36,7 @@
     let name_valid = true;
     let url_valid = true;
     let ratio_valid = true;
+    $: detect_class = "person";
     $: name_message = "";
     $: ratio_message = "";
     $: url_message = "";
@@ -130,6 +131,7 @@
     // }).then(response => {
     //         console.log(response);
     //     });
+    console.log();
 </script>
 
 <section class="relative w-full h-full py-40 min-h-screen">
@@ -140,7 +142,7 @@
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
                     {#if edit}Edit{/if} Camera Information
                 </div>
-                <img src={API_DETECT_URL+`detector/?stream_url=${data_url}&ratio=1&obj_detect_type=mask&camera_id=${data.id}`} class="mb-4"/>
+                <img src={API_DETECT_URL+`detector/?stream_url=${data_url}&ratio=1&obj_detect_type=mask&camera_id=${data.id}`} alt="An IP Camera Stream" class="mb-4"/>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-cam-name">
                         Name
@@ -172,25 +174,39 @@
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">{ratio_message}</p>
                     {/if}
 
-                    <button
+                    <div class="grid grid-cols-2 gap-4">
+                        <button
                         class="text-white bg-lime-600 active:bg-lime-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                         on:click={() =>{
                             edit = edit ? false : true;
                         }} type="button">
-                        Change Mode
-                    </button>
+                            {#if edit} Disable {:else} Enable {/if} Edit
+                        </button>
+                        <button
+                        class="text-white bg-lime-600 active:bg-lime-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                        on:click={() =>{
+                            if(detect_class == 'person'){
+                                detect_class = 'mask';
+                            }else{
+                                detect_class = 'person'
+                            }
+                        }} type="button">
+                            Change Detect Class To {#if detect_class == 'person'} Mask {:else} Person {/if}
+                        </button>
+                    </div>
+                   
                        
                     {#if edit}
                         {#if processing}
                             <button
-                                class="text-white bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                                class="text-white mt-3 bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                                 type="submit" disabled>
                                 <icon class="fa-solid fa-spinner fa-spin-pulse fa-xl mr-1"></icon>
                                 Processing..
                             </button>
                         {:else}
                             <button
-                                class="text-white bg-blue-700 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                                class="text-white mt-3 bg-blue-700 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                                 type="submit">
                                 Submit
                             </button>

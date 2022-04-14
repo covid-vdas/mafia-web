@@ -72,7 +72,7 @@
 
       <ul class="md:flex-col md:min-w-full flex flex-col list-none">
         <li class="items-center">
-          <a href="/" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/'? 'text-blue-700':''}">
+          <a sveltekit:prefetch href="/" class="text-sm uppercase py-3 font-bold block {$page.url.pathname=='/'? 'text-blue-700':''}">
             <i class="fas fa-tv mr-2 text-sm"></i>
             Dashboard
           </a>
@@ -80,7 +80,7 @@
 
         {#if user_object.role_id.name != "staff"}
           <li class="items-center">
-            <a href="/management/user/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/user\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
+            <a sveltekit:prefetch href="/management/user/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/user\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
               <i class="fas fa-users mr-2 text-sm"></i>
                 {#if user_object.role_id.name == "admin"}User{:else}Staff{/if} Management
             </a>
@@ -89,7 +89,7 @@
        
         {#if user_object.role_id.name == "admin"}
           <li class="items-center">
-            <a href="/management/role/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/role\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
+            <a sveltekit:prefetch href="/management/role/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/role\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
               <i class="fas fa-user-gear mr-2 text-sm"></i>
               Role Management
             </a>
@@ -98,14 +98,14 @@
        
 
         <li class="items-center">
-          <a href="/management/report/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/report\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
+          <a sveltekit:prefetch href="/management/report/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/report\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
             <i class="fa-solid fa-square-poll-horizontal mr-3 text-sm"></i>
             Reports
           </a>
         </li>
 
         <li class="items-center">
-          <a href="/management/area/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/area\/)/.test($page.url.pathname) || /^(\/management\/camera\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
+          <a sveltekit:prefetch href="/management/area/list" class="text-sm uppercase py-3 font-bold block {/^(\/management\/area\/)/.test($page.url.pathname) || /^(\/management\/camera\/)/.test($page.url.pathname) ? 'text-blue-700':''}">
             <i class="fas fa-map-marked mr-2 text-sm"></i>
             {#if user_object.role_id.name == "staff"}Camera{:else}Area{/if} Management
           </a>
