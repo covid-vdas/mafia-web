@@ -35,7 +35,7 @@
   function userAction(action, d) {
       switch (action) {
         case "detail":
-          goto("/management/report/area_" + d.id );
+          goto("/management/report/r_" + d.id );
           break;
         default:
       }
@@ -84,12 +84,27 @@
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                {capitalizeFirstLetter(d.name)}
+                <!-- {d.type_id} --> Facemask
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                <!-- {d.camera_id} --> Huyberkiss
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                <!-- {d.class_id} --> Mask
+              </td>
+              <td
+                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+              >
+                {d.distance}
               </td>
               <td
                 class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                {new Date(d.updated_at).toLocaleString("vi-VN")}
+                {new Date(d.created_at).toLocaleString("vi-VN")}
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"

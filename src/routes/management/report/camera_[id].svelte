@@ -7,7 +7,7 @@
         let token_value;
         console.log("Loading");
         token.subscribe((t) => (token_value = t));
-        const response = await fetch(API_URL+"camera/getAllCamera/"+params.id+"/",{
+        const response = await fetch(API_URL+"violation/",{
             method : "GET",
             headers : {
                 "Content-type": "application/json",
@@ -54,29 +54,16 @@
     let table_title = camera.name + " Report";
 
     let table_properties = [
-        "name",
-        "url",
-        "area id",
-        "updated date",
-        "action",
+        "No.",
+        "Type",
+        "Camera",
+        "Class",
+        "Distance",
+        "Created At",
+        "Action"
     ];
 
     let action_list = [
-        {
-            "name":"view",
-            "icon":"fas fa-circle-info",
-            "color": "text-blue-800 hover:text-blue-400"
-        },
-        {
-            "name":"edit",
-            "icon":"fas fa-pen",
-            "color": "text-blue-800 hover:text-blue-400"
-        },
-        {
-            "name":"delete",
-            "icon":"fas fa-trash",
-            "color": "text-rose-600 hover:text-rose-400"
-        },
         {
             "name":"detail",
             "icon": "fa-solid fa-right-to-bracket",

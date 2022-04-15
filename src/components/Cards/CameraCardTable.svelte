@@ -121,10 +121,13 @@
   </div>
   <div class="block w-full overflow-x-auto">
     <div class="grid grid-cols-4 gap-4 px-5 text-center text-slate-700 font-bold">
-      {#each data as d}
+      {#each data as d,i}
       <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2" on:click={handleClick(d)}>
         <div>
-          <img src={d.url} class="mb-3"/>
+          <img id={"camera_"+i} src={d.url} on:error={(e) =>{
+            let source = e.target;
+            source.setAttribute("src", "/static/error_placeholder.png");
+          }} alt="camera stream" class="mb-3"/>
         </div>
         <div>{d.name}</div>
       </div>
