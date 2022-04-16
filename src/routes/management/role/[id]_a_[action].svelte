@@ -94,7 +94,7 @@
             <div
                 class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    {#if edit}Edit{/if} Role Information
+                    <a sveltekit:prefetch href={"/management/role/list"} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>{#if edit}Edit{/if} Role Information
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">

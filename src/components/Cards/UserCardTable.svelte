@@ -58,7 +58,7 @@
                   if (response.status == 200 || response.status == 201) {
                     reloadData();
                     console.log("success");
-                    toast.push("Enable User Successful", {
+                    toast.push("Enable user successfully", {
                       theme: {
                         '--toastBackground': 'white',
                         '--toastBarBackground': 'green',
@@ -68,7 +68,7 @@
                     });
                   } else {
                     console.log(response);
-                    toast.push("Enable User Unsuccessful", {
+                    toast.push("An error occurred while enabling user", {
                       theme: {
                         '--toastBackground':'white',
                         '--toastBarBackground': 'red',
@@ -79,7 +79,7 @@
                   }
                 }).catch(error => {
                 close(Confirmation);
-                toast.push("Enable User Unsuccessful", {
+                toast.push("An error occurred while enabling user", {
                   theme: {
                     '--toastBackground':'white',
                     '--toastBarBackground': 'red',
@@ -115,7 +115,7 @@
                   close(Confirmation);
                   if (response.status == 200 || response.status == 201) {
                     reloadData()
-                    toast.push("Disable User Successful", {
+                    toast.push("Disable user successfully", {
                       theme: {
                         '--toastBackground': 'white',
                         '--toastBarBackground': 'green',
@@ -125,7 +125,7 @@
                     });
                   } else {
                     console.log(response);
-                    toast.push("Disable User Unsuccessful", {
+                    toast.push("An error occurred while disabling user", {
                       theme: {
                         '--toastBackground':'white',
                         '--toastBarBackground': 'red',
@@ -136,7 +136,7 @@
                   }
                 }).catch(error => {
                 close(Confirmation);
-                toast.push("Disable User Unsuccessful", {
+                toast.push("An error occurred while disabling user", {
                   theme: {
                     '--toastBackground': 'white',
                     '--toastBarBackground': 'red',
@@ -176,7 +176,7 @@
                   close(Confirmation);
                   if (response.status == 200 || response.status == 201) {
                     reloadData()
-                    toast.push("Delete user Successful", {
+                    toast.push("Delete user successfully", {
                       theme: {
                         '--toastBackground': 'white',
                         '--toastBarBackground': 'green',
@@ -186,7 +186,7 @@
                     });
                   } else {
                     console.log(response);
-                    toast.push("Delete user Unsuccessful", {
+                    toast.push("An error occurred deleting user", {
                       theme: {
                         '--toastBackground':'white',
                         '--toastBarBackground': 'red',
@@ -197,7 +197,7 @@
                   }
                 }).catch(error => {
                 close(Confirmation);
-                toast.push("Delete user Unsuccessful", {
+                toast.push("An error occurred deleting user", {
                   theme: {
                     '--toastBackground': 'white',
                     '--toastBarBackground': 'red',

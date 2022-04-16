@@ -32,73 +32,6 @@
     await invalidate(API_URL+"camera/");
   }
 
-  function userAction(action, d) {
-      switch (action) {
-        case 'view':
-          goto("/management/camera/" + d.id + "_a_v");
-          break;
-        case 'edit':
-          goto("/management/camera/" + d.id + "_a_e");
-          break;
-        case 'delete':
-        open(Confirmation, {
-            message: "Do you want to delete this Area.",
-            title: "Confirmation",
-            btn_title: "Yes",
-            handleClick: () => {
-              fetch(API_URL + "camera/" + d.id + "/", {
-                method: "DELETE",
-                headers: {
-                  "Content-type": "application/json",
-                  "Authorization": "Bearer " + token_value,
-                },
-              }).then(
-                response => {
-                  close(Confirmation);
-                  if (response.status == 200 || response.status == 201) {
-                    reloadData()
-                    toast.push("Delete Area Successful", {
-                      theme: {
-                        '--toastBackground': 'white',
-                        '--toastBarBackground': 'green',
-                        '--toastColor': 'black',
-                        '--toastBoxShadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                      }
-                    });
-                  } else {
-                    console.log(response);
-                    toast.push("Delete Area Unsuccessful", {
-                      theme: {
-                        '--toastBackground':'white',
-                        '--toastBarBackground': 'red',
-                        '--toastColor': 'black',
-                        '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                      }
-                    });
-                  }
-                }).catch(error => {
-                close(Confirmation);
-                toast.push("Delete Area Unsuccessful", {
-                  theme: {
-                    '--toastBackground': 'white',
-                    '--toastBarBackground': 'red',
-                    '--toastColor': 'black',
-                    '--toastBoxShadow': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-
-                  }
-                });
-                console.log(error);
-              });
-            },
-            closeModal: () => {
-              close(Confirmation);
-            }
-          });
-          break;
-        default:
-      }
-    }
-
     const handleClick = (d) => {
       goto("/management/camera/" + d.id + "_a_v");
     }
@@ -111,8 +44,9 @@
   <div class="rounded-t mb-0 px-4 py-3 border-0">
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+        <a sveltekit:prefetch href={"/management/area/list"} class="mr-3 text-xl"><i class="fa-solid fa-angle-left"></i></a>
         <h3
-          class="font-bold text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
+          class="font-bold inline-block text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
         >
           {table_title}s
         </h3>
@@ -122,14 +56,14 @@
   <div class="block w-full overflow-x-auto">
     <div class="grid grid-cols-4 gap-4 px-5 text-center text-slate-700 font-bold">
       {#each data as d,i}
-      <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2" on:click={handleClick(d)}>
-        <div>
+      <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2 grid grid-rows-1" on:click={handleClick(d)}>
+        <div class="row-span-1 mb-3">
           <img id={"camera_"+i} src={d.url} on:error={(e) =>{
             let source = e.target;
             source.setAttribute("src", "/static/error_placeholder.png");
-          }} alt="camera stream" class="mb-3"/>
+          }}  alt="camera stream" class="bg bg-contain"/>
         </div>
-        <div>{d.name}</div>
+        <div class="row-span-1 text-center items-center">{d.name}</div>
       </div>
       {/each}
     </div>

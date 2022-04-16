@@ -60,7 +60,7 @@
                   close(Confirmation);
                   if (response.status == 200 || response.status == 201) {
                     reloadData()
-                    toast.push("Delete Area Successful", {
+                    toast.push("Deleted area successfully", {
                       theme: {
                         '--toastBackground': 'white',
                         '--toastBarBackground': 'green',
@@ -70,7 +70,7 @@
                     });
                   } else {
                     console.log(response);
-                    toast.push("Delete Area Unsuccessful", {
+                    toast.push("An error occurred while deleting area", {
                       theme: {
                         '--toastBackground':'white',
                         '--toastBarBackground': 'red',
@@ -81,7 +81,7 @@
                   }
                 }).catch(error => {
                 close(Confirmation);
-                toast.push("Delete Area Unsuccessful", {
+                toast.push("An error occurred while deleting area", {
                   theme: {
                     '--toastBackground': 'white',
                     '--toastBarBackground': 'red',

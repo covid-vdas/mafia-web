@@ -153,7 +153,7 @@
                 processing = false;
                 if(response.status == 200 || response.status == 201){
                     reloadData();
-                    toast.push("Update User Successful", {
+                    toast.push("Changed User information successfully.", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'green',
@@ -164,7 +164,7 @@
                     goto("/management/user/list")
                 }else{
                     console.log(response);
-                    toast.push("Update User Unsuccessful", {
+                    toast.push("An error occurred while changing user information", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -175,7 +175,7 @@
                     });
                 }
             }).catch (error =>{
-                toast.push("Update User Unsuccessful", {
+                toast.push("An error occurred while changing user information", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -196,7 +196,7 @@
             <div
                 class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    {#if edit}Edit{/if} User Information
+                    <a sveltekit:prefetch href={"/management/user/list"} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>{#if edit}Edit{/if} User Information
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
@@ -275,9 +275,11 @@
                         <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                         transition-all duration-150 focus:outline-none" bind:value={user.managed_by} disabled={!edit} required>
                             {#each managers as m}
-                                <option value={m.id} selected>
-                                    {capitalizeFirstLetter(m.fullname)}
-                                </option>
+                                {#if m.id != user.id}
+                                    <option value={m.id} selected>
+                                        {capitalizeFirstLetter(m.fullname)}
+                                    </option>
+                                {/if}       
                             {/each}
                             </select>
                         {/if}

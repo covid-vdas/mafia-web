@@ -1,6 +1,6 @@
 <script context="module">
     import {API_URL} from "utils/constant.js";
-    import {token, user} from "../../../stores.js";
+    import {token} from "../../../stores.js";
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({params}){
         let token_value;
@@ -105,7 +105,7 @@
                 processing = false;
                 if(response.status == 200 || response.status == 201){
                     reloadData();
-                    toast.push("Update User Successful", {
+                    toast.push("Changed User Password Successfully", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'green',
@@ -116,7 +116,7 @@
                     goto("/management/user/list")
                 }else{
                     console.log(response);
-                    toast.push("Update User Unsuccessful", {
+                    toast.push("An error occurred while changing user password", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -127,7 +127,7 @@
                     });
                 }
             }).catch (error =>{
-                toast.push("Update User Unsuccessful", {
+                toast.push("An error occurred while changing user password", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -147,7 +147,7 @@
         <div class="w-full lg:w-5/12 px-4">
             <div class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    Change User Password
+                    <a sveltekit:prefetch href={`/management/user/${user_id}_a_e`} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>Change User Password
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="edit-password">

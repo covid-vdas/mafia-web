@@ -15,6 +15,7 @@
   export let data;
   export let action_list;
   export let user_object;
+  export let area_id;
 
 
   const { open, close } = getContext('simple-modal');
@@ -28,13 +29,9 @@
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  async function reloadData(){
-    await invalidate(API_URL+"area/");
-  }
-
   function userAction(action, d) {
       switch (action) {
-        case "detail":
+        case "view":
           goto("/management/report/r_" + d.id );
           break;
         default:
@@ -51,8 +48,9 @@
   <div class="rounded-t mb-0 px-4 py-3 border-0">
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+        <a sveltekit:prefetch href={"/management/report/area_" + area_id + "/"} class="mr-3 text-xl"><i class="fa-solid fa-angle-left"></i></a>
         <h3
-          class="font-semibold text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
+          class="font-semibold inline-block text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
         >
           {table_title}s
         </h3>
@@ -84,17 +82,17 @@
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                <!-- {d.type_id} --> Facemask
+                {d.type_id.name} 
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                <!-- {d.camera_id} --> Huyberkiss
+                {d.camera_id.name} 
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                <!-- {d.class_id} --> Mask
+                {d.class_id.name}
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
@@ -127,3 +125,4 @@
     </table>
   </div>
 </div>
+

@@ -5,7 +5,7 @@
     export async function load({fetch, params}){
         let token_value;
         token.subscribe((t) => (token_value = t));
-        const response = await fetch(API_URL+"role/"+params.id+"/",{
+        const response = await fetch(API_URL+"violation/"+params.id+"/",{
             method : "GET",
             headers : {
                 "Content-type": "application/json",
@@ -14,13 +14,13 @@
         });
         
         const edit = params.action == "e"? true : false;
-        const role = response.ok && (await response.json());
+        const data = response.ok && (await response.json());
 
         return{
             props: {
                 token: token_value,
                 edit: edit,
-                role: role,
+                data: data,
             }
         };
     }
@@ -32,59 +32,11 @@
 
     export let edit;
     export let token;
-    export let role;
+    export let data;
     let processing = false;
 
 
     const handleSubmit = async () =>{
-        processing = true;
-        const response = await fetch(API_URL+"role/"+role.id+"/",{
-            method : "PATCH",
-            headers : {
-                "Content-type": "application/json",
-                "Authorization": "Bearer "+ token,
-            },
-            body : JSON.stringify({
-                'name' : role.name,
-            }),
-        }).then(
-            response => {
-                processing = false;
-                if(response.status == 200 || response.status == 201){
-                    reloadData();
-                    toast.push("Update Role Successful", {
-                        theme: {
-                            '--toastBackground':'white',
-                            '--toastBarBackground': 'green',
-                            '--toastColor': 'black',
-                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                        }
-                    });
-                    goto("/management/role/list")
-                }else{
-                    console.log(response);
-                    toast.push("Update Role Unsuccessful", {
-                        theme: {
-                            '--toastBackground':'white',
-                            '--toastBarBackground': 'red',
-                            '--toastColor': 'black',
-                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                            
-                        }
-                    });
-                }
-            }).catch (error =>{
-                toast.push("Update Role Unsuccessful", {
-                        theme: {
-                            '--toastBackground':'white',
-                            '--toastBarBackground': 'red',
-                            '--toastColor': 'black',
-                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                        }
-                    });
-                console.log(error);
-                processing = false;
-            });
     }
 </script>
 
@@ -94,38 +46,41 @@
             <div
                 class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    {#if edit}Edit{/if} Report Information
+                    <a sveltekit:prefetch href={"/management/report/camera_"+data.camera_id.id} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>{#if edit}Edit{/if} Report Information
                 </div>
-                <img class="mb-4" src="/static/error_placeholder.png"/>
+                <img class="mb-4" src="#" on:error={(e) =>{
+                    let source = e.target;
+                    source.setAttribute("src", "/static/report_temp.png");
+                  }} alt="Violation Image"/>
 
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
                         ID
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={role.name} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={data.id} disabled={!edit}/>
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
                         Type
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={role.name} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" value="Distance" disabled={!edit}/>
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
                         Camera
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={role.name} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={data.camera_id.name} disabled={!edit}/>
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
                         Class
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={role.name} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" value="Person" disabled={!edit}/>
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
                         Distance
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={role.name} disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" value="132.53608929178085" disabled={!edit}/>
 
-                    {#if edit}
+                    {#if !edit}
                         {#if processing}
                             <button
                                 class="text-white bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
@@ -135,9 +90,9 @@
                             </button>
                         {:else}
                             <button
-                                class="text-white bg-blue-700 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                                class="text-white bg-emerald-600 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                                 type="submit">
-                                Submit
+                                Export
                             </button>
                         {/if}
                     {/if}

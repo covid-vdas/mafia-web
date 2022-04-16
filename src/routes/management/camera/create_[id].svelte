@@ -67,13 +67,13 @@
                 'name' : data.name,
                 'url' : data.url,
                 'area_id' : area_id,
-                // 'ratio' : data.ratio,
+                'ratio' : data.ratio,
             }),
         }).then(
             response => {
                 processing = false;
                 if(response.status == 200 || response.status == 201){
-                    toast.push("Create Area Successful", {
+                    toast.push("Added new camera successfully", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'green',
@@ -84,7 +84,7 @@
                     goto("/management/camera/list_"+area_id)
                 }else{
                     console.log(response);
-                    toast.push("Create Area Unsuccessful", {
+                    toast.push("An error occurred while adding new camera", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -95,7 +95,7 @@
                     });
                 }
             }).catch (error =>{
-                toast.push("Create Area Unsuccessful", {
+                toast.push("An error occurred while adding new camera", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -119,7 +119,7 @@
             <div
                 class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    Create New Camera 
+                    <a sveltekit:prefetch href={"/management/camera/list_"+area_id} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>Create New Camera 
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-cam-name">

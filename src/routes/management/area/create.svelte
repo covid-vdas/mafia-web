@@ -94,7 +94,7 @@
             response => {
                 processing = false;
                 if(response.status == 200 || response.status == 201){
-                    toast.push("Create Area Successful", {
+                    toast.push("Added new area successfully", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'green',
@@ -105,7 +105,7 @@
                     goto("/management/area/list")
                 }else{
                     console.log(response);
-                    toast.push("Create Area Unsuccessful", {
+                    toast.push("An error occurred while adding new area", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -116,7 +116,7 @@
                     });
                 }
             }).catch (error =>{
-                toast.push("Create Area Unsuccessful", {
+                toast.push("An error occurred while adding new area", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -137,7 +137,7 @@
             <div
                 class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    Create New Area 
+                    <a sveltekit:prefetch href={"/management/area/list"} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>Create New Area 
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-username">
@@ -171,7 +171,7 @@
                         Managed By Staff
                     </label>
                     <select class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" bind:value={data.managed_staff} required>
+                    transition-all duration-150 focus:outline-none" bind:value={data.managed_staff}>
                         {#if managed_users.length === 0}
                             <option value="" disabled selected>There is no staff under manager management</option>
                         {/if}

@@ -7,7 +7,7 @@
         let token_value;
         console.log("Loading");
         token.subscribe((t) => (token_value = t));
-        const response = await fetch(API_URL+"violation/",{
+        const response = await fetch(API_URL+"violation/getAllViolation/"+params.id+"/",{
             method : "GET",
             headers : {
                 "Content-type": "application/json",
@@ -65,9 +65,9 @@
 
     let action_list = [
         {
-            "name":"detail",
-            "icon": "fa-solid fa-right-to-bracket",
-            "color": "text-emerald-600 hover:text-emerald-400"
+            "name":"view",
+            "icon":"fas fa-circle-info",
+            "color": "text-blue-800 hover:text-blue-400"
         }
     ]
     
@@ -79,7 +79,7 @@
 <section class="relative w-full h-full py-40 min-h-screen">
     <div class="flex flex-wrap mt-4">
         <div class="w-full mb-12 px-4">
-            <ReportCameraDetailCardTable table_title={table_title} table_properties={table_properties} area_id={area_id} action_list={action_list} data={data} user_object={user_object} color="light"/>
+            <ReportCameraDetailCardTable table_title={table_title} table_properties={table_properties} area_id={camera.area_id} action_list={action_list} data={data} user_object={user_object} color="light"/>
         </div>
     </div>
 </section>

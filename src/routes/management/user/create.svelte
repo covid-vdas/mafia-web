@@ -208,7 +208,7 @@
                 processing = false;
                 if(response.status == 200 || response.status == 201){
                     reloadData();
-                    toast.push("Create User Successful", {
+                    toast.push("Added new user successfully", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'green',
@@ -219,7 +219,7 @@
                     goto("/management/user/list")
                 }else{
                     console.log(response);
-                    toast.push("Create User Unsuccessful", {
+                    toast.push("An error occurred while changing adding new user", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -230,7 +230,7 @@
                     });
                 }
             }).catch (error =>{
-                toast.push("Create User Unsuccessful", {
+                toast.push("An error occurred while changing adding new user", {
                         theme: {
                             '--toastBackground':'white',
                             '--toastBarBackground': 'red',
@@ -271,7 +271,7 @@
             <div
                 class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    Create New {#if is_admin}User{:else}Staff{/if}
+                    <a sveltekit:prefetch href={"/management/user/list"} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>Create New {#if is_admin}User{:else}Staff{/if}
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-username">
