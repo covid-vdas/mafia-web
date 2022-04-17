@@ -89,21 +89,29 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
-    <div class="grid grid-cols-4 gap-4 px-5 text-center text-slate-700 font-bold">
-      {#each result_data as d,i}
-      <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2 grid grid-rows-1" on:click={handleClick(d)}>
-        <div class="row-span-1 mb-3">
-          <img id={"camera_"+i} src={d.url} on:error={(e) =>{
-            let source = e.target;
-            source.setAttribute("src", "/static/error_placeholder.png");
-          }}  alt="camera stream" class="bg bg-contain"/>
-        </div>
-        <div class="row-span-1 text-center items-center">{d.name}</div>
+    {#if result_data.length == 0 || result_data == null}
+      <div class="items-center text-center w-full bg-transparent border-collapse py-10">
+          <div class="py-10">
+            <i class="fa-solid fa-box-open text-8xl text-blue-600 mb-5"></i>
+            <h1 class="text-3xl font-semibold text-zinc-700">There Is No Data Available</h1>
+          </div>
       </div>
-      {/each}
-    </div>
+    {:else}
+      <div class="grid grid-cols-4 gap-4 px-5 text-center text-slate-700 font-bold">
+        {#each result_data as d,i}
+        <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2 grid grid-rows-1" on:click={handleClick(d)}>
+          <div class="row-span-1 mb-3">
+            <img id={"camera_"+i} src={d.url} on:error={(e) =>{
+              let source = e.target;
+              source.setAttribute("src", "/static/error_placeholder.png");
+            }}  alt="camera stream" class="bg bg-contain"/>
+          </div>
+          <div class="row-span-1 text-center items-center">{d.name}</div>
+        </div>
+        {/each}
+      </div>
     <!-- Projects table -->
-
+    {/if}
   </div>
   <div class="rounded-t mb-0 px-4 py-3 border-0">
     <div class="flex flex-wrap items-center">

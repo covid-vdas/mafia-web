@@ -20,6 +20,30 @@
 
   const { open, close } = getContext('simple-modal');
   
+  let result_data;
+
+  $: search_key = "";
+
+  result_data = data;
+
+  const handleSearch = () => {
+      let search_key_value = removeAccents(search_key).toLowerCase();
+      if(search_key_value){
+        result_data = data.filter((d) => {
+        return removeAccents(d.type_id.name).toLowerCase().includes(search_key_value) || removeAccents(d.class_id.name).toLowerCase().includes(search_key_value);
+      })
+      } else {
+        result_data = data;
+      }
+      
+    }
+
+  
+  function removeAccents(str) {
+  return str.normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  }
   
   let index = 0;
   const increment = () => index += 1;
@@ -55,74 +79,92 @@
           {table_title}s
         </h3>
       </div>
+      <div class="inline-flex flex-row-reverse px-4 ">
+        <div class="relative flex w-full flex-wrap items-stretch">
+          <span class="px-2 py-2 leading-snug font-normal absolute text-center text-zinc-300 bg-transparent rounded items-center justify-center text-lg">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <input class="pl-9 bg-white placeholder-zinc-300 rounded-md text-sm w-full ease-linear
+          transition-all duration-150 focus:outline-none" type="text" bind:value={search_key} on:change={() => handleSearch()}/>
+        </div>
+      </div>
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
-    <!-- Projects table -->
-    <table class="items-center w-full bg-transparent border-collapse">
-      <thead>
-        <tr>
-        {#each table_properties as prop}
-        <th
-          class="px-6 align-middle text-center border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold {color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-700 text-red-200 border-red-600'}"
-        >
-          {prop}
-        </th>
-        {/each}
-        </tr>
-      </thead>
-      <tbody>
-        {#each data as d}
-            <tr>
-              <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                  {increment()}
-                </span>
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {d.type_id.name} 
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {d.camera_id.name} 
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {capitalizeFirstLetter(d.class_id.name)}
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {#if d.distance == -1}No Distance{:else}{d.distance}{/if}
-              </td>
-              <td
-                class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {new Date(d.created_at).toLocaleString("vi-VN")}
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
-              >
-                {#each action_list as action}
-                  {#if user_object.role_id.name != "admin" && (action.name != "delete" && action.name != "edit" && action.name != "view")}
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
-                      <icon class={action.icon}></icon>
-                    </button>
-                  {:else if user_object.role_id.name == "admin" }
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
-                      <icon class={action.icon}></icon>
-                    </button>
-                  {/if} 
-                {/each}
-              </td>
-            </tr>   
-        {/each}   
-      </tbody>
-    </table>
+    {#if result_data.length == 0 || result_data == null}
+      <div class="items-center text-center w-full bg-transparent border-collapse py-10">
+          <div class="py-10">
+            <i class="fa-solid fa-box-open text-8xl text-blue-600 mb-5"></i>
+            <h1 class="text-3xl font-semibold text-zinc-700">There Is No Data Available</h1>
+          </div>
+      </div>
+    {:else}
+      <!-- Projects table -->
+      <table class="items-center w-full bg-transparent border-collapse">
+        <thead>
+          <tr>
+          {#each table_properties as prop}
+          <th
+            class="px-6 align-middle text-center border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold {color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-700 text-red-200 border-red-600'}"
+          >
+            {prop}
+          </th>
+          {/each}
+          </tr>
+        </thead>
+        <tbody>
+          {#each result_data as d}
+              <tr>
+                <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                  <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
+                    {increment()}
+                  </span>
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {d.type_id.name} 
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {d.camera_id.name} 
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {capitalizeFirstLetter(d.class_id.name)}
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {#if d.distance == -1}No Distance{:else}{d.distance}{/if}
+                </td>
+                <td
+                  class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {new Date(d.created_at).toLocaleString("vi-VN")}
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
+                >
+                  {#each action_list as action}
+                    {#if user_object.role_id.name != "admin" && (action.name != "delete" && action.name != "edit" && action.name != "view")}
+                      <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
+                        <icon class={action.icon}></icon>
+                      </button>
+                    {:else if user_object.role_id.name == "admin" }
+                      <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
+                        <icon class={action.icon}></icon>
+                      </button>
+                    {/if} 
+                  {/each}
+                </td>
+              </tr>   
+          {/each}   
+        </tbody>
+      </table>
+    {/if}
   </div>
 </div>
 

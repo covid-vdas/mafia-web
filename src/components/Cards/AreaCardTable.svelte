@@ -57,6 +57,7 @@
 
   async function reloadData(){
     await invalidate(API_URL+"area/");
+    result_data = data;
   }
 
   function userAction(action, d) {
@@ -157,61 +158,70 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
-    <!-- Projects table -->
-    <table class="items-center w-full bg-transparent border-collapse">
-      <thead>
-        <tr>
-        {#each table_properties as prop}
-        <th
-          class="px-6 align-middle text-center border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold {color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-700 text-red-200 border-red-600'}"
-        >
-          {prop}
-        </th>
-        {/each}
-        </tr>
-      </thead>
-      <tbody>
-        {#each result_data as d, i}
-            <tr>
-              <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                  {i+1}
-                </span>
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {capitalizeFirstLetter(d.name)}
-              </td>
-              <td
-                class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-              >
-                {new Date(d.updated_at).toLocaleString("vi-VN")}
-              </td>
-              <td
-                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
-              >
-                {#each action_list as action}
-                  {#if user_object.role_id.name != "admin" && (action.name != "delete" && action.name != "edit" && action.name != "view")}
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
-                      <icon class={action.icon}></icon>
-                    </button>
-                  {:else if user_object.role_id.name == "admin" }
-                    <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
-                      <icon class={action.icon}></icon>
-                    </button>
-                  {/if} 
-                {/each}
-              </td>
-            </tr>   
-        {/each}   
-      </tbody>
-    </table>
+    {#if result_data.length == 0 || result_data == null}
+      <div class="items-center text-center w-full bg-transparent border-collapse py-10">
+          <div class="py-10">
+            <i class="fa-solid fa-box-open text-8xl text-blue-600 mb-5"></i>
+            <h1 class="text-3xl font-semibold text-zinc-700">There Is No Data Available</h1>
+          </div>
+      </div>
+    {:else}
+      <!-- Projects table -->
+      <table class="items-center w-full bg-transparent border-collapse">
+        <thead>
+          <tr>
+          {#each table_properties as prop}
+          <th
+            class="px-6 align-middle text-center border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold {color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-700 text-red-200 border-red-600'}"
+          >
+            {prop}
+          </th>
+          {/each}
+          </tr>
+        </thead>
+        <tbody>
+          {#each result_data as d, i}
+              <tr>
+                <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                  <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
+                    {i+1}
+                  </span>
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {capitalizeFirstLetter(d.name)}
+                </td>
+                <td
+                  class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {new Date(d.updated_at).toLocaleString("vi-VN")}
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
+                >
+                  {#each action_list as action}
+                    {#if user_object.role_id.name == "staff" && action.name == "detail"}
+                      <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
+                        <icon class={action.icon}></icon>
+                      </button>
+                    {:else if user_object.role_id.name != "staff" }
+                      <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
+                        <icon class={action.icon}></icon>
+                      </button>
+                    {/if} 
+                  {/each}
+                </td>
+              </tr>   
+          {/each}   
+        </tbody>
+      </table>
+    {/if}
   </div>
   <div class="rounded-t mb-0 px-4 py-3 border-0">
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-        {#if user_object.role_id.name == "admin"}<a href="/management/area/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>{/if}
+        {#if user_object.role_id.name != "staff"}<a href="/management/area/create" class="btn bg-emerald-600 text-white">Create New {table_title}</a>{/if}
       </div>
     </div>
   </div>
