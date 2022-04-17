@@ -35,6 +35,9 @@
     export let data;
     let processing = false;
 
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
     const handleSubmit = async () =>{
     }
@@ -48,7 +51,7 @@
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
                     <a sveltekit:prefetch href={"/management/report/camera_"+data.camera_id.id} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>{#if edit}Edit{/if} Report Information
                 </div>
-                <img class="mb-4" src="#" on:error={(e) =>{
+                <img class="mb-4" src={data.image_id.url} on:error={(e) =>{
                     let source = e.target;
                     source.setAttribute("src", "/static/report_temp.png");
                   }} alt="Violation Image"/>
@@ -63,7 +66,7 @@
                         Type
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" value="Distance" disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={data.type_id.name} disabled={!edit}/>
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
                         Camera
                     </label>
@@ -73,29 +76,12 @@
                         Class
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" value="Person" disabled={!edit}/>
+                    transition-all duration-150 focus:outline-none" id="info-fullname" value={capitalizeFirstLetter(data.class_id.name)} disabled={!edit}/>
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-fullname">
                         Distance
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="info-fullname" value="132.53608929178085" disabled={!edit}/>
-
-                    {#if !edit}
-                        {#if processing}
-                            <button
-                                class="text-white bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                                type="submit" disabled>
-                                <icon class="fa-solid fa-spinner fa-spin-pulse fa-xl mr-1"></icon>
-                                Processing..
-                            </button>
-                        {:else}
-                            <button
-                                class="text-white bg-emerald-600 active:bg-blue-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                                type="submit">
-                                Export
-                            </button>
-                        {/if}
-                    {/if}
+                    transition-all duration-150 focus:outline-none" id="info-fullname" value={data.distance == -1 ? "No Distance" : data.distance} disabled={!edit}/>
                 </form>
             </div>
         </div>

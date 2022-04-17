@@ -18,11 +18,28 @@
   export let action_list;
   export let user_object;
 
+  let result_data;
+  let token_value;
+  
+  $: search_key = "";
 
   const { open, close } = getContext('simple-modal');
-
-  let token_value;
+  
   token.subscribe((t) => (token_value = t));
+  result_data = data;
+
+
+  const handleSearch = () => {
+    console.log(search_key);
+    if(search_key){
+      result_data = data.filter((d) => {
+      return d.name.includes(search_key);
+    })
+    } else {
+      result_data = data;
+    }
+    
+  }
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -52,10 +69,19 @@
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
         <h3
-          class="font-semibold text-lg {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
+          class="font-semibold text-lg inline-block {color === 'light' ? 'text-blueGray-700' : 'text-white'}"
         >
           {table_title}
-        </h3>
+        </h3> 
+      </div>
+      <div class="inline-flex flex-row-reverse px-4 ">
+        <div class="relative flex w-full flex-wrap items-stretch">
+          <span class="px-2 py-2 leading-snug font-normal absolute text-center text-zinc-300 bg-transparent rounded items-center justify-center text-lg">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <input class="pl-9 bg-white placeholder-zinc-300 rounded-md text-sm w-full ease-linear
+          transition-all duration-150 focus:outline-none" type="text" bind:value={search_key} on:change={() => handleSearch()}/>
+        </div>
       </div>
     </div>
   </div>
@@ -74,7 +100,7 @@
         </tr>
       </thead>
       <tbody>
-        {#each data as d,i}
+        {#each result_data as d,i}
             <tr>
               <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">

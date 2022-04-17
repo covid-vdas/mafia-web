@@ -19,6 +19,31 @@
   export let user_object;
   export let area_id;
 
+  let result_data;
+
+  $: search_key = "";
+
+  result_data = data;
+
+  const handleSearch = () => {
+      let search_key_value = removeAccents(search_key).toLowerCase();
+      if(search_key_value){
+        result_data = data.filter((d) => {
+        return removeAccents(d.name).toLowerCase().includes(search_key_value);
+      })
+      } else {
+        result_data = data;
+      }
+      
+    }
+
+  
+  function removeAccents(str) {
+  return str.normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  }
+
   const { open, close } = getContext('simple-modal');
 
   let token_value;
@@ -51,11 +76,20 @@
           {table_title}s
         </h3>
       </div>
+      <div class="inline-flex flex-row-reverse px-4 ">
+        <div class="relative flex w-full flex-wrap items-stretch">
+          <span class="px-2 py-2 leading-snug font-normal absolute text-center text-zinc-300 bg-transparent rounded items-center justify-center text-lg">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <input class="pl-9 bg-white placeholder-zinc-300 rounded-md text-sm w-full ease-linear
+          transition-all duration-150 focus:outline-none" type="text" bind:value={search_key} on:change={() => handleSearch()}/>
+        </div>
+      </div>
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
     <div class="grid grid-cols-4 gap-4 px-5 text-center text-slate-700 font-bold">
-      {#each data as d}
+      {#each result_data as d}
       <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2 grid grid-rows-1" on:click={handleClick(d)}>
         <div class="row-span-1 mb-3">
           <img src={d.url}

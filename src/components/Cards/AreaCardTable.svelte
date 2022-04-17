@@ -26,6 +26,30 @@
   let token_value;
   token.subscribe((t) => (token_value = t));
 
+  let result_data;
+
+  $: search_key = "";
+
+  result_data = data;
+
+  const handleSearch = () => {
+      let search_key_value = removeAccents(search_key).toLowerCase();
+      if(search_key_value){
+        result_data = data.filter((d) => {
+        return removeAccents(d.name).toLowerCase().includes(search_key_value);
+      })
+      } else {
+        result_data = data;
+      }
+      
+    }
+
+  
+  function removeAccents(str) {
+  return str.normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  }
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -121,6 +145,15 @@
           {table_title}s
         </h3>
       </div>
+      <div class="inline-flex flex-row-reverse px-4 ">
+        <div class="relative flex w-full flex-wrap items-stretch">
+          <span class="px-2 py-2 leading-snug font-normal absolute text-center text-zinc-300 bg-transparent rounded items-center justify-center text-lg">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <input class="pl-9 bg-white placeholder-zinc-300 rounded-md text-sm w-full ease-linear
+          transition-all duration-150 focus:outline-none" type="text" bind:value={search_key} on:change={() => handleSearch()}/>
+        </div>
+      </div>
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
@@ -138,11 +171,11 @@
         </tr>
       </thead>
       <tbody>
-        {#each data as d}
+        {#each result_data as d, i}
             <tr>
               <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                  {increment()}
+                  {i+1}
                 </span>
               </td>
               <td

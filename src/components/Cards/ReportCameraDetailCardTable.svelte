@@ -92,12 +92,12 @@
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                {d.class_id.name}
+                {capitalizeFirstLetter(d.class_id.name)}
               </td>
               <td
                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
               >
-                {d.distance}
+                {#if d.distance == -1}No Distance{:else}{d.distance}{/if}
               </td>
               <td
                 class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
