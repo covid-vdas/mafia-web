@@ -1,6 +1,6 @@
 <script>
   // core components
-  import {API_URL} from "utils/constant.js";
+  import {API_URL, PAGE_SIZE} from "utils/constant.js";
   import { token } from "../../stores.js";
   import { toast } from '@zerodevx/svelte-toast';
   import { goto, invalidate } from '$app/navigation';
@@ -8,6 +8,8 @@
   import Confirmation from 'components/Modals/Confirmation.svelte';
   import CardLineChart from "components/Cards/CardLineChart.svelte";
   import CardDoughnutChart from "components/Cards/CardDoughnutChart.svelte";
+  import paginate from 'components/Paginator/paginate.js';
+  import PaginationNav from 'components/Paginator/PaginationNav.svelte';
 
   // can be one of light or dark
   export let color = "light";
@@ -20,21 +22,24 @@
 
 
   const { open, close } = getContext('simple-modal');
-  
-  let result_data;
 
   $: search_key = "";
 
-  result_data = data;
+  $: items = data;
+  let currentPage = 1
+  let pageSize = PAGE_SIZE
+  $: paginatedItems = paginate({ items, pageSize, currentPage })
 
   const handleSearch = () => {
       let search_key_value = removeAccents(search_key).toLowerCase();
       if(search_key_value){
-        result_data = data.filter((d) => {
-        return removeAccents(d.type_id.name).toLowerCase().includes(search_key_value) || removeAccents(d.class_id.name).toLowerCase().includes(search_key_value);
-      })
+        items = data.filter((d) => {
+          return removeAccents(d.type_id.name).toLowerCase().includes(search_key_value) || removeAccents(d.class_id.name).toLowerCase().includes(search_key_value);
+        })
+        currentPage = 1;
       } else {
-        result_data = data;
+        items = data;
+        currentPage = 1;
       }
       
     }
@@ -89,7 +94,7 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
-    {#if result_data.length == 0 || result_data == null}
+    {#if items.length == 0 || items == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
           <div class="py-10 flex-col justify-center">
             <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>
@@ -115,11 +120,11 @@
           </tr>
         </thead>
         <tbody>
-          {#each result_data as d,i}
+          {#each paginatedItems as d,i}
               <tr>
                 <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                    {i + 1}
+                    { (currentPage - 1) * pageSize +  i + 1}
                   </span>
                 </td>
                 <td
@@ -166,6 +171,14 @@
           {/each}   
         </tbody>
       </table>
+      <PaginationNav
+      totalItems="{items.length}"
+      pageSize="{pageSize}"
+      currentPage="{currentPage}"
+      limit="{1}"
+      showStepOptions="{true}"
+      on:setPage="{(e) => currentPage = e.detail.page}"
+      />
     {/if}
   </div>
 </div>

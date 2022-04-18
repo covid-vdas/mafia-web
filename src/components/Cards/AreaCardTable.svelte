@@ -1,6 +1,6 @@
 <script>
   // core components
-  import {API_URL} from "utils/constant.js";
+  import {API_URL, PAGE_SIZE} from "utils/constant.js";
   import { token } from "../../stores.js";
   import { toast } from '@zerodevx/svelte-toast';
   import { goto, invalidate } from '$app/navigation';
@@ -29,7 +29,7 @@
 
   $: items = data;
   let currentPage = 1
-  let pageSize = 2
+  let pageSize = PAGE_SIZE
   $: paginatedItems = paginate({ items, pageSize, currentPage })
 
   
@@ -38,8 +38,8 @@
       if(search_key_value){
         items = data.filter((d) => {
         return removeAccents(d.name).toLowerCase().includes(search_key_value);
-        currentPage = 1;
         });
+        currentPage = 1;
       } else {
         items = data;
         currentPage = 1;
@@ -187,7 +187,7 @@
               <tr>
                 <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                    {i+1}
+                    { (currentPage - 1) * pageSize +  i + 1}
                   </span>
                 </td>
                 <td

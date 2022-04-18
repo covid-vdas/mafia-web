@@ -1,6 +1,6 @@
 <script>
   // core components
-  import {API_URL} from "utils/constant.js";
+  import {API_URL, PAGE_SIZE} from "utils/constant.js";
   import { token } from "../../stores.js";
   import { toast } from '@zerodevx/svelte-toast';
   import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
@@ -8,6 +8,8 @@
   import { goto, invalidate } from '$app/navigation';
   import { getContext } from 'svelte';
   import Confirmation from 'components/Modals/Confirmation.svelte';
+  import paginate from 'components/Paginator/paginate.js';
+  import PaginationNav from 'components/Paginator/PaginationNav.svelte';
   
 
   // can be one of light or dark
@@ -18,24 +20,30 @@
   export let action_list;
   export let user_object;
 
-  let result_data;
+  let items;
 
   $: search_key = "";
 
-  result_data = data.filter((d) => {
-    return d.username != user_object.username;
-  });
+  $:  items = data.filter((d) => {
+        return d.username != user_object.username;
+      });
+  let currentPage = 1
+  let pageSize = PAGE_SIZE
+  $: paginatedItems = paginate({ items, pageSize, currentPage })
+
 
   const handleSearch = () => {
       let search_key_value = removeAccents(search_key).toLowerCase();
       if(search_key_value){
-        result_data = data.filter((d) => {
-        return (removeAccents(d.username).toLowerCase().includes(search_key_value) || removeAccents(d.fullname).toLowerCase().includes(search_key_value)) && d.username != user_object.username;
-      })
+        items = data.filter((d) => {
+          return (removeAccents(d.username).toLowerCase().includes(search_key_value) || removeAccents(d.fullname).toLowerCase().includes(search_key_value)) && d.username != user_object.username;
+        })
+        currentPage = 1;
       } else {
-        result_data = data.filter((d) => {
+        items = data.filter((d) => {
           return d.username != user_object.username;
         });
+        currentPage = 1;
       }
     }
 
@@ -57,7 +65,7 @@
 
   async function reloadData(){
     await invalidate(API_URL+"user/");
-    result_data = data.filter((d) => {
+    items = data.filter((d) => {
       return d.username != user_object.username;
     });
   }
@@ -273,7 +281,7 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
-    {#if result_data.length == 0 || result_data == null}
+    {#if items.length == 0 || items == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
         <div class="py-10 flex-col justify-center">
             <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>
@@ -295,11 +303,11 @@
           </tr>
         </thead>
         <tbody>
-          {#each result_data as d, i}
+          {#each paginatedItems as d, i}
               <tr>
                 <td class="border-t-0 text-center px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   <span class="{color === 'light' ? 'text-blueGray-600' : 'text-white'}">
-                    {i + 1}
+                    { (currentPage - 1) * pageSize +  i + 1}
                   </span>
                 </td>
                 <td
@@ -369,6 +377,14 @@
           {/each}   
         </tbody>
       </table>
+      <PaginationNav
+      totalItems="{items.length}"
+      pageSize="{pageSize}"
+      currentPage="{currentPage}"
+      limit="{1}"
+      showStepOptions="{true}"
+      on:setPage="{(e) => currentPage = e.detail.page}"
+      />
     {/if}
   </div>
   <div class="rounded-t mb-0 px-4 py-3 border-0">

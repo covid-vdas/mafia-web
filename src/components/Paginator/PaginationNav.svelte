@@ -30,7 +30,7 @@
   }
 </script>
 
-<div class="pagination-nav flex">
+<div class="pagination-nav flex justify-center mt-4">
   {#each options as option}
     <span
       class="option"
@@ -46,7 +46,7 @@
       on:click="{() => handleOptionClick(option)}"
     >
       {#if option.type === 'number' && option.value !== currentPage}
-        <div class="option number first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-orange-500 bg-white text-orange-500">
+        <div class="option number first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative bg-white text-zinc-600">
           <slot name="number" value="{option.value}">
             <span>{option.value}</span>
           </slot>
@@ -56,27 +56,39 @@
           <span>...</span>
         </slot>
       {:else if option.type === 'symbol' && option.symbol === PREVIOUS_PAGE}
-        <div class="option prev first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-orange-500 bg-white text-orange-500">
+        <div class="option prev first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative bg-white">
           <slot name="prev">
-            <i class="fa-solid fa-chevron-left"></i>
-          </slot>
-        </div>
-      {:else if option.type === 'symbol' && option.symbol === NEXT_PAGE}
-        <div class="option next first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-orange-500 bg-white text-orange-500">
-          <slot name="next ">
-            <svg
+            <i> 
+              <svg
               style="width:24px;height:24px"
               viewBox="0 0 24 24"
             >
               <path
-                fill="#27272a"
+                fill="#2563eb"
+                d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+              />
+            </svg>
+            </i>
+          </slot>
+        </div>
+      {:else if option.type === 'symbol' && option.symbol === NEXT_PAGE}
+        <div class="option next first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative bg-white">
+          <slot name="next ">
+            <i>
+              <svg
+              style="width:24px;height:24px"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="#2563eb"
                 d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
               />
             </svg>
+            </i>
           </slot>
         </div>
         {:else if option.type === 'number' }
-        <div class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-orange-500 text-white bg-orange-500">
+        <div class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative border-b-2 border-blue-600 text-blue-600 ">
           <slot name="number" value="{option.value}">
             <span>{option.value}</span>
           </slot>

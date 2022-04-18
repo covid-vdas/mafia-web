@@ -35,7 +35,7 @@
 
   let items = result_data;
   let currentPage = 1
-  let pageSize = 1
+  let pageSize = 10
   $: paginatedItems = paginate({ items, pageSize, currentPage })
 
   const handleSearch = () => {
@@ -122,7 +122,7 @@
               <tr>
                 <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                    {i+1}
+                    { (currentPage - 1) * pageSize +  i + 1}
                   </span>
                 </td>
                 <td
@@ -148,7 +148,8 @@
           {/each}   
         </tbody>
       </table>
-      <LightPaginationNav
+      <div class="mb-4">
+        <LightPaginationNav
         totalItems="{items.length}"
         pageSize="{pageSize}"
         currentPage="{currentPage}"
@@ -156,6 +157,7 @@
         showStepOptions="{true}"
         on:setPage="{(e) => currentPage = e.detail.page}"
       />
+      </div>
     </div>
     {/if}
   </div>

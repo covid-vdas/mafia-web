@@ -88,6 +88,12 @@
     
     <p class="mt-4"></p>
 
+    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-cam-ratio">
+        Ratio
+    </label>
+    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-3/12 ease-linear
+    transition-all duration-150 focus:outline-none" id="create-cam-ratio" step="any" bind:value={ratio} required/>
+
 {#if uploaded}
     {#if processing}
         <div class="spinner-border text-primary" role="status">
@@ -111,11 +117,7 @@
     <button class="btn btn-success" on:click={() => fileInput.click()}>
         Select images
     </button>
-    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-cam-ratio">
-        Ratio
-    </label>
-    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-3/12 ease-linear
-    transition-all duration-150 focus:outline-none" id="create-cam-ratio" bind:value={ratio} required/>
+   
     <!-- {#if !ratio_valid}
         <p class="text-rose-600 text-left text-sm font-semibold mb-3">{ratio_message}</p>
     {/if} -->

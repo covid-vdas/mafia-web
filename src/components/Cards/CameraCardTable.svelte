@@ -1,6 +1,6 @@
 <script>
   // core components
-  import {API_URL} from "utils/constant.js";
+  import {API_URL, CAMERA_PAGE_SIZE} from "utils/constant.js";
   import { token } from "../../stores.js";
   import { toast } from '@zerodevx/svelte-toast';
   import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
@@ -8,7 +8,8 @@
   import { goto, invalidate } from '$app/navigation';
   import { getContext } from 'svelte';
   import Confirmation from 'components/Modals/Confirmation.svelte';
-  
+  import PaginationNav from 'components/Paginator/PaginationNav.svelte';
+  import paginate from 'components/Paginator/paginate.js';
 
   // can be one of light or dark
   export let color = "light";
@@ -24,20 +25,25 @@
   let token_value;
   token.subscribe((t) => (token_value = t));
 
-  let result_data;
-
   $: search_key = "";
 
-  result_data = data;
+  $: items = data;
+  let currentPage = 1
+  let pageSize = CAMERA_PAGE_SIZE
+  $: paginatedItems = paginate({ items, pageSize, currentPage })
+
+  items = data;
 
   const handleSearch = () => {
       let search_key_value = removeAccents(search_key).toLowerCase();
       if(search_key_value){
-        result_data = data.filter((d) => {
+        items = data.filter((d) => {
         return removeAccents(d.name).toLowerCase().includes(search_key_value);
-      })
+                });
+        currentPage = 1;
       } else {
-        result_data = data;
+        items = data;
+        currentPage = 1;
       }
       
     }
@@ -89,7 +95,7 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
-    {#if result_data.length == 0 || result_data == null}
+    {#if items.length == 0 || items == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
         <div class="py-10 flex-col justify-center">
             <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>/i>
@@ -98,7 +104,7 @@
       </div>
     {:else}
       <div class="grid grid-cols-4 gap-4 px-5 text-center text-slate-700 font-bold">
-        {#each result_data as d,i}
+        {#each paginatedItems as d,i}
         <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2 grid grid-rows-1" on:click={handleClick(d)}>
           <div class="row-span-1">
             <img id={"camera_"+i} src={d.url} on:error={(e) =>{
@@ -110,6 +116,14 @@
         </div>
         {/each}
       </div>
+      <PaginationNav
+      totalItems="{items.length}"
+      pageSize="{pageSize}"
+      currentPage="{currentPage}"
+      limit="{1}"
+      showStepOptions="{true}"
+      on:setPage="{(e) => currentPage = e.detail.page}"
+      />
     <!-- Projects table -->
     {/if}
   </div>

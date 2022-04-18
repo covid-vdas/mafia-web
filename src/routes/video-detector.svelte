@@ -1,19 +1,50 @@
 <script>
     import { onMount } from 'svelte'
 
-    let IP = '14.161.73.85:81'
-    let valid = false
+   
+   /** @type {HTMLInputElement} */
+   let fileInput
+
     let processing = false
-    let ivSteam
+    let uploaded = false
+    let ratio;
 
-    let elModal
-    let modal
+    let elModal, modal
+    let elVideo
+    let valid = false;
+    let detected_url = "";
 
-    let elImg
-    let lastImgUrl = ''
+    const cancel = () => {
+        images = []
+        results = []
+        uploaded = false
+        processing = false
+        modal.hide()
+    }
 
-    $: {
-        valid = /^\d{1,3}(\.\d{1,3}){3}(\:\d+)?$/.test(IP)
+    const upload = () => {
+        processing = true
+        let done = 0
+        
+        const data = new FormData()
+        data.append('video', elVideo.file)
+        data.append('ratio', ratio)
+        console.log(data)
+        fetch(API_DETECT_URL+'detector/', {
+            method: 'POST',
+            body: data,
+        })
+            .then(resp => {
+                if(resp.status == 200){
+
+                }
+            }
+            ).catch(err => {
+                console.log(err)
+                processing = false
+                alert('Failed to upload images.')
+            })
+       
     }
 
     onMount(() => {
@@ -22,43 +53,28 @@
         })
     })
 
-    const blobToBase64 = blob => {
+    const fileToUrl = (file) => new Promise(resolve => {
         const reader = new FileReader()
-        reader.readAsDataURL(blob);
-        return new Promise(resolve => {
-            reader.onloadend = () => {
-                resolve(reader.result)
-            }
-        })
-    }
+        reader.onload = (e) => resolve(URL.createObjectURL(file))
+        reader.readAsDataURL(file)
+    })
 
-    const process = () => {
-        processing = true
 
-        fetch(`/api/forward?ip=${IP}`)
-            .then(resp => resp.json())
-            .then(json => {
-                if (!json.ok) throw null
-                lastImgUrl = 'data:image/jpeg;base64,' + json.data
-                elImg.src = lastImgUrl
-                modal.show()
-                stream()
-            })
-            .catch(err => {
-                processing = false
-                alert('Failed to fetch camera\'s image streaming.')
-            })
-    }
 
-    const stream = () => {
-        ivSteam = setInterval(() => {
-            fetch(`/api/forward?ip=${IP}`)
-            .then(resp => resp.json())
-            .then(json => {
-                lastImgUrl = 'data:image/jpeg;base64,' + json.data
-                elImg.src = lastImgUrl
-            })
-        }, 100)
+    const onFileChange = async (e) => {
+        const files = fileInput.files
+        const vids = [...files]
+            .filter(f => f.size !== 0)
+            .map(async f => ({
+                file: f,
+                name: f.name,
+                size: f.size,
+                type: f.type,
+                src: await fileToUrl(f)
+            }))
+
+        elVideo = await Promise.all(vids)
+        uploaded = true
     }
 
     const close = () => {
@@ -77,29 +93,50 @@
         <a href="/">Back to home</a>
     </div>
 
-    <div class="input-group mb-3 mt-4" style="max-width: 300px;">
-        <span class="input-group-text"><i class="bi bi-camera-video" /></span>
-        <input bind:value={IP} disabled={processing} type="text" class="form-control" placeholder="Enter a camera IP address" />
-    </div>
+    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-3/12 ease-linear
+    transition-all duration-150 focus:outline-none" id="create-cam-ratio" step="any" bind:value={ratio} required/>
 
-    <button class="btn btn-primary" on:click={process} disabled={!valid || processing}>
-    {#if processing}
-        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-        Processing...
+    {#if uploaded}
+        {#if processing}
+            <div class="spinner-border text-primary" role="status">
+            </div>
+            <p class="mt-2">Processing...</p>
+        {:else}
+            <p>
+                {elVideo.length} Video selected
+            </p>
+            <div>
+                {#each elVideo as vid}
+                    <video src={vid.src} controls class="m-2" style="height: 400px" />
+                {/each}
+            </div>
+            <button class="btn btn-primary mt-2" on:click={upload}>
+                <i class="bi bi-lightning-charge-fill" /> Detect now
+            </button>
+            <a class="link link-danger mt-2" on:click={cancel}>Cancel</a>
+        {/if}
     {:else}
-        <i class="bi bi-lightning-charge-fill" /> Detect now
+        <button class="btn btn-success" on:click={() => fileInput.click()}>
+            Select Video
+        </button>
     {/if}
-    </button>
+
+    <input
+        bind:this={fileInput}
+        on:change={onFileChange}
+        hidden type="file"
+        accept="video/mp4,video/x-m4v,video/*"
+    />
 </section>
 
 <div bind:this={elModal} class="modal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{IP}</h5>
+                <h5 class="modal-title">Detect Result</h5>
             </div>
             <div class="modal-body">
-                <img bind:this={elImg} alt="" />
+                <img bind:this={elVideo} alt="" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" on:click={close}>Close</button>
