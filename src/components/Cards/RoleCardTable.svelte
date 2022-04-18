@@ -4,11 +4,15 @@
   import { token } from "../../stores.js";
   import { toast } from '@zerodevx/svelte-toast';
   import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
+  import CardLineChart from "components/Cards/CardLineChart.svelte";
   import { page } from "$app/stores"
   import { goto, invalidate } from '$app/navigation';
   import { getContext } from 'svelte';
   import Confirmation from 'components/Modals/Confirmation.svelte';
-  
+  import paginate from 'components/Paginator/paginate.js';
+  import LightPaginationNav from 'components/Paginator/LightPaginationNav.svelte';
+
+
 
   // can be one of light or dark
   export let color = "light";
@@ -17,6 +21,7 @@
   export let data;
   export let action_list;
   export let user_object;
+
 
   let result_data;
   let token_value;
@@ -28,6 +33,10 @@
   token.subscribe((t) => (token_value = t));
   result_data = data;
 
+  let items = result_data;
+  let currentPage = 1
+  let pageSize = 1
+  $: paginatedItems = paginate({ items, pageSize, currentPage })
 
   const handleSearch = () => {
     console.log(search_key);
@@ -88,12 +97,13 @@
   <div class="block w-full overflow-x-auto">
     {#if result_data.length == 0 || result_data == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
-          <div class="py-10">
-            <i class="fa-solid fa-box-open text-8xl text-blue-600 mb-5"></i>
+        <div class="py-10 flex-col justify-center">
+            <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>
             <h1 class="text-3xl font-semibold text-zinc-700">There Is No Data Available</h1>
           </div>
       </div>
     {:else}
+    <div class="flex-col">
     <!-- Projects table -->
       <table class="items-center w-full bg-transparent border-collapse">
         <thead>
@@ -108,7 +118,7 @@
           </tr>
         </thead>
         <tbody>
-          {#each result_data as d,i}
+          {#each paginatedItems as d,i}
               <tr>
                 <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
@@ -138,6 +148,15 @@
           {/each}   
         </tbody>
       </table>
+      <LightPaginationNav
+        totalItems="{items.length}"
+        pageSize="{pageSize}"
+        currentPage="{currentPage}"
+        limit="{1}"
+        showStepOptions="{true}"
+        on:setPage="{(e) => currentPage = e.detail.page}"
+      />
+    </div>
     {/if}
   </div>
 </div>

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   // library that creates chart objects in page
-  import Chart from "chart.js";
+  import Chart from "chart.js/auto";
 
   // init chart
   onMount(async () => {
@@ -19,17 +19,17 @@
         ],
         datasets: [
           {
-            label: new Date().getFullYear(),
-            backgroundColor: "#4c51bf",
-            borderColor: "#4c51bf",
+            label: "Distance",
+            backgroundColor: "#2563eb",
+            borderColor: "#2563eb",
             data: [65, 78, 66, 44, 56, 67, 75],
             fill: false
           },
           {
-            label: new Date().getFullYear() - 1,
+            label: "Mask",
             fill: false,
-            backgroundColor: "#fff",
-            borderColor: "#fff",
+            backgroundColor: "#f43f5e",
+            borderColor: "#f43f5e",
             data: [40, 68, 86, 74, 56, 60, 87]
           }
         ]
@@ -111,7 +111,7 @@
 </script>
 
 <div
-  class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-blueGray-700"
+  class="relative flex flex-col min-w-0 break-words w-full mb-6 rounded bg-blueGray-700"
 >
   <div class="rounded-t mb-0 px-4 py-3 bg-transparent">
     <div class="flex flex-wrap items-center">
@@ -119,8 +119,8 @@
         <h6 class="uppercase text-blueGray-100 mb-1 text-xs font-semibold">
           Overview
         </h6>
-        <h2 class="text-white text-xl font-semibold">
-          Sales value
+        <h2 class="text-zinc-800 text-xl font-semibold">
+          Violations rate
         </h2>
       </div>
     </div>

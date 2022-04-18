@@ -1,39 +1,26 @@
 <script>
   import { onMount } from "svelte";
   // library that creates chart objects in page
-  import Chart from "chart.js";
+  import Chart from "chart.js/auto";
+  import Utils from "chart.js/auto";
 
   // init chart
   onMount(async () => {
     let config = {
-      type: "bar",
+      type: "doughnut",
       data: {
         labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
+          "No Mask",
+          "Distance",
         ],
         datasets: [
           {
             label: new Date().getFullYear(),
-            backgroundColor: "#ed64a6",
-            borderColor: "#ed64a6",
-            data: [30, 78, 56, 34, 100, 45, 13],
+            backgroundColor: ["#2563eb",  "#f43f5e"],
+            data: [30, 70],
             fill: false,
             barThickness: 8
           },
-          {
-            label: new Date().getFullYear() - 1,
-            fill: false,
-            backgroundColor: "#4c51bf",
-            borderColor: "#4c51bf",
-            data: [27, 68, 86, 74, 10, 4, 87],
-            barThickness: 8
-          }
         ]
       },
       options: {
@@ -103,7 +90,7 @@
 </script>
 
 <div
-  class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded"
+  class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 rounded"
 >
   <div class="rounded-t mb-0 px-4 py-3 bg-transparent">
     <div class="flex flex-wrap items-center">
@@ -111,8 +98,8 @@
         <h6 class="uppercase text-blueGray-400 mb-1 text-xs font-semibold">
           Performance
         </h6>
-        <h2 class="text-blueGray-700 text-xl font-semibold">
-          Total orders
+        <h2 class="text-zinc-700 text-xl font-semibold">
+          Violations Rate
         </h2>
       </div>
     </div>

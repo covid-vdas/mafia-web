@@ -91,8 +91,8 @@
   <div class="block w-full overflow-x-auto">
     {#if result_data.length == 0 || result_data == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
-          <div class="py-10">
-            <i class="fa-solid fa-box-open text-8xl text-blue-600 mb-5"></i>
+        <div class="py-10 flex-col justify-center">
+            <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>/i>
             <h1 class="text-3xl font-semibold text-zinc-700">There Is No Data Available</h1>
           </div>
       </div>
@@ -100,13 +100,13 @@
       <div class="grid grid-cols-4 gap-4 px-5 text-center text-slate-700 font-bold">
         {#each result_data as d,i}
         <div class="bg-white rounded-lg p-3 cursor-pointer shadow-md rouded border-2 grid grid-rows-1" on:click={handleClick(d)}>
-          <div class="row-span-1 mb-3">
+          <div class="row-span-1">
             <img id={"camera_"+i} src={d.url} on:error={(e) =>{
               let source = e.target;
               source.setAttribute("src", "/static/error_placeholder.png");
-            }}  alt="camera stream" class="bg bg-contain"/>
+            }}  alt="camera stream" class="object-cover object-center w-full h-full"/>
           </div>
-          <div class="row-span-1 text-center items-center">{d.name}</div>
+          <div class="row-span-1 text-center items-center mt-3">{d.name}</div>
         </div>
         {/each}
       </div>

@@ -6,7 +6,8 @@
   import { goto, invalidate } from '$app/navigation';
   import { getContext } from 'svelte';
   import Confirmation from 'components/Modals/Confirmation.svelte';
-  
+  import CardLineChart from "components/Cards/CardLineChart.svelte";
+  import CardDoughnutChart from "components/Cards/CardDoughnutChart.svelte";
 
   // can be one of light or dark
   export let color = "light";
@@ -44,9 +45,6 @@
             .replace(/[\u0300-\u036f]/g, '')
             .replace(/đ/g, 'd').replace(/Đ/g, 'D');
   }
-  
-  let index = 0;
-  const increment = () => index += 1;
 
 
   function capitalizeFirstLetter(string) {
@@ -93,12 +91,16 @@
   <div class="block w-full overflow-x-auto">
     {#if result_data.length == 0 || result_data == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
-          <div class="py-10">
-            <i class="fa-solid fa-box-open text-8xl text-blue-600 mb-5"></i>
+          <div class="py-10 flex-col justify-center">
+            <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>
             <h1 class="text-3xl font-semibold text-zinc-700">There Is No Data Available</h1>
           </div>
       </div>
     {:else}
+      <div class="flex flex-wrap flex-row">
+        <CardDoughnutChart/>
+        <CardLineChart/>
+      </div>
       <!-- Projects table -->
       <table class="items-center w-full bg-transparent border-collapse">
         <thead>
@@ -113,11 +115,11 @@
           </tr>
         </thead>
         <tbody>
-          {#each result_data as d}
+          {#each result_data as d,i}
               <tr>
                 <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
-                    {increment()}
+                    {i + 1}
                   </span>
                 </td>
                 <td

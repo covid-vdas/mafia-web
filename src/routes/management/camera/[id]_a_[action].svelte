@@ -96,6 +96,7 @@
             body : JSON.stringify({
                 'name' : data.name,
                 'url' : data.url,
+                'ratio' : data.ratio
             }),
         }).then(
             response => {
@@ -247,7 +248,7 @@
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-cam-ratio">
                         Ratio
                     </label>
-                    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    <input type="number" step="any" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none
                     {!ratio_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-cam-ratio" bind:value={data.ratio} disabled={!edit} required/>
                     {#if !ratio_valid}

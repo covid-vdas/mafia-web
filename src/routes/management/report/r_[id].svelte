@@ -1,5 +1,5 @@
 <script context="module">
-    import {API_URL} from "utils/constant.js";
+    import {API_URL, MEDIA_DETECT_URL} from "utils/constant.js";
     import {token} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({fetch, params}){
@@ -39,6 +39,8 @@
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    console.log(data)
+
     const handleSubmit = async () =>{
     }
 </script>
@@ -51,7 +53,7 @@
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
                     <a sveltekit:prefetch href={"/management/report/camera_"+data.camera_id.id} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>{#if edit}Edit{/if} Report Information
                 </div>
-                <img class="mb-4" src={data.image_id.url} on:error={(e) =>{
+                <img class="mb-4" src={`${MEDIA_DETECT_URL}${data.image_id.name}.png`} on:error={(e) =>{
                     let source = e.target;
                     source.setAttribute("src", "/static/report_temp.png");
                   }} alt="Violation Image"/>

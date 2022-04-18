@@ -15,7 +15,7 @@ const config = {
 				}
 			},
 			ssr: {
-				noExternal: [ 'dayjs' ],
+				noExternal: [ 'dayjs', 'chart.js' ],
 			}
 		}
 		
