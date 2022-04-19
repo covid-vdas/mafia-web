@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte'
-
+    import { MEDIA_DETECT_URL, API_DETECT_URL } from 'utils/constant.js'
    
    /** @type {HTMLInputElement} */
    let fileInput
@@ -12,11 +12,11 @@
     let elModal, modal
     let elVideo
     let valid = false;
-    let detected_url = "";
+    $: detected_url = "";
 
     const cancel = () => {
-        images = []
-        results = []
+        elVideo = []
+        detected_url = []
         uploaded = false
         processing = false
         modal.hide()
@@ -24,25 +24,26 @@
 
     const upload = () => {
         processing = true
-        let done = 0
-        
+        const video_name = elVideo[0].name.split('.').slice(0, -1).join('.');
         const data = new FormData()
-        data.append('video', elVideo.file)
+        data.append('video', elVideo[0].file)
         data.append('ratio', ratio)
-        console.log(data)
+        console.log(video_name);
         fetch(API_DETECT_URL+'detector/', {
             method: 'POST',
             body: data,
         })
             .then(resp => {
                 if(resp.status == 200){
-
+                    detected_url = `${MEDIA_DETECT_URL}${video_name}.avi`
+                    modal.show()
+                    processing = false
                 }
             }
             ).catch(err => {
                 console.log(err)
                 processing = false
-                alert('Failed to upload images.')
+                alert('Failed to upload Video.')
             })
        
     }
@@ -77,10 +78,10 @@
         uploaded = true
     }
 
+
     const close = () => {
-        clearInterval(ivSteam)
         processing = false
-        elImg.src = ''
+        detected_url = ''
         modal.hide()
     }
 </script>
@@ -93,7 +94,10 @@
         <a href="/">Back to home</a>
     </div>
 
-    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-3/12 ease-linear
+     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-cam-ratio">
+        Ratio
+    </label>
+    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-2/12 ease-linear
     transition-all duration-150 focus:outline-none" id="create-cam-ratio" step="any" bind:value={ratio} required/>
 
     {#if uploaded}
@@ -107,7 +111,9 @@
             </p>
             <div>
                 {#each elVideo as vid}
-                    <video src={vid.src} controls class="m-2" style="height: 400px" />
+                    <video src={vid.src} controls class="m-2" style="height: 400px">
+                        <track kind="captions">
+                    </video>
                 {/each}
             </div>
             <button class="btn btn-primary mt-2" on:click={upload}>
@@ -129,17 +135,21 @@
     />
 </section>
 
+
 <div bind:this={elModal} class="modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg relative w-full lg:w-3/12 my-6 mx-auto max-w-3xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Detect Result</h5>
             </div>
-            <div class="modal-body">
-                <img bind:this={elVideo} alt="" />
+            <div class="modal-body flex justify-center">
+                <video controls class="w-40 h-30" alt="">
+                    <source src="http://192.168.1.108:8000/media/detected/street-6th-1.avi" type="video/avi"/>
+                    <track kind="captions">
+                </video>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" on:click={close}>Close</button>
+                <button type="button" class="btn bg-zinc-700 text-white" on:click={close}>Close</button>
             </div>
         </div>
     </div>

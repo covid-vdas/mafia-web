@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte'
-    import { API_URL, API_DETECT_URL } from 'utils/constant.js'
+    import { API_DETECT_URL, MEDIA_DETECT_URL } from 'utils/constant.js'
 
     /** @type {HTMLInputElement} */
     let fileInput
@@ -53,23 +53,26 @@
         processing = true
         let done = 0
         images.forEach((v, i) => {
+            processing = true;
             const data = new FormData()
             data.append('img', v.file)
             data.append('ratio', ratio)
-            console.log(data)
             fetch(API_DETECT_URL+'detector/', {
                 method: 'POST',
                 body: data,
             })
-                .then(resp => resp.json())
-                .then(json => {
-                    results = [...results, 'data:image/jpeg;base64,' + json.data]
-                    if (++done >= images.length) {
-                        modal.show()
-                        processing = false
+                .then(resp => {
+                    if(resp.status == 200){
+                        let detected_url = `${MEDIA_DETECT_URL}${v.name}`
+                        results = [...results, detected_url];
+                        if (++done >= images.length) {
+
+                            modal.show()
+                            processing = false
+                        }
                     }
-                })
-                .catch(err => {
+                }
+                ).catch(err => {
                     console.log(err)
                     processing = false
                     alert('Failed to upload images.')
@@ -91,7 +94,7 @@
     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-cam-ratio">
         Ratio
     </label>
-    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-3/12 ease-linear
+    <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-2/12 ease-linear
     transition-all duration-150 focus:outline-none" id="create-cam-ratio" step="any" bind:value={ratio} required/>
 
 {#if uploaded}
@@ -116,8 +119,7 @@
 {:else}
     <button class="btn btn-success" on:click={() => fileInput.click()}>
         Select images
-    </button>
-   
+    </button> 
     <!-- {#if !ratio_valid}
         <p class="text-rose-600 text-left text-sm font-semibold mb-3">{ratio_message}</p>
     {/if} -->

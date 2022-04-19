@@ -1,6 +1,7 @@
 export const API_URL = "http://mafia-violation.herokuapp.com/api/";
-export const API_DETECT_URL = "http://localhost:8000/api/";
-export const MEDIA_DETECT_URL = "http://localhost:8000/media/detected/";
+const API_DETECT = "http://192.168.1.108:8000/"
+export const API_DETECT_URL = `${API_DETECT}api/`;
+export const MEDIA_DETECT_URL = `${API_DETECT}media/detected/`;
 export const PAGE_SIZE = 10;
 export const CAMERA_PAGE_SIZE = 12;
 

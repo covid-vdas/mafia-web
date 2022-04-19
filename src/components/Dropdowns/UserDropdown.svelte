@@ -69,8 +69,8 @@
     bind:this="{popoverDropdownRef}"
     class="bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48 {dropdownPopoverShow ? 'block':'hidden'}"
   >
-    <a
-      href="#pablo" on:click={(e) => e.preventDefault()}
+    <a sveltekit:prefetch
+      href="/user/profile"
       class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
     >
       <i class="fa-solid fa-user mr-4"></i> User Profile
