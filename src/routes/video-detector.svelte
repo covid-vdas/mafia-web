@@ -35,7 +35,7 @@
         })
             .then(resp => {
                 if(resp.status == 200){
-                    detected_url = `${MEDIA_DETECT_URL}${video_name}.avi`
+                    detected_url = `${MEDIA_DETECT_URL}${video_name}.mp4`
                     modal.show()
                     processing = false
                 }
@@ -122,7 +122,7 @@
             <a class="link link-danger mt-2" on:click={cancel}>Cancel</a>
         {/if}
     {:else}
-        <button class="btn btn-success" on:click={() => fileInput.click()}>
+        <button class="btn btn-success" on:click={() => modal.show()}>
             Select Video
         </button>
     {/if}
@@ -143,8 +143,8 @@
                 <h5 class="modal-title">Detect Result</h5>
             </div>
             <div class="modal-body flex justify-center">
-                <video controls class="w-40 h-30" alt="">
-                    <source src="http://192.168.1.108:8000/media/detected/street-6th-1.avi" type="video/avi"/>
+                <video controls alt="">
+                    <source src="http://192.168.1.108:8000/media/detected/7b97d86c8a7d66220a425eaec00617ef.mp4" type="video/mp4"/>
                     <track kind="captions">
                 </video>
             </div>

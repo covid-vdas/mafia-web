@@ -128,7 +128,7 @@
     <input
         bind:this={fileInput}
         on:change={onFileChange}
-        hidden type="file" multiple
+        hidden type="file"
         accept="image/png, image/gif, image/jpeg"
     />
 </section>
