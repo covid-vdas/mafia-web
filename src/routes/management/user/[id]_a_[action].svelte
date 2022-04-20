@@ -10,6 +10,7 @@
         let managers;
         token.subscribe((t) => (token_value = t));
         user.subscribe((t) => (login_user = t));
+        
         const response = await fetch(API_URL+"user/"+params.id+"/",{
             method : "GET",
             headers : {
@@ -17,6 +18,13 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
+
+        if(response.status == 401 || response.status == 403){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
         
         if(login_user.includes("admin")){
             const response_role = await fetch(API_URL+"role/",{
@@ -39,6 +47,8 @@
             managers = response_manager.ok && (await response_manager.json());
         }
         
+        
+
         const edit = params.action == "e"? true : false;
         const user_data = response.ok && (await response.json());
         

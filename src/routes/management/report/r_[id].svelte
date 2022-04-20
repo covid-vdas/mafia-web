@@ -12,6 +12,13 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
+
+        if(response.status == 401 || response.status == 403){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
         
         const edit = params.action == "e"? true : false;
         const data = response.ok && (await response.json());
@@ -55,7 +62,7 @@
                 </div>
                 <img class="mb-4" src={`${MEDIA_DETECT_URL}${data.image_id.name}.png`} on:error={(e) =>{
                     let source = e.target;
-                    source.setAttribute("src", "/static/report_temp.png");
+                    source.setAttribute("src", "/static/error_placeholder.png");
                   }} alt="Violation Image"/>
 
                 <form on:submit|preventDefault="{handleSubmit}">

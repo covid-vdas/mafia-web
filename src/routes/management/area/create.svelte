@@ -15,9 +15,17 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
+
+        if(response_user.status == 401 || response_user.status == 403){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
+
         const users = response_user.ok && (await response_user.json());
 
-        if(login_user.includes("admin")){
+        if(login_user.includes(`"name":"admin"`)){
             const response_manager = await fetch(API_URL+"user/getAllManager/",{
                 method : "GET",
                 headers : {

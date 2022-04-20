@@ -1,11 +1,20 @@
 <script context="module">
     import {API_URL} from "utils/constant.js";
-    import {token} from "../../../stores.js";
+    import {token, user} from "../../../stores.js";
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({params}){
         let token_value;
-
+        let login_user;
+        user.subscribe((t) => (login_user = t));
         token.subscribe((t) => (token_value = t));
+
+
+        if(login_user.includes(`"name":"staff"`)){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
 
         return{
             props: {

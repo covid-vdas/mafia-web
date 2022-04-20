@@ -14,7 +14,6 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
-        const data = response.ok && (await response.json());
 
         const response_camera = await fetch(API_URL+"camera/"+params.id+"/",{
             method : "GET",
@@ -24,6 +23,14 @@
             }
         });
 
+        if(response.status == 401 || response_camera.status == 401 || response.status == 403 || response_camera.status == 403){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
+
+        const data = response.ok && (await response.json());
         const camera = response_camera.ok && (await response_camera.json());
 
         let user_value;

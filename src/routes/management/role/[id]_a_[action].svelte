@@ -1,6 +1,6 @@
 <script context="module">
     import {API_URL} from "utils/constant.js";
-    import {token} from "../../../stores.js"
+    import {token,user} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({fetch, params}){
         let token_value;
@@ -13,6 +13,17 @@
             }
         });
         
+        let user_value;
+        user.subscribe((u) => (user_value = u));
+
+
+        if(response.status == 401 || response.status == 403 || !user_value.includes(`"name":"admin"`)){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
+
         const edit = params.action == "e"? true : false;
         const role = response.ok && (await response.json());
 

@@ -14,8 +14,6 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
-        const role = response.ok && (await response.json());
-
 
         let user_value;
         let user_object;
@@ -25,6 +23,17 @@
             user_object = JSON.parse(user_value);
         }
 
+
+        if(response.status == 401 || response.status == 403 || !user_value.includes(`"name":"admin"`)){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
+        
+        const role = response.ok && (await response.json());
+
+        
         return{
             props: {
                 role: role,

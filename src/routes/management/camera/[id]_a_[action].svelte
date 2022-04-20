@@ -16,7 +16,14 @@
             }
         });
         
-        if(login_user.includes("staff")){
+        if(response.status == 401 || response.status == 403){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
+
+        if(login_user.includes(`"name":"staff"`)){
             is_staff = true;
         }
         const edit = params.action == "e"? true : false;

@@ -18,7 +18,15 @@
             }
         });
 
-        if(login_user.includes("admin")){
+        if(login_user.includes(`"name":"staff"`)){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
+    
+
+        if(login_user.includes(`"name":"admin"`)){
             const response_manager = await fetch(API_URL+"user/getAllManager/",{
                 method : "GET",
                 headers : {

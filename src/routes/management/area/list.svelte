@@ -14,6 +14,14 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
+
+        if(response.status == 401 || response.status == 403){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
+
         const data = response.ok && (await response.json());
 
 

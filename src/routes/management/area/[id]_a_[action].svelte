@@ -2,7 +2,7 @@
     import {API_URL} from "utils/constant.js";
     import {token, user} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
-    export async function load({fetch, params}){
+    export async function load({fetch, params, session}){
         let token_value;
         let login_user;
         let managers;
@@ -23,6 +23,14 @@
                 "Authorization": "Bearer "+ token_value,
             }
         });
+
+        if(response.status == 401 || response_user.status == 401 || response_user.status == 403 || response.status == 403){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
+
         const users = response_user.ok && (await response_user.json());
 
         if(login_user.includes("admin")){

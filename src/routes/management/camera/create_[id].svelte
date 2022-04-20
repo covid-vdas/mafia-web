@@ -1,9 +1,18 @@
 <script context="module">
-    import {token} from "../../../stores.js"
+    import {token, user} from "../../../stores.js"
     /** @type {import('@sveltejs/kit').Load} */
     export async function load({fetch, params}){
         let token_value;
+        let login_user;
         token.subscribe((t) => (token_value = t));
+        user.subscribe((t) => (login_user = t));
+
+        if(login_user.includes(`"name":"staff"`)){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
         return{
             props: {
                 token: token_value,

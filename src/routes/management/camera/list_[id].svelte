@@ -16,6 +16,12 @@
         });
         const data = response.ok && (await response.json());
 
+        if(response.status == 401 || response.status == 403){
+            return {
+                redirect:"/",
+                status: 303,
+            }
+        }
 
         let user_value;
         let user_object;

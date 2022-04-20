@@ -171,14 +171,16 @@
           {/each}   
         </tbody>
       </table>
-      <PaginationNav
-      totalItems="{items.length}"
-      pageSize="{pageSize}"
-      currentPage="{currentPage}"
-      limit="{1}"
-      showStepOptions="{true}"
-      on:setPage="{(e) => currentPage = e.detail.page}"
-      />
+      <div class="mb-4">
+        <PaginationNav
+        totalItems="{items.length}"
+        pageSize="{pageSize}"
+        currentPage="{currentPage}"
+        limit="{1}"
+        showStepOptions="{true}"
+        on:setPage="{(e) => currentPage = e.detail.page}"
+        />
+      </div>
     {/if}
   </div>
 </div>
