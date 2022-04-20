@@ -1,16 +1,17 @@
 <script context="module">
     import {API_URL} from "utils/constant.js";
-    import {token} from "../../../stores.js";
+    import {token, user} from "../../stores.js";
     /** @type {import('@sveltejs/kit').Load} */
-    export async function load({params}){
+    export async function load({}){
         let token_value;
-
+        let login_user;
         token.subscribe((t) => (token_value = t));
+        user.subscribe((t) => (login_user = t));
 
         return{
             props: {
                 token: token_value,
-                user_id: params.id,
+                login_user: login_user,
             }
         };
     }
@@ -22,6 +23,7 @@
 
     export let token;
     export let user_id;
+    export let login_user;
     let confirm_pass;
     let confirm_pass_valid = true;
     let pass_valid = true;
@@ -31,7 +33,9 @@
     $: pass_message = "";
 
     let processing = false;
-
+    if(login_user){
+        login_user = JSON.parse(login_user);
+    }
 
     async function reloadData(){
         await invalidate(API_URL+"user/");
@@ -91,7 +95,7 @@
         }
 
         if(pass_valid & confirm_pass_valid){
-            const response = await fetch(API_URL+"user/"+user_id+"/",{
+            const response = await fetch(API_URL+"user/"+login_user.id+"/",{
             method : "PATCH",
             headers : {
                 "Content-type": "application/json",
@@ -113,7 +117,7 @@
                             '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
                         }
                     });
-                    goto("/management/user/list")
+                    goto("/")
                 }else{
                     console.log(response);
                     toast.push("An error occurred while changing user password", {
@@ -147,7 +151,7 @@
         <div class="w-full lg:w-5/12 px-4">
             <div class="relative flex flex-col min-w-0 break-words shadow-lg rounded py-4 px-9">
                 <div class="text-left mb-8 font-bold text-2xl text-zinc-700">
-                    <a sveltekit:prefetch href={`/management/user/${user_id}_a_e`} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>Change User Password
+                    <a sveltekit:prefetch href={`/user/profile`} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>Change Personal Password
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="edit-password">

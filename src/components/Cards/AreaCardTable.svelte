@@ -171,11 +171,11 @@
     {:else}
       <!-- Projects table -->
       <table class="items-center w-full bg-transparent border-collapse">
-        <thead>
+        <thead class="bg bg-blue-700">
           <tr>
           {#each table_properties as prop}
           <th
-            class="px-6 align-middle text-center border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold {color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-700 text-red-200 border-red-600'}"
+            class="px-6 align-middle text-center text-white border border-solid py-3 font-bold text-xs uppercase border-l-1 border-r-1 whitespace-nowrap "
           >
             {prop}
           </th>
@@ -184,7 +184,7 @@
         </thead>
         <tbody>
           {#each paginatedItems as d, i}
-              <tr>
+              <tr class="{i % 2 != 0? 'bg bg-slate-100': ''}">
                 <td class="border-t-0 px-6 text-center align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   <span class="{color === 'light' ? 'btext-blueGray-600' : 'text-white'}">
                     { (currentPage - 1) * pageSize +  i + 1}

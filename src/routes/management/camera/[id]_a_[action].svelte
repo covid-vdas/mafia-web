@@ -214,7 +214,7 @@
                         {/if} 
                     </div>
                 </div>
-                <img src={API_DETECT_URL+`detector/?stream_url=${data_url}&ratio=${data.ratio}&obj_detect_type=${detect_class}&camera_id=${data.id}`} 
+                <img src={API_DETECT_URL+`detector/?stream_url=${data_url}&ratio=${data.ratio}&camera_id=${data.id}`} 
                         on:error={(e) =>{
                             let source = e.target;
                             let src = source.getAttribute("src");

@@ -13,6 +13,11 @@
     let elModal, modal
     let results = []
 
+    let ratio_valid = true;
+
+    $: ratio_message = "";
+    
+
     onMount(() => {
         import('bootstrap/dist/js/bootstrap').then(bootstrap => {
             modal = new bootstrap.Modal(elModal, { keyboard: false, backdrop: false })
@@ -27,6 +32,7 @@
 
     const onFileChange = async (e) => {
         const files = fileInput.files
+        console.log(files)
         const imgs = [...files]
             .filter(f => f.size !== 0)
             .map(async f => ({
@@ -46,13 +52,23 @@
         results = []
         uploaded = false
         processing = false
+        ratio = 1
+        ratio_valid = true
+        fileInput.value = ''
         modal.hide()
     }
 
     const upload = () => {
         processing = true
         let done = 0
-        images.forEach((v, i) => {
+        ratio_valid = true;
+        if(ratio <= 0 || !ratio){
+            console.log("abc")
+            ratio_valid = false;
+            ratio_message = "Ratio must be greater than zero";
+        }
+        if(ratio_valid){
+            images.forEach((v, i) => {
             processing = true;
             const data = new FormData()
             data.append('img', v.file)
@@ -78,6 +94,8 @@
                     alert('Failed to upload images.')
                 })
         })
+        }
+        processing = false
     }
 </script>
 
@@ -96,6 +114,9 @@
     </label>
     <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-2/12 ease-linear
     transition-all duration-150 focus:outline-none" id="create-cam-ratio" step="any" bind:value={ratio} required/>
+    {#if !ratio_valid}
+        <p class="text-rose-600 text-left text-md font-semibold mb-3">{ratio_message}</p>
+    {/if}
 
 {#if uploaded}
     {#if processing}
@@ -114,15 +135,12 @@
         <button class="btn btn-primary mt-2" on:click={upload}>
             <i class="bi bi-lightning-charge-fill" /> Detect now
         </button>
-        <a class="link link-danger mt-2" on:click={cancel}>Cancel</a>
+        <a class="link link-danger mt-2 hover:cursor-pointer" on:click={cancel}>Cancel</a>
     {/if}
 {:else}
     <button class="btn btn-success" on:click={() => fileInput.click()}>
         Select images
     </button> 
-    <!-- {#if !ratio_valid}
-        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{ratio_message}</p>
-    {/if} -->
 {/if}
 
     <input

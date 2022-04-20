@@ -1,9 +1,9 @@
 <script>
     import { onMount } from 'svelte'
     import { MEDIA_DETECT_URL, API_DETECT_URL } from 'utils/constant.js'
-   
+
    /** @type {HTMLInputElement} */
-   let fileInput
+    let fileInput
 
     let processing = false
     let uploaded = false
@@ -13,12 +13,17 @@
     let elVideo
     let valid = false;
     $: detected_url = "";
+    let ratio_valid = true;
+
+    $: ratio_message = "";
+
 
     const cancel = () => {
         elVideo = []
         detected_url = []
         uploaded = false
         processing = false
+        fileInput.value = '';
         modal.hide()
     }
 
@@ -28,8 +33,15 @@
         const data = new FormData()
         data.append('video', elVideo[0].file)
         data.append('ratio', ratio)
-        console.log(video_name);
-        fetch(API_DETECT_URL+'detector/', {
+        
+        ratio_valid = true;
+        if(ratio <= 0 || !ratio){
+            ratio_valid = false;
+            ratio_message = "Ratio must be greater than zero";
+            processing = false;
+        }
+        if(ratio_valid){
+            fetch(API_DETECT_URL+'detector/', {
             method: 'POST',
             body: data,
         })
@@ -45,7 +57,8 @@
                 processing = false
                 alert('Failed to upload Video.')
             })
-       
+        }
+        
     }
 
     onMount(() => {
@@ -99,6 +112,9 @@
     </label>
     <input type="number" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-2/12 ease-linear
     transition-all duration-150 focus:outline-none" id="create-cam-ratio" step="any" bind:value={ratio} required/>
+    {#if !ratio_valid}
+        <p class="text-rose-600 text-left text-md font-semibold mb-3">{ratio_message}</p>
+    {/if}
 
     {#if uploaded}
         {#if processing}
@@ -122,7 +138,7 @@
             <a class="link link-danger mt-2" on:click={cancel}>Cancel</a>
         {/if}
     {:else}
-        <button class="btn btn-success" on:click={() => modal.show()}>
+        <button class="btn btn-success" on:click={() => fileInput.click()}>
             Select Video
         </button>
     {/if}
@@ -144,7 +160,7 @@
             </div>
             <div class="modal-body flex justify-center">
                 <video controls alt="">
-                    <source src="http://192.168.1.108:8000/media/detected/7b97d86c8a7d66220a425eaec00617ef.mp4" type="video/mp4"/>
+                    <source src="{detected_url}" type="video/mp4"/>
                     <track kind="captions">
                 </video>
             </div>

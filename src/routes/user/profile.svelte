@@ -18,7 +18,7 @@
         return{
             props: {
                 token: token_value,
-                user: login_user,
+                data: login_user,
                 edit: edit,
                 role: role,
             }
@@ -34,11 +34,11 @@
 
     export let edit;
     export let token;
-    export let user;
+    export let data;
     export let role;
 
-    user = JSON.parse(user);
-    user.birthdate = moment(user.birthdate, "yyyy-mm-DD").format("DD/mm/yyyy");
+    data = JSON.parse(data);
+    data.birthdate = moment(data.birthdate, "yyyy-mm-DD").format("DD/mm/yyyy");
 
     let test_date = "";
     let role_staff_index;
@@ -52,7 +52,7 @@
 
 
     let processing = false;
-    // user.birthdate = new Date(user.birthdate).toLocaleDateString();
+    // data.birthdate = new Date(data.birthdate).toLocaleDateString();
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -66,13 +66,13 @@
     const handleSubmit = async () =>{ 
         processing = true;
 
-        if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(user.email)){
+        if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email)){
             email_valid = true;
         } else{
             email_valid = false;
         }
 
-        if (/^(0)[1-9]\d{8}$/.test(user.phone)){
+        if (/^(0)[1-9]\d{8}$/.test(data.phone)){
             phone_valid = true;
         } else{
             phone_valid = false;
@@ -80,35 +80,35 @@
 
         fullname_valid = true;
         const isValidLength250 = /^.{2,50}$/;
-        if (!isValidLength250.test(user.fullname)) {
+        if (!isValidLength250.test(data.fullname)) {
             fullname_message = "Fullname must have at least 2 characters";
             fullname_valid = false;
         }
 
         address_valid = true;
         const addressLength = /^.{2,}$/;
-        if (!addressLength.test(user.address)) {
+        if (!addressLength.test(data.address)) {
             address_message = "Address must have at least 2 characters";
             address_valid = false;
         }
 
-        console.log(user);
+        console.log(data);
 
         if(email_valid && phone_valid && fullname_valid && address_valid) {
-            const response = await fetch(API_URL+"user/"+user.id+"/",{
+            const response = await fetch(API_URL+"user/"+data.id+"/",{
             method : "PATCH",
             headers : {
                 "Content-type": "application/json",
                 "Authorization": "Bearer "+ token,
             },
             body : JSON.stringify({
-                'fullname' : user.fullname,
-                'phone' : user.phone,
-                'role_id' : user.role_id.id,
-                'email' : user.email,
-                'birthdate' : moment(user.birthdate, "DD/mm/yyyy").format("yyyy-mm-DD"),
-                'managed_by': user.managed_by,
-                'address': user.address,
+                'fullname' : data.fullname,
+                'phone' : data.phone,
+                'role_id' : data.role_id.id,
+                'email' : data.email,
+                'birthdate' : moment(data.birthdate, "DD/mm/yyyy").format("yyyy-mm-DD"),
+                'managed_by': data.managed_by,
+                'address': data.address,
             }),
         }).then(
             response => {
@@ -123,7 +123,8 @@
                             '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
                         }
                     });
-                    goto("/management/user/list")
+                    user.update((u) => u = JSON.stringify(data));
+                    goto("/");
                 }else{
                     console.log(response);
                     toast.push("An error occurred while changing user information", {
@@ -166,7 +167,7 @@
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none 
-                    {!fullname_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-fullname" bind:value={user.fullname} disabled={!edit}/>
+                    {!fullname_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-fullname" bind:value={data.fullname} disabled={!edit}/>
                     {#if !fullname_valid}
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">{fullname_message}</p>
                     {/if}
@@ -177,7 +178,7 @@
                     <input type="email" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none
                     {!email_valid?'border-1 border-rose-500 focus:border-rose-600':''}
-                    " id="info-email" bind:value={user.email} disabled={!edit}/>
+                    " id="info-email" bind:value={data.email} disabled={!edit}/>
                     {#if !email_valid}
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Email is invalid.</p>
                     {/if}
@@ -188,7 +189,7 @@
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow  mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none
                     {!phone_valid?'border-1 border-rose-500 focus:border-rose-600':''}
-                    " id="info-phone" bind:value={user.phone} disabled={!edit}/>
+                    " id="info-phone" bind:value={data.phone} disabled={!edit}/>
                     {#if !phone_valid}
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Phone is invalid.</p>
                     {/if}
@@ -198,7 +199,7 @@
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none
-                    {!address_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-fullname" bind:value={user.address} disabled={!edit}/>
+                    {!address_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="info-fullname" bind:value={data.address} disabled={!edit}/>
                     {#if !address_valid}
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">{address_message}</p>
                     {/if}
@@ -206,7 +207,7 @@
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-birthdate">
                         birthdate
                     </label>
-                    <SveltyPicker bind:value={user.birthdate} on:keydown={(e) => {e.preventDefault();}}
+                    <SveltyPicker bind:value={data.birthdate} on:keydown={(e) => {e.preventDefault();}}
                         inputClasses="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear transition-all duration-150 focus:outline-none"
                         todayBtnClasses="text-white bg-blue-500 text-sm font-bold p-2 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         clearBtnClasses="text-rose-600 bg-white border-1 border-rose-500 text-sm font-bold p-2 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
