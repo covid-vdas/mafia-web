@@ -160,7 +160,8 @@
             <div class="modal-body">
                 <div class="container">
                 {#each results as r}
-                    <img src={r} />
+                    <img src={r}/>
+                    <a href={r} download="detected.png">Download Image</a>
                 {/each}
                 </div>
             </div>
