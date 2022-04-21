@@ -30,7 +30,6 @@
     const upload = () => {
         processing = true
         const video_name = elVideo[0].name.split('.').slice(0, -1).join('.');
-        console.log(elVideo[0])
         const data = new FormData()
         data.append('video', elVideo[0].file)
         data.append('ratio', ratio)

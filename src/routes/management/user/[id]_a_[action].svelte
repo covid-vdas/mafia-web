@@ -19,7 +19,7 @@
             }
         });
 
-        if(response.status == 401 || response.status == 403){
+        if(response.status == 401 || response.status == 403 || (login_user.includes(`"name":"staff"`) && login_user)){
             return {
                 redirect:"/",
                 status: 303,
@@ -140,8 +140,6 @@
             address_valid = false;
         }
 
-        console.log(user);
-
         if(email_valid && phone_valid && fullname_valid && address_valid) {
             const response = await fetch(API_URL+"user/"+user.id+"/",{
             method : "PATCH",
@@ -155,7 +153,7 @@
                 'role_id' : user.role_id.id,
                 'email' : user.email,
                 'birthdate' : moment(user.birthdate, "DD/mm/yyyy").format("yyyy-mm-DD"),
-                'managed_by': user.managed_by,
+                'managed_by': user.managed_by || login_user.id,
                 'address': user.address,
             }),
         }).then(

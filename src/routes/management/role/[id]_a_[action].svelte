@@ -46,6 +46,15 @@
     export let role;
     let processing = false;
 
+    let about_role;
+
+    if (role.name == 'admin'){
+        about_role = "Manage manager, staff, area, camera and view report"
+    } else if (role.name == 'manager'){
+        about_role = "Manage staff area, camera and view report"
+    } else if (role.name == 'staff'){
+        about_role = "View camera and reports";
+    }
 
     const handleSubmit = async () =>{
         processing = true;
@@ -114,6 +123,13 @@
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none" id="info-fullname" bind:value={role.name} disabled={!edit}/>
 
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-about">
+                        About
+                    </label>
+                    <textarea class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none" id="info-about" bind:value={about_role} disabled={!edit}/>
+                   
+                    
                     {#if edit}
                         {#if processing}
                             <button

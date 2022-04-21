@@ -256,15 +256,9 @@
                   class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center"
                 >
                   {#each action_list as action}
-                    {#if user_object.role_id.name != "admin" && (action.name != "delete" && action.name != "edit" && action.name != "view")}
                       <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
                         <icon class={action.icon}></icon>
                       </button>
-                    {:else if user_object.role_id.name == "admin" }
-                      <button on:click={userAction(action.name, d)} class="btn text-2xl m-0.1 {action.color}">
-                        <icon class={action.icon}></icon>
-                      </button>
-                    {/if} 
                   {/each}
                 </td>
               </tr>   

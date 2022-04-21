@@ -92,8 +92,6 @@
             address_valid = false;
         }
 
-        console.log(data);
-
         if(email_valid && phone_valid && fullname_valid && address_valid) {
             const response = await fetch(API_URL+"user/"+data.id+"/",{
             method : "PATCH",
@@ -126,7 +124,6 @@
                     user.update((u) => u = JSON.stringify(data));
                     goto("/");
                 }else{
-                    console.log(response);
                     toast.push("An error occurred while changing user information", {
                         theme: {
                             '--toastBackground':'white',

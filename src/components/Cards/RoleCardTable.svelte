@@ -31,7 +31,6 @@
   const { open, close } = getContext('simple-modal');
   
   token.subscribe((t) => (token_value = t));
-  result_data = data;
 
   let items;
 
@@ -123,7 +122,7 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
-    {#if result_data.length == 0 || result_data == null}
+    {#if items.length == 0 || items == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
         <div class="py-10 flex-col justify-center">
             <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>
