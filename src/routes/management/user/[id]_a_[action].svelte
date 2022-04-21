@@ -26,7 +26,7 @@
             }
         }
         
-        if(login_user.includes("admin")){
+        if(login_user.includes("admin") && login_user){
             const response_role = await fetch(API_URL+"role/",{
             method : "GET",
             headers : {

@@ -9,7 +9,7 @@
         token.subscribe((t) => (token_value = t));
 
 
-        if(login_user.includes(`"name":"staff"`)){
+        if(login_user.includes(`"name":"staff"`) && login_user){
             return {
                 redirect:"/",
                 status: 303,

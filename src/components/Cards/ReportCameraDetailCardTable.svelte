@@ -35,12 +35,13 @@
   let currentPage = 1
   let pageSize = PAGE_SIZE
   $: paginatedItems = paginate({ items, pageSize, currentPage })
+  let processing = false;
 
   const handleSearch = () => {
       let search_key_value = removeAccents(search_key).toLowerCase();
       if(search_key_value){
         items = data.filter((d) => {
-          return removeAccents(d.type_id.name).toLowerCase().includes(search_key_value) || removeAccents(d.class_id.name).toLowerCase().includes(search_key_value);
+          return removeAccents(d.type_id.name).toLowerCase().includes(search_key_value) || removeAccents(d.class_id.name).toLowerCase().includes(search_key_value) || d.distance.toString().includes(search_key_value);
         })
         currentPage = 1;
       } else {
@@ -72,6 +73,7 @@
     }
 
   const chartByTime = async (time) =>{
+    processing = true
     const response = await fetch(`${API_URL}violation/listViolationByCamera/${data[0].camera_id.id}/?from-date=${time}`, {
                 method: "GET",
                 headers: {
@@ -90,7 +92,70 @@
               }).catch(err => {
                 console.log(err);
               })
+    processing = false
   }
+
+  const sort_col_type = {
+      "type": 0,
+      "class": 0,
+      "distance": 0,
+      "created_at": 1,
+    }
+
+    const sort_table = (col) => {
+      if(col == "type" && sort_col_type.type <= 0 ){
+        items = items.sort((a,b)=>{
+          return removeAccents(a.type_id.name).toLowerCase().localeCompare(removeAccents(b.type_id.name).toLowerCase());
+        })
+        sort_col_type.type = 1;
+      } else if (col == "type" && sort_col_type.type > 0) {
+        items = items.sort((a,b)=>{
+          return -1 * removeAccents(a.type_id.name).toLowerCase().localeCompare(removeAccents(b.type_id.name).toLowerCase());
+        })
+        sort_col_type.type = -1;
+      }
+
+
+      if(col == "class" && sort_col_type.class <= 0 ){
+        items = items.sort((a,b)=>{
+          return removeAccents(a.class_id.name).toLowerCase().localeCompare(removeAccents(b.class_id.name).toLowerCase());
+        })
+        sort_col_type.class = 1;
+      } else if (col == "class" && sort_col_type.class > 0) {
+        items = items.sort((a,b)=>{
+          return -1 * removeAccents(a.class_id.name).toLowerCase().localeCompare(removeAccents(b.class_id.name).toLowerCase());
+        })
+        sort_col_type.class = -1;
+      }
+
+
+
+      if(col == "distance" && sort_col_type.distance <= 0 ){
+        items = items.sort((a,b)=>{
+          return a.distance - b.distance;
+        })
+        sort_col_type.distance = 1;
+      } else if (col == "distance" && sort_col_type.distance > 0) {
+        items = items.sort((a,b)=>{
+          return -1 * (a.distance - b.distance);
+        })
+        sort_col_type.distance = -1;
+      }
+
+
+
+      if(col == "created at" && sort_col_type.created_at <= 0 ){
+        items = items.sort((a,b)=>{
+          return a.created_at > b.created_at? 1 : -1;
+        })
+        sort_col_type.created_at = 1;
+      } else if (col == "created at" && sort_col_type.created_at > 0) {
+        items = items.sort((a,b)=>{
+          return -1 * (a.created_at > b.created_at? 1 : -1);
+        })
+        sort_col_type.created_at = -1;
+      }
+  	}
 
 </script>
 
@@ -123,11 +188,11 @@
       <CardDoughnutChart data={chart_data}/>
       <CardLineChart data={chart_data}/>
       <div class="flex-auto flex-row ml-4 mb-3">
-        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 7? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(7)}">1 Week</button>
-        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 30? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(30)}">1 Month</button>
-        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 90? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(90)}">3 Months</button>
-        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 180? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(180)}">6 Months</button>
-        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 365? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(365)}">1 Year</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 7? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " disabled={processing} on:click="{() => chartByTime(7)}">1 Week</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 30? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " disabled={processing} on:click="{() => chartByTime(30)}">1 Month</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 90? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " disabled={processing} on:click="{() => chartByTime(90)}">3 Months</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 180? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " disabled={processing} on:click="{() => chartByTime(180)}">6 Months</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 365? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " disabled={processing} on:click="{() => chartByTime(365)}">1 Year</button>
       </div>
     </div>
     {#if items.length == 0 || items == null}
@@ -144,7 +209,10 @@
           <tr>
           {#each table_properties as prop}
           <th
-            class="px-6 align-middle text-center text-white border border-solid py-3 font-bold text-xs uppercase border-l-1 border-r-1 whitespace-nowrap "
+            class="px-6 cursor-pointer align-middle text-center text-white border border-solid py-3 font-bold text-xs uppercase border-l-1 border-r-1 whitespace-nowrap "
+            on:click={() => {
+              sort_table(prop.toLowerCase());
+            }}
           >
             {prop}
           </th>

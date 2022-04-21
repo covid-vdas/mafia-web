@@ -15,6 +15,16 @@
           </p>
         </div>
       </div>
+      <div class="w-full md:w-8/12 px-4">
+        <ul class="flex flex-wrap list-none md:justify-end justify-center">
+            <a
+              href="/about"
+              class="text-blueGray-600 hover:text-blueGray-800 hover:cursor-pointer text-sm font-semibold block py-1 px-3 z-50"
+            >
+              About Us
+            </a>
+        </ul>
+      </div>
     </div>
   </div>
 </footer>

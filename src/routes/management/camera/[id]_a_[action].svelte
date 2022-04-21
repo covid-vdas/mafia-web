@@ -263,7 +263,7 @@
                     {/if}
 
                     {#if !is_staff}
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="">
                             <button
                             class="text-white bg-lime-600 active:bg-lime-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                             on:click={() =>{
@@ -271,7 +271,7 @@
                             }} type="button">
                                 {#if edit} Disable {:else} Enable {/if} Edit
                             </button>
-                            <button
+                            <!-- <button
                             class="text-white bg-lime-600 active:bg-lime-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                             on:click={() =>{
                                 if(detect_class == 'person'){
@@ -281,7 +281,7 @@
                                 }
                             }} type="button">
                                 Change Detect Class To {#if detect_class == 'person'} Mask {:else} Person {/if}
-                            </button>
+                            </button> -->
                         </div>
                     
                         

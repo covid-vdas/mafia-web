@@ -25,7 +25,7 @@
 
         const users = response_user.ok && (await response_user.json());
 
-        if(login_user.includes(`"name":"admin"`)){
+        if(login_user.includes(`"name":"admin"`) && login_user){
             const response_manager = await fetch(API_URL+"user/getAllManager/",{
                 method : "GET",
                 headers : {

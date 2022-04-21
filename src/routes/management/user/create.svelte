@@ -18,7 +18,7 @@
             }
         });
 
-        if(login_user.includes(`"name":"staff"`)){
+        if(login_user.includes(`"name":"staff"`) && login_user){
             return {
                 redirect:"/",
                 status: 303,
@@ -26,7 +26,7 @@
         }
     
 
-        if(login_user.includes(`"name":"admin"`)){
+        if(login_user.includes(`"name":"admin"`) && login_user){
             const response_manager = await fetch(API_URL+"user/getAllManager/",{
                 method : "GET",
                 headers : {

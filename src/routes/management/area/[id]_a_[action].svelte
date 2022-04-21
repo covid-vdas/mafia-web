@@ -87,6 +87,7 @@
 
     const handleSubmit = async () =>{
         processing = true;
+
         const response = await fetch(API_URL+"area/"+data.id+"/",{
             method : "PATCH",
             headers : {
@@ -96,7 +97,7 @@
             body : JSON.stringify({
                 'name' : data.name,
                 'managed_manager': data.managed_manager,
-                'managed_staff': data.managed_staff,
+                'managed_staff': data.managed_staff || 'none',
             }),
         }).then(
             response => {

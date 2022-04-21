@@ -68,7 +68,23 @@
       }
     }
 
+    const sort_col_type = {
+      "name": 0
+    }
 
+    const sort_table = (col) => {
+      if(col == "name" && sort_col_type.name <= 0 ){
+        items = items.sort((a,b)=>{
+          return removeAccents(a.name).toLowerCase().localeCompare(removeAccents(b.name).toLowerCase());
+        })
+        sort_col_type.name = 1;
+      } else if (col == "name" && sort_col_type.name > 0) {
+        items = items.sort((a,b)=>{
+          return -1 * removeAccents(a.name).toLowerCase().localeCompare(removeAccents(b.name).toLowerCase());
+        })
+        sort_col_type.name = -1;
+      }
+  	}
 
 </script>
 
@@ -111,6 +127,9 @@
           {#each table_properties as prop}
           <th
               class="px-6 align-middle text-center text-white border border-solid py-3 font-bold text-xs uppercase border-l-1 border-r-1 whitespace-nowrap "
+              on:click={() => {
+                sort_table(prop);
+              }}
               >
             {prop}
           </th>

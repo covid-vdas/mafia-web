@@ -46,8 +46,6 @@
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    console.log(data)
-
     const handleSubmit = async () =>{
     }
 </script>

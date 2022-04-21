@@ -254,6 +254,75 @@
     }
 
 
+    const sort_col_type = {
+      "fullname": 0,
+      "username": 0,
+      "email": 0,
+      "role" : 0,
+      "status" : 0,
+    }
+
+    const sort_table = (col) => {
+      if(col == "username" && sort_col_type.username <= 0 ){
+        items = items.sort((a,b)=>{
+          return removeAccents(a.username).toLowerCase().localeCompare(removeAccents(b.username).toLowerCase());
+        })
+        sort_col_type.username = 1;
+      } else if (col == "username" && sort_col_type.username > 0) {
+        items = items.sort((a,b)=>{
+          return -1 * removeAccents(a.username).toLowerCase().localeCompare(removeAccents(b.username).toLowerCase());
+        })
+        sort_col_type.username = -1;
+      }
+
+      if(col == "full name" && sort_col_type.fullname <=0){
+        items = items.sort((a,b)=>{
+          return removeAccents(a.fullname).toLowerCase().localeCompare(removeAccents(b.fullname).toLowerCase());
+        })
+        sort_col_type.fullname = 1;
+      } else if( col == "full name" && sort_col_type.fullname > 0 ){
+        items = items.sort((a,b)=>{
+          return -1 * removeAccents(a.fullname).toLowerCase().localeCompare(removeAccents(b.fullname).toLowerCase());
+        })
+        sort_col_type.fullname = -1;
+      }
+
+      if(col == "email" && sort_col_type.email <=0){
+        items = items.sort((a,b)=>{
+          return removeAccents(a.email).toLowerCase().localeCompare(removeAccents(b.email).toLowerCase());
+        })
+        sort_col_type.email = 1;
+      } else if( col == "email" && sort_col_type.email > 0 ){
+        items = items.sort((a,b)=>{
+          return -1 * removeAccents(a.email).toLowerCase().localeCompare(removeAccents(b.email).toLowerCase());
+        })
+        sort_col_type.email = -1;
+      }
+
+      if(col == "role" && sort_col_type.role <=0){
+        items = items.sort((a,b)=>{
+          return removeAccents(a.role_id.name).toLowerCase().localeCompare(removeAccents(b.role_id.name).toLowerCase());
+        })
+        sort_col_type.role = 1;
+      } else if( col == "role" && sort_col_type.role > 0 ){
+        items = items.sort((a,b)=>{
+          return -1 * removeAccents(a.role_id.name).toLowerCase().localeCompare(removeAccents(b.role_id.name).toLowerCase());
+        })
+        sort_col_type.role = -1;
+      }
+
+      if(col == "status" && sort_col_type.status <=0){
+        items = items.sort((a,b)=>{
+          return a.is_active && !b.is_active ? 1 : -1
+        })
+        sort_col_type.status = 1;
+      } else if( col == "status" && sort_col_type.status > 0 ){
+        items = items.sort((a,b)=>{
+          return -1 * (a.is_active && !b.is_active ? 1 : -1);
+        })
+        sort_col_type.status = -1;
+      }
+  	}
 
 </script>
 
@@ -295,7 +364,10 @@
           <tr>
           {#each table_properties as prop}
             <th
-              class="px-6 align-middle text-center text-white border border-solid py-3 font-bold text-xs uppercase border-l-1 border-r-1 whitespace-nowrap "
+              class="px-6 cursor-pointer align-middle text-center text-white border border-solid py-3 font-bold text-xs uppercase border-l-1 border-r-1 whitespace-nowrap "
+              on:click={() => {
+                sort_table(prop);
+              }}
               >
               {prop}
             </th>

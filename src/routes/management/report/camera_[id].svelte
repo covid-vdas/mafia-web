@@ -16,12 +16,12 @@
         });
 
         const response_chart = await fetch(`${API_URL}violation/listViolationByCamera/${params.id}/?from-date=7`, {
-                method: "GET",
-                headers: {
-                  "Content-type": "application/json",
-                  "Authorization": "Bearer " + token_value,
+            method: "GET",
+            headers: {
+                "Content-type": "application/json",
+                "Authorization": "Bearer " + token_value,
                 },
-              })
+            })
 
         const response_camera = await fetch(API_URL+"camera/"+params.id+"/",{
             method : "GET",
@@ -52,7 +52,7 @@
 
         return{
             props: {
-                data: data,
+                data: data.data,
                 user_object: user_object,
                 area_id: params.id,
                 camera : camera,
@@ -68,6 +68,8 @@
     export let area_id;
     export let camera;
     export let chart_data;
+    export let data;
+    export let user_object;
 
     let table_title = camera.name + " Report";
 
@@ -88,9 +90,6 @@
             "color": "text-blue-800 hover:text-blue-400"
         }
     ]
-    
-    export let data;
-    export let user_object;
 
 </script>
 

@@ -1,6 +1,6 @@
 <script>
   // core components
-  import {API_URL} from "utils/constant.js";
+  import {API_URL, PAGE_SIZE} from "utils/constant.js";
   import { token } from "../../stores.js";
   import { toast } from '@zerodevx/svelte-toast';
   import TableDropdown from "components/Dropdowns/TableDropdown.svelte";
@@ -33,25 +33,34 @@
   token.subscribe((t) => (token_value = t));
   result_data = data;
 
-  let items = result_data;
+  let items;
+
+  $:  items = data
   let currentPage = 1
-  let pageSize = 10
+  let pageSize = PAGE_SIZE
   $: paginatedItems = paginate({ items, pageSize, currentPage })
 
   const handleSearch = () => {
-    console.log(search_key);
-    if(search_key){
-      result_data = data.filter((d) => {
-      return d.name.includes(search_key);
-    })
+      if(search_key){
+        items = data.filter((d) => {
+        return d.name.includes(search_key);
+      })
+    currentPage = 1;
     } else {
-      result_data = data;
+      items = data;
+      currentPage = 1;
     }
     
   }
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  function removeAccents(str) {
+  return str.normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D');
   }
 
   async function reloadData(){
@@ -69,6 +78,25 @@
         default:
       }
     }
+
+    const sort_col_type = {
+      "name": 0
+    }
+
+    const sort_table = (col) => {
+      if(col == "name" && sort_col_type.name <= 0 ){
+        items = items.sort((a,b)=>{
+          return removeAccents(a.name).toLowerCase().localeCompare(removeAccents(b.name).toLowerCase());
+        })
+        sort_col_type.name = 1;
+      } else if (col == "name" && sort_col_type.name > 0) {
+        items = items.sort((a,b)=>{
+          return -1 * removeAccents(a.name).toLowerCase().localeCompare(removeAccents(b.name).toLowerCase());
+        })
+        sort_col_type.name = -1;
+      }
+  	}
+
 </script>
 
 <div
@@ -110,8 +138,10 @@
           <tr>
           {#each table_properties as prop}
           <th
-            class="px-6 align-middle text-center text-white border border-solid py-3 font-bold text-xs uppercase border-l-1 border-r-1 whitespace-nowrap "
-          >
+            class="px-6 cursor-pointer align-middle text-center text-white border border-solid py-3 font-bold text-xs uppercase border-l-1 border-r-1 whitespace-nowrap "
+            on:click={() => {
+              sort_table(prop);
+            }} >
             {prop}
           </th>
           {/each}

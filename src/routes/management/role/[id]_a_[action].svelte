@@ -17,7 +17,7 @@
         user.subscribe((u) => (user_value = u));
 
 
-        if(response.status == 401 || response.status == 403 || !user_value.includes(`"name":"admin"`)){
+        if(response.status == 401 || response.status == 403 || (!user_value.includes(`"name":"admin"`) && user_value)){
             return {
                 redirect:"/",
                 status: 303,

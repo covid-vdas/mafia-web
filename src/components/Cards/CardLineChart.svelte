@@ -17,9 +17,9 @@
       labels = [];
       mask_value = [];
       distance_value = [];
-      for (let obj of data.total_customDays) {
-        labels = [...labels, obj.date];
-        mask_value = [...mask_value, obj.faceMask];
+      for (let obj of data.data) {
+        labels = [...labels, obj.day];
+        mask_value = [...mask_value, obj.facemask];
         distance_value = [...distance_value, obj.distance];
       }
       chart.data.labels = labels;
