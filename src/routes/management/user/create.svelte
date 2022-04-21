@@ -92,7 +92,7 @@
     $: username_message = "";
     $: fullname_message = "";
     $: address_message = "";
-
+    $: email_message = "";
 
     const handleSubmit = async () => {
         processing = true;
@@ -101,6 +101,7 @@
             email_valid = true;
         } else{
             email_valid = false;
+            email_message = "Please enter a valid email"
         }
 
         if (/^(0)[1-9]\d{8}$/.test(user.phone)){
@@ -210,7 +211,7 @@
                 'address': user.address,
             }),
         }).then(
-            response => {
+            async response => {
                 processing = false;
                 if(response.status == 200 || response.status == 201){
                     reloadData();
@@ -224,7 +225,20 @@
                     });
                     goto("/management/user/list")
                 }else{
-                    console.log(response);
+                    let response_data = await response.json();
+                    let username = response_data.username;
+                    let email = response_data.email;
+
+                    if(username){
+                        username_valid = false;
+                        username_message = "This username is already in use";
+                    }
+
+                    if(email){
+                        email_valid = false;
+                        email_message = "This email is already in use";
+                    }
+
                     toast.push("An error occurred while changing adding new user", {
                         theme: {
                             '--toastBackground':'white',
@@ -332,7 +346,7 @@
                     {!email_valid?'border-1 border-rose-500 focus:border-rose-600':''}
                     " id="create-email" bind:value={user.email}/>
                     {#if !email_valid}
-                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">Your Email is invalid</p>
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{email_message}</p>
                     {/if}
 
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-phone">
