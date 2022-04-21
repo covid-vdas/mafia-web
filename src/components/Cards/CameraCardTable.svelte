@@ -98,7 +98,7 @@
     {#if items.length == 0 || items == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
         <div class="py-10 flex-col justify-center">
-            <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>/i>
+            <img class="mx-auto animate-bounce object-contain h-64 w-64 mb-3" src="/static/data-not-found.svg" alt="data-not-found"/>
             <h1 class="text-3xl font-semibold text-zinc-700">There Is No Data Available</h1>
           </div>
       </div>

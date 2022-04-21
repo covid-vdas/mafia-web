@@ -162,7 +162,7 @@
             </div>
             <div class="modal-body flex justify-center text-center font-semibold text-xl">
                 <h1> <p class="mb-2">Video Detected Successfully</p>
-                    <p>Please click download the video!</p></h1>
+                    <p>Please click Download button to download the video!</p></h1>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn bg-emerald-600 text-white" on:click|preventDefault={async ()=> {

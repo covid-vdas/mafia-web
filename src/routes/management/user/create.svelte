@@ -183,8 +183,6 @@
         }else {
             confirm_pass_valid = false;
         }
-
-        console.log(user);
         
         if( username_valid && fullname_valid && phone_valid && email_valid && confirm_pass_valid && pass_valid){
             if(login_user.role_id.name == "manager"){
@@ -353,7 +351,7 @@
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
                     transition-all duration-150 focus:outline-none
-                    {!address_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="create-fullname" bind:value={user.address}/>
+                    {!address_valid?'border-1 border-rose-500 focus:border-rose-600':''}" id="create-address" bind:value={user.address}/>
                     {#if !address_valid}
                         <p class="text-rose-600 text-left text-sm font-semibold mb-3">{address_message}</p>
                     {/if}

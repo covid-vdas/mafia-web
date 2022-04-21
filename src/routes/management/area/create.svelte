@@ -148,11 +148,11 @@
                     <a sveltekit:prefetch href={"/management/area/list"} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>Create New Area 
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
-                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-username">
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="create-area-name">
                         Name
                     </label>
                     <input type="text" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
-                    transition-all duration-150 focus:outline-none" id="create-username" bind:value={data.name} />
+                    transition-all duration-150 focus:outline-none" id="create-area-name" bind:value={data.name} />
 
                     {#if login_user.role_id.name == "admin"} 
                         <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="info-role">

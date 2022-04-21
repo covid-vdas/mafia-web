@@ -73,7 +73,7 @@
           Overview
         </h3>
         <h2 class="text-zinc-700 text-xl font-semibold">
-          Violations Cases By Date
+          Share of Violation Types to Total Violation Cases
         </h2>
       </div>
     </div>

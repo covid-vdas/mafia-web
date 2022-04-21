@@ -119,6 +119,17 @@
     </div>
   </div>
   <div class="block w-full overflow-x-auto">
+    <div class="flex flex-wrap flex-row">
+      <CardDoughnutChart data={chart_data}/>
+      <CardLineChart data={chart_data}/>
+      <div class="flex-auto flex-row ml-4 mb-3">
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 7? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(7)}">1 Week</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 30? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(30)}">1 Month</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 90? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(90)}">3 Months</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 180? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(180)}">6 Months</button>
+        <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 365? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(365)}">1 Year</button>
+      </div>
+    </div>
     {#if items.length == 0 || items == null}
       <div class="items-center text-center w-full bg-transparent border-collapse py-10">
           <div class="py-10 flex-col justify-center">
@@ -126,18 +137,7 @@
             <h1 class="text-3xl font-semibold text-zinc-700">There Is No Data Available</h1>
           </div>
       </div>
-    {:else}
-      <div class="flex flex-wrap flex-row">
-        <CardDoughnutChart data={chart_data}/>
-        <CardLineChart data={chart_data}/>
-        <div class="flex-auto flex-row ml-4 mb-3">
-          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 7? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(7)}">1 Week</button>
-          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 30? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(30)}">1 Month</button>
-          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 90? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(90)}">3 Months</button>
-          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 180? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(180)}">6 Months</button>
-          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 365? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(365)}">1 Year</button>
-        </div>
-      </div>
+    {:else}   
       <!-- Projects table -->
       <table class="items-center w-full bg-transparent border-collapse">
         <thead class="bg bg-blue-700">

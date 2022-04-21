@@ -87,7 +87,7 @@
     <div class="flex flex-wrap items-center">
       <div class="relative w-full max-w-full flex-grow flex-1">
         <h2 class="text-zinc-800 text-xl font-semibold">
-          Violations rate
+          Change of Violation Cases over time
         </h2>
       </div>
     </div>
