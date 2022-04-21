@@ -30,6 +30,7 @@
     const upload = () => {
         processing = true
         const video_name = elVideo[0].name.split('.').slice(0, -1).join('.');
+        console.log(elVideo[0])
         const data = new FormData()
         data.append('video', elVideo[0].file)
         data.append('ratio', ratio)
@@ -47,7 +48,8 @@
         })
             .then(resp => {
                 if(resp.status == 200){
-                    detected_url = `${MEDIA_DETECT_URL}${video_name}.mp4`
+                    detected_url = `${MEDIA_DETECT_URL}${encodeURIComponent(video_name)}.mp4`
+                    console.log(detected_url);
                     modal.show()
                     processing = false
                 }
@@ -158,13 +160,22 @@
             <div class="modal-header">
                 <h5 class="modal-title">Detect Result</h5>
             </div>
-            <div class="modal-body flex justify-center">
-                <video controls alt="">
-                    <source src="{detected_url}" type="video/mp4"/>
-                    <track kind="captions">
-                </video>
+            <div class="modal-body flex justify-center text-center font-semibold text-xl">
+                <h1> <p class="mb-2">Video Detected Successfully</p>
+                    <p>Please click download the video!</p></h1>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn bg-emerald-600 text-white" on:click|preventDefault={async ()=> {
+                    const image = await fetch(detected_url)
+                    const imageBlog = await image.blob()
+                    const imageURL = URL.createObjectURL(imageBlog)
+                    const link = document.createElement('a')
+                    link.href = imageURL
+                    link.download = elVideo[0].name;
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link)
+                }}> Download Video </button>
                 <button type="button" class="btn bg-zinc-700 text-white" on:click={close}>Close</button>
             </div>
         </div>

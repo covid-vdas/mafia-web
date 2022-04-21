@@ -32,7 +32,6 @@
 
     const onFileChange = async (e) => {
         const files = fileInput.files
-        console.log(files)
         const imgs = [...files]
             .filter(f => f.size !== 0)
             .map(async f => ({
@@ -63,10 +62,11 @@
         let done = 0
         ratio_valid = true;
         if(ratio <= 0 || !ratio){
-            console.log("abc")
             ratio_valid = false;
             ratio_message = "Ratio must be greater than zero";
+            processing = false
         }
+
         if(ratio_valid){
             images.forEach((v, i) => {
             processing = true;
@@ -79,7 +79,7 @@
             })
                 .then(resp => {
                     if(resp.status == 200){
-                        let detected_url = `${MEDIA_DETECT_URL}${v.name}`
+                        let detected_url = `${MEDIA_DETECT_URL}${encodeURIComponent(v.name)}`
                         results = [...results, detected_url];
                         if (++done >= images.length) {
 
@@ -95,7 +95,6 @@
                 })
         })
         }
-        processing = false
     }
 </script>
 
@@ -158,19 +157,24 @@
                 <h5 class="modal-title">Result</h5>
             </div>
             <div class="modal-body">
-                <div class="container">
+                <div class="container flex justify-center">
                 {#each results as r}
-                    <img src={r}/>
-                    <a href={r} download="detected" on:click="{() => {
-                        var text = document.getElementById("text").value;
-                    var filename = "GFG.txt";
-              
-                    download(filename, text);
-                    }}">Download Image</a>
+                    <img src={r} alt="detected Image"/>
                 {/each}
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn bg-emerald-600 text-white" on:click|preventDefault={async ()=> {
+                    const image = await fetch(results[0])
+                    const imageBlog = await image.blob()
+                    const imageURL = URL.createObjectURL(imageBlog)
+                    const link = document.createElement('a')
+                    link.href = imageURL
+                    link.download = images[0].name;
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link)
+                }}> Download Image </button>
                 <button type="button" class="btn bg-slate-200" on:click={cancel}>Close</button>
             </div>
         </div>

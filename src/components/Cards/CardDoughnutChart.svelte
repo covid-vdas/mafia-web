@@ -2,7 +2,17 @@
   import { onMount } from "svelte";
   // library that creates chart objects in page
   import Chart from "chart.js/auto";
-  import Utils from "chart.js/auto";
+
+
+  export let data;
+
+  let chart;
+  let ctx;
+
+  $: if (chart){
+      chart.data.datasets[0].data = [data.total_distance, data.total_facemask];
+      chart.update();
+		}
 
   // init chart
   onMount(async () => {
@@ -10,14 +20,15 @@
       type: "doughnut",
       data: {
         labels: [
-          "No Mask",
           "Distance",
+          "Mask",
+          
         ],
         datasets: [
           {
             label: new Date().getFullYear(),
             backgroundColor: ["#2563eb",  "#f43f5e"],
-            data: [30, 70],
+            data: [data.total_distance, data.total_facemask],
             fill: false,
             barThickness: 8
           },
@@ -45,47 +56,10 @@
           align: "end",
           position: "bottom",
         },
-        scales: {
-          xAxes: [
-            {
-              display: false,
-              scaleLabel: {
-                display: true,
-                labelString: "Month",
-              },
-              gridLines: {
-                borderDash: [2],
-                borderDashOffset: [2],
-                color: "rgba(33, 37, 41, 0.3)",
-                zeroLineColor: "rgba(33, 37, 41, 0.3)",
-                zeroLineBorderDash: [2],
-                zeroLineBorderDashOffset: [2],
-              },
-            },
-          ],
-          yAxes: [
-            {
-              display: true,
-              scaleLabel: {
-                display: false,
-                labelString: "Value",
-              },
-              gridLines: {
-                borderDash: [2],
-                drawBorder: false,
-                borderDashOffset: [2],
-                color: "rgba(33, 37, 41, 0.2)",
-                zeroLineColor: "rgba(33, 37, 41, 0.15)",
-                zeroLineBorderDash: [2],
-                zeroLineBorderDashOffset: [2],
-              },
-            },
-          ],
-        },
       },
     };
-    let ctx = document.getElementById("bar-chart").getContext("2d");
-    window.myBar = new Chart(ctx, config);
+
+    chart = new Chart(ctx, config);
   });
 </script>
 
@@ -99,14 +73,14 @@
           Overview
         </h3>
         <h2 class="text-zinc-700 text-xl font-semibold">
-          Violations Rate
+          Violations Cases By Date
         </h2>
       </div>
     </div>
   </div>
   <div class="p-4 flex-auto">
     <div class="relative h-350-px">
-      <canvas id="bar-chart"></canvas>
+      <canvas id="bar-chart" bind:this={ctx}></canvas>
     </div>
   </div>
 </div>

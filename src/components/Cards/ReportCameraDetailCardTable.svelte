@@ -19,7 +19,13 @@
   export let action_list;
   export let user_object;
   export let area_id;
+  export let chart_data;
+  
+  $: active_time = 7;
+  
+  let token_value;
 
+  token.subscribe((t) => (token_value = t));
 
   const { open, close } = getContext('simple-modal');
 
@@ -65,7 +71,26 @@
       }
     }
 
-
+  const chartByTime = async (time) =>{
+    const response = await fetch(`${API_URL}violation/listViolationByCamera/${data[0].camera_id.id}/?from-date=${time}`, {
+                method: "GET",
+                headers: {
+                  "Content-type": "application/json",
+                  "Authorization": "Bearer " + token_value,
+                },
+              }).then(response => {
+                if(response.status == 200){
+                  active_time = time;
+                  return response.json();
+                }
+              }).then(resData => {
+                if(resData){
+                  chart_data = resData;
+                }
+              }).catch(err => {
+                console.log(err);
+              })
+  }
 
 </script>
 
@@ -103,8 +128,15 @@
       </div>
     {:else}
       <div class="flex flex-wrap flex-row">
-        <CardDoughnutChart/>
-        <CardLineChart/>
+        <CardDoughnutChart data={chart_data}/>
+        <CardLineChart data={chart_data}/>
+        <div class="flex-auto flex-row ml-4 mb-3">
+          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 7? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(7)}">1 Week</button>
+          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 30? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(30)}">1 Month</button>
+          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 90? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(90)}">3 Months</button>
+          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 180? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(180)}">6 Months</button>
+          <button class="px-2.5 mr-2 py-0.5 border-2 {active_time == 365? 'border-blue-600 text-white bg-blue-600' : 'border-blue-600 text-black bg-white'} rounded-full " on:click="{() => chartByTime(365)}">1 Year</button>
+        </div>
       </div>
       <!-- Projects table -->
       <table class="items-center w-full bg-transparent border-collapse">

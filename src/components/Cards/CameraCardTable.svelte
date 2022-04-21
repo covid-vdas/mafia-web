@@ -110,7 +110,7 @@
             <img id={"camera_"+i} src={d.url} on:error={(e) =>{
               let source = e.target;
               source.setAttribute("src", "/static/error_placeholder.png");
-            }}  alt="camera stream" class="object-cover object-center w-full h-full"/>
+            }}  alt="camera stream" class="object-cover object-center w-full h-60"/>
           </div>
           <div class="row-span-1 text-center items-center mt-3">{d.name}</div>
         </div>
