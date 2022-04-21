@@ -161,7 +161,12 @@
                 <div class="container">
                 {#each results as r}
                     <img src={r}/>
-                    <a href={r} download="detected.png">Download Image</a>
+                    <a href={r} download="detected" on:click="{() => {
+                        var text = document.getElementById("text").value;
+                    var filename = "GFG.txt";
+              
+                    download(filename, text);
+                    }}">Download Image</a>
                 {/each}
                 </div>
             </div>
