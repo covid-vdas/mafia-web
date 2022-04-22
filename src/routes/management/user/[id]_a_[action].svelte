@@ -320,7 +320,7 @@
                     {#if edit}
 
                         <a class="btn text-white bg-yellow-500 text-sm font-bold uppercase px-6 py-3 rounded-md shadow
-                         hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all mb-3
+                         hover:shadow-lg outline-none focus:outline-none mr-1 w-full ease-linear transition-all mb-3
                          duration-150" href="/management/user/{user.id}_p">Change password</a>
                         
                         {#if processing}

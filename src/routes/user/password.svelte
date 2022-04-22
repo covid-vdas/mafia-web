@@ -22,15 +22,17 @@
     import { goto, invalidate } from '$app/navigation';
 
     export let token;
-    export let user_id;
     export let login_user;
     let confirm_pass;
     let confirm_pass_valid = true;
     let pass_valid = true;
     let user = {
-        password: ""
+        password: "",
+        old_password:""
     };
     $: pass_message = "";
+    let old_pass_valid = true;
+    $: old_pass_message = "";
 
     let processing = false;
     if(login_user){
@@ -95,52 +97,78 @@
         }
 
         if(pass_valid & confirm_pass_valid){
-            const response = await fetch(API_URL+"user/"+login_user.id+"/",{
-            method : "PATCH",
+            const login_response = await fetch(API_URL+"login/",{
+            method : "POST",
             headers : {
                 "Content-type": "application/json",
-                "Authorization": "Bearer "+ token,
             },
             body : JSON.stringify({
-                'password' : user.password,
-            }),
-        }).then(
-            response => {
-                processing = false;
-                if(response.status == 200 || response.status == 201){
-                    reloadData();
-                    toast.push("Changed User Password Successfully", {
-                        theme: {
-                            '--toastBackground':'white',
-                            '--toastBarBackground': 'green',
-                            '--toastColor': 'black',
-                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                        }
-                    });
-                    goto("/")
-                }else{
-                    console.log(response);
-                    toast.push("An error occurred while changing user password", {
-                        theme: {
-                            '--toastBackground':'white',
-                            '--toastBarBackground': 'red',
-                            '--toastColor': 'black',
-                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                            
-                        }
-                    });
+                'username' : login_user.username,
+                'password' : user.old_password
                 }
-            }).catch (error =>{
-                toast.push("An error occurred while changing user password", {
-                        theme: {
-                            '--toastBackground':'white',
-                            '--toastBarBackground': 'red',
-                            '--toastColor': 'black',
-                            '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                        }
-                    });
-                console.log(error);
-            });
+            ),
+            }).then(
+                response => {
+                    if(response.status == 200){
+                        old_pass_valid = true;
+                    }else{
+                        old_pass_valid = false;
+                        old_pass_message = "Your old password is incorrect";
+                    }
+                }).catch (error =>{
+                    error_status=true;
+                    console.log(error);
+                });
+
+                if(old_pass_valid){
+                    const response = await fetch(API_URL+"user/"+login_user.id+"/",{
+                method : "PATCH",
+                headers : {
+                    "Content-type": "application/json",
+                    "Authorization": "Bearer "+ token,
+                },
+                body : JSON.stringify({
+                    'password' : user.password,
+                }),
+            }).then(
+                response => {
+                    processing = false;
+                    if(response.status == 200 || response.status == 201){
+                        reloadData();
+                        toast.push("Changed User Password Successfully", {
+                            theme: {
+                                '--toastBackground':'white',
+                                '--toastBarBackground': 'green',
+                                '--toastColor': 'black',
+                                '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                            }
+                        });
+                        goto("/")
+                    }else{
+                        console.log(response);
+                        toast.push("An error occurred while changing user password", {
+                            theme: {
+                                '--toastBackground':'white',
+                                '--toastBarBackground': 'red',
+                                '--toastColor': 'black',
+                                '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                                
+                            }
+                        });
+                    }
+                }).catch (error =>{
+                    toast.push("An error occurred while changing user password", {
+                            theme: {
+                                '--toastBackground':'white',
+                                '--toastBarBackground': 'red',
+                                '--toastColor': 'black',
+                                '--toastBoxShadow' : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                            }
+                        });
+                    console.log(error);
+                });
+            }
+            
         }
         processing = false;
     }
@@ -154,6 +182,17 @@
                     <a sveltekit:prefetch href={`/user/profile`} class="mr-3"><i class="fa-solid fa-angle-left"></i></a>Change Personal Password
                 </div>
                 <form on:submit|preventDefault="{handleSubmit}">
+                    <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="edit-old-password">
+                        Old Password
+                    </label>
+                    <input type="password" class="px-3 py-3 bg-white placeholder-zinc-300 rounded-md text-sm shadow mb-4 focus:ring w-full ease-linear
+                    transition-all duration-150 focus:outline-none
+                    {!old_pass_valid?'border-1 border-rose-500 focus:border-rose-600':''}
+                    " id="edit-old-password" bind:value={user.old_password} />
+                    {#if !old_pass_valid}
+                        <p class="text-rose-600 text-left text-sm font-semibold mb-3">{old_pass_message}</p>
+                    {/if}
+
                     <label class="block uppercase text-zinc-600 text-xs font-bold mb-2" for="edit-password">
                         Password
                     </label>
